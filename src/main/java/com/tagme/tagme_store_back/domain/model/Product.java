@@ -3,6 +3,8 @@ package com.tagme.tagme_store_back.domain.model;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Blob;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Product {
@@ -13,9 +15,9 @@ public class Product {
     private BigDecimal discountPercentage;
     private BigDecimal price;
     private Blob image;
-    private Category category;
+    private List<Category> categories;
 
-    public Product(Long id, String name, String description, BigDecimal basePrice, BigDecimal discountPercentage, Blob image, Category category) {
+    public Product(Long id, String name, String description, BigDecimal basePrice, BigDecimal discountPercentage, Blob image, List<Category> categories) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -23,7 +25,7 @@ public class Product {
         this.discountPercentage = discountPercentage;
         this.price = calculateFinalPrice();
         this.image = image;
-        this.category = category;
+        this.categories = categories.isEmpty() ?  new ArrayList<>() : categories;
     }
 
     public Long getId() {
@@ -82,12 +84,12 @@ public class Product {
         this.image = image;
     }
 
-    public Category getCategory() {
-        return category;
+    public List<Category> getCategory() {
+        return categories;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setCategory(List<Category> categories) {
+        this.categories = categories;
     }
 
     @Override
@@ -100,7 +102,7 @@ public class Product {
                 ", discountPercentage=" + discountPercentage +
                 ", price=" + price +
                 ", image=" + image +
-                ", category=" + category +
+                ", categories=" + categories +
                 '}';
     }
 
@@ -108,11 +110,11 @@ public class Product {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return Objects.equals(id, product.id) && Objects.equals(name, product.name) && Objects.equals(description, product.description) && Objects.equals(basePrice, product.basePrice) && Objects.equals(discountPercentage, product.discountPercentage) && Objects.equals(price, product.price) && Objects.equals(image, product.image) && Objects.equals(category, product.category);
+        return Objects.equals(id, product.id) && Objects.equals(name, product.name) && Objects.equals(description, product.description) && Objects.equals(basePrice, product.basePrice) && Objects.equals(discountPercentage, product.discountPercentage) && Objects.equals(price, product.price) && Objects.equals(image, product.image) && Objects.equals(categories, product.categories);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, basePrice, discountPercentage, price, image, category);
+        return Objects.hash(id, name, description, basePrice, discountPercentage, price, image, categories);
     }
 }
