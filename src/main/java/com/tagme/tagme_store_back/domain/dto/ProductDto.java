@@ -12,6 +12,6 @@ public record ProductDto(
         BigDecimal basePrice,
         BigDecimal discountPercentage,
         Blob image,
-        Category category
+        CategoryDto category
 ) {
 }
