@@ -1,5 +1,7 @@
 package com.tagme.tagme_store_back.domain.service;
 
+import com.tagme.tagme_store_back.domain.dto.CategoryDto;
+
 import java.util.List;
 
 public interface CategoryService {

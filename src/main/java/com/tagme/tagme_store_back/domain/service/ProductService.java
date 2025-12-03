@@ -1,5 +1,6 @@
 package com.tagme.tagme_store_back.domain.service;
 
+import com.tagme.tagme_store_back.domain.dto.ProductDto;
 import com.tagme.tagme_store_back.domain.model.Page;
 
 public interface ProductService {
