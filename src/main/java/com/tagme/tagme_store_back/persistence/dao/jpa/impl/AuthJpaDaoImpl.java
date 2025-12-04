@@ -16,7 +16,6 @@ public class AuthJpaDaoImpl implements AuthJpaDao {
     private EntityManager entityManager;
 
     @Override
-    @Transactional
     public UUID createSession(Long userId) {
         UserJpaEntity user = entityManager.find(UserJpaEntity.class, userId);
         if (user == null) {

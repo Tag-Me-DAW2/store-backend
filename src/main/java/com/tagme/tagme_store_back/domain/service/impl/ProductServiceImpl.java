@@ -9,6 +9,7 @@ import com.tagme.tagme_store_back.domain.model.Product;
 import com.tagme.tagme_store_back.domain.repository.CategoryRepository;
 import com.tagme.tagme_store_back.domain.repository.ProductRepository;
 import com.tagme.tagme_store_back.domain.service.ProductService;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 
@@ -68,6 +69,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         if (id == null) {
             throw new RuntimeException("Id cannot be null");
@@ -78,6 +80,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public ProductDto create(ProductDto product) {
         categoryRepository.findById(product.category().id()).orElseThrow(() -> new ResourceNotFoundException("Category with id: " + product.category().id() + " doesn't exist"));
 
@@ -87,6 +90,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public ProductDto update(ProductDto product) {
         productRepository.findById(product.id()).orElseThrow(() -> new ResourceNotFoundException("Product with id " + product.id() + " doesn't exist"));
         categoryRepository.findById(product.category().id()).orElseThrow(() -> new ResourceNotFoundException("Tried to update product with category " + product.category().id() + " but doesnt exist"));

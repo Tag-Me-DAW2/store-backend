@@ -7,6 +7,7 @@ import com.tagme.tagme_store_back.domain.repository.AuthRepository;
 import com.tagme.tagme_store_back.domain.repository.UserRepository;
 import com.tagme.tagme_store_back.domain.service.AuthService;
 import com.tagme.tagme_store_back.domain.utils.PasswordUtils;
+import jakarta.transaction.Transactional;
 
 import java.util.UUID;
 
@@ -20,6 +21,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public String login(LoginRequest loginRequest) {
         UserDto userDto = userRepository.findByEmail(loginRequest.email()).orElseThrow(() ->
                 new InvalidCredentialsException("Email o contraseña incorrectos")
@@ -38,6 +40,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public void logout(String token) {
         if (token == null ||  token.isBlank()) {
             throw new InvalidCredentialsException("Token inválido");

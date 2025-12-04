@@ -8,6 +8,7 @@ import com.tagme.tagme_store_back.domain.model.User;
 import com.tagme.tagme_store_back.domain.repository.UserRepository;
 import com.tagme.tagme_store_back.domain.service.UserService;
 import com.tagme.tagme_store_back.domain.utils.PasswordUtils;
+import jakarta.transaction.Transactional;
 
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
@@ -29,6 +30,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDto create(UserDto userDto) {
         if(userRepository.findByEmail(userDto.email()).isPresent()) {
             throw new BusinessException("Email " + userDto.email() + " is already in use");
@@ -42,6 +44,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDto update(UserDto userDto) {
         if(userRepository.findById(userDto.id()).isEmpty()) {
             throw new ResourceNotFoundException("Email " + userDto.email() + " not found");
@@ -65,7 +68,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(Long id) {
+    @Transactional
+    public void deleteById(Long id) {
         if (id == null) {
             throw new RuntimeException("User id cannot be null");
         }

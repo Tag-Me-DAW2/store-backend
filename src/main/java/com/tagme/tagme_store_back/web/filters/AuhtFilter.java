@@ -43,6 +43,4 @@ public class AuhtFilter implements Filter {
             httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
         }
     }
-
-
 }

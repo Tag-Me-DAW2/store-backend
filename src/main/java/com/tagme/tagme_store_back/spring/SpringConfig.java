@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SpringConfig {
+
     @Bean
     public UserJpaDao userJpaDao() {
         return new UserJpaDaoImpl();
@@ -39,8 +40,7 @@ public class SpringConfig {
 
     @Bean
     public AuthRepository authRepository(AuthJpaDao authJpaDao) {
-        return new AuthRepositoryImpl(authJpaDao) {
-        };
+        return new AuthRepositoryImpl(authJpaDao);
     }
 
     @Bean
