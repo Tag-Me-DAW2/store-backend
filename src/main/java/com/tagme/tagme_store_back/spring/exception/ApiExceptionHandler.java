@@ -35,7 +35,7 @@ public class ApiExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler({Exception.class,RuntimeException.class})
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ErrorMessage handleGeneralException(Exception exception) {
         return new ErrorMessage(exception);

@@ -2,6 +2,7 @@ package com.tagme.tagme_store_back.domain.service.impl;
 
 import com.tagme.tagme_store_back.domain.dto.UserDto;
 import com.tagme.tagme_store_back.domain.exception.BusinessException;
+import com.tagme.tagme_store_back.domain.exception.ResourceNotFoundException;
 import com.tagme.tagme_store_back.domain.repository.UserRepository;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -47,17 +49,17 @@ class UserServiceImplTest {
             assertEquals(userDto1, actualUser);
         }
 
-        @DisplayName("Given non-existing user ID, when getById is called, then throw BusinessException")
+        @DisplayName("Given non-existing user ID, when getById is called, then throw ResourceNotFoundException")
         @Test
         void testGetByIdNonExistingUser() {
             when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
-            assertThrows(BusinessException.class, () -> userService.getById(9999999L));
+            assertThrows(ResourceNotFoundException.class, () -> userService.getById(9999999L));
         }
 
-        @DisplayName("Given null user ID, when getById is called, then throw BusinessException")
+        @DisplayName("Given null user ID, when getById is called, then throw RuntimeException")
         @Test
         void testGetByIdNullId() {
-            assertThrows(BusinessException.class, () -> userService.getById(null));
+            assertThrows(RuntimeException.class, () -> userService.getById(null));
         }
     }
 
@@ -97,12 +99,12 @@ class UserServiceImplTest {
             assertEquals(userDto1, updatedUser);
         }
 
-        @DisplayName("Given non-existing user ID, when update is called, then throw BusinessException")
+        @DisplayName("Given non-existing user ID, when update is called, then throw ResourceNotFoundException")
         @Test
         void testUpdateNonExistingUser() {
             when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-            assertThrows(BusinessException.class, () -> userService.update(userDto1));
+            assertThrows(ResourceNotFoundException.class, () -> userService.update(userDto1));
         }
 
         @DisplayName("Given existing email used by another user, when update is called, then throw BusinessException")
@@ -127,12 +129,18 @@ class UserServiceImplTest {
             assertDoesNotThrow(() -> userService.delete(userDto1.id()));
         }
 
-        @DisplayName("Given non-existing user ID, when delete is called, then throw BusinessException")
+        @DisplayName("Given non-existing user ID, when delete is called, then throw ResourceNotFoundException")
         @Test
         void testDeleteNonExistingUser() {
             when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-            assertThrows(BusinessException.class, () -> userService.delete(9999999L));
+            assertThrows(ResourceNotFoundException.class, () -> userService.delete(9999999L));
+        }
+
+        @DisplayName("Given null user ID, when delete is called, then throw RuntimeException")
+        @Test
+        void testDeleteNullId() {
+            assertThrows(RuntimeException.class, () -> userService.delete(null));
         }
     }
 

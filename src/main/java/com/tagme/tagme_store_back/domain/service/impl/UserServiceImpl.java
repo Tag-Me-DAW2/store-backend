@@ -2,6 +2,7 @@ package com.tagme.tagme_store_back.domain.service.impl;
 
 import com.tagme.tagme_store_back.domain.dto.UserDto;
 import com.tagme.tagme_store_back.domain.exception.BusinessException;
+import com.tagme.tagme_store_back.domain.exception.ResourceNotFoundException;
 import com.tagme.tagme_store_back.domain.mapper.UserMapper;
 import com.tagme.tagme_store_back.domain.model.User;
 import com.tagme.tagme_store_back.domain.repository.UserRepository;
@@ -18,13 +19,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getById(Long id) {
         if (id == null) {
-            throw new BusinessException("User id cannot be null");
+            throw new RuntimeException("User id cannot be null");
         }
 
         return userRepository.findById(id)
                 .map(UserMapper::fromUserDtoToUser)
                 .map(UserMapper::fromUserToUserDto)
-                .orElseThrow(() -> new BusinessException("User with id " + id + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found"));
     }
 
     @Override
@@ -43,7 +44,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto update(UserDto userDto) {
         if(userRepository.findById(userDto.id()).isEmpty()) {
-            throw new BusinessException("Email " + userDto.email() + " not found");
+            throw new ResourceNotFoundException("Email " + userDto.email() + " not found");
         }
 
         userRepository.findByEmail(userDto.email())
@@ -65,9 +66,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(Long id) {
-        UserDto userDto = getById(id);
+        if (id == null) {
+            throw new RuntimeException("User id cannot be null");
+        }
 
-        if(userDto == null) throw new BusinessException("User with id " + id + " not found");
+        UserDto userDto = getById(id);
+        if(userDto == null) throw new ResourceNotFoundException("User with id " + id + " not found");
 
         userRepository.deleteById(id);
     }
