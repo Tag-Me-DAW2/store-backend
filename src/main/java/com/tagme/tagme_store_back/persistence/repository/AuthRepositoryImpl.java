@@ -21,9 +21,4 @@ public class AuthRepositoryImpl implements AuthRepository {
     public void logout(String token) {
         authJpaDao.logout(token);
     }
-
-    @Override
-    public boolean isValidToken(String token) {
-        return authJpaDao.isValidToken(token);
-    }
 }

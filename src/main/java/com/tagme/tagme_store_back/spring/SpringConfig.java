@@ -7,8 +7,11 @@ import com.tagme.tagme_store_back.domain.service.UserService;
 import com.tagme.tagme_store_back.domain.service.impl.AuthServiceImpl;
 import com.tagme.tagme_store_back.domain.service.impl.UserServiceImpl;
 import com.tagme.tagme_store_back.persistence.dao.jpa.AuthJpaDao;
+import com.tagme.tagme_store_back.persistence.dao.jpa.UserJpaDao;
 import com.tagme.tagme_store_back.persistence.dao.jpa.impl.AuthJpaDaoImpl;
+import com.tagme.tagme_store_back.persistence.dao.jpa.impl.UserJpaDaoImpl;
 import com.tagme.tagme_store_back.persistence.repository.AuthRepositoryImpl;
+import com.tagme.tagme_store_back.persistence.repository.UserRepositoryImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

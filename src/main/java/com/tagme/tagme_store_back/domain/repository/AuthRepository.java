@@ -5,5 +5,4 @@ import java.util.UUID;
 public interface AuthRepository {
     UUID createSession(Long userId);
     void logout(String sessionId);
-    boolean isValidToken(String token);
 }
