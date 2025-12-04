@@ -1,6 +1,5 @@
 package com.tagme.tagme_store_back.domain.model;
 
-import java.util.List;
 import java.util.Objects;
 
 public class Category {

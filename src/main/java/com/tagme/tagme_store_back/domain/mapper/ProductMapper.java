@@ -4,19 +4,8 @@ import com.tagme.tagme_store_back.domain.dto.ProductDto;
 import com.tagme.tagme_store_back.domain.model.Product;
 
 public class ProductMapper {
-    private static ProductMapper INSTANCE;
 
-    private ProductMapper() {
-    }
-
-    public static ProductMapper getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new ProductMapper();
-        }
-        return INSTANCE;
-    }
-
-    public ProductDto toDto(Product product) {
+    public static ProductDto fromProductToProductDto (Product product) {
         if (product == null) {
             return null;
         }
@@ -26,12 +15,13 @@ public class ProductMapper {
                 product.getDescription(),
                 product.getBasePrice(),
                 product.getDiscountPercentage(),
+                product.getPrice(),
                 product.getImage(),
-                CategoryMapper.getInstance().toDto(product.getCategory())
+                CategoryMapper.fromCategoryToCategoryDto(product.getCategory())
         );
     }
 
-    public Product toModel(ProductDto productDto) {
+    public static Product fromProductDtoToProduct (ProductDto productDto) {
         if (productDto == null) {
             return null;
         }
@@ -42,7 +32,7 @@ public class ProductMapper {
                 productDto.basePrice(),
                 productDto.discountPercentage(),
                 productDto.image(),
-                CategoryMapper.getInstance().toModel(productDto.category())
+                CategoryMapper.fromCategoryDtoToCategory(productDto.category())
         );
     }
 }

@@ -8,11 +8,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductRepository {
-    List<Product> findAll(int page, int size);
-    long getTotalProducts();
-    Optional<Product> findById(Long id);
-    List<Product> findProductsByCategoryId(Long categoryId);
+    Page<ProductDto> findAll(int page, int size);
+    Optional<ProductDto> findById(Long id);
+    List<ProductDto> findProductsByCategoryId(Long categoryId);
     void deleteById(Long id);
-    Product save(Product product);
-    Product update(Product product);
+    ProductDto save(ProductDto productDto);
+    Long getTotalProducts();
 }

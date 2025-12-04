@@ -3,11 +3,15 @@ package com.tagme.tagme_store_back.domain.service.impl;
 import com.tagme.tagme_store_back.domain.dto.CategoryDto;
 import com.tagme.tagme_store_back.domain.dto.ProductDto;
 import com.tagme.tagme_store_back.domain.exception.ResourceNotFoundException;
+import com.tagme.tagme_store_back.domain.mapper.ProductMapper;
 import com.tagme.tagme_store_back.domain.model.Category;
 import com.tagme.tagme_store_back.domain.model.Page;
 import com.tagme.tagme_store_back.domain.model.Product;
+import com.tagme.tagme_store_back.domain.repository.CategoryRepository;
 import com.tagme.tagme_store_back.domain.repository.ProductRepository;
+import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,143 +31,210 @@ class ProductServiceImplTest {
     @Mock
     private ProductRepository productRepository;
 
+    @Mock
+    protected CategoryRepository categoryRepository;
+
     @InjectMocks
     private ProductServiceImpl productService;
 
     private ProductDto productDto1;
     private ProductDto productDto2;
+    private ProductDto productDto3;
 
     private Product product1;
     private Product product2;
+    private Product product3;
 
 
     @BeforeEach
     void setUp() {
-        CategoryDto categoryDto = new CategoryDto(1L, "Category 1");
-        Category category = new Category(1L, "Category 1");
+        productDto1 = Instancio.of(ProductDto.class).withSeed(10).create();
+        productDto2 = Instancio.of(ProductDto.class).withSeed(20).create();
 
-        productDto1 = new ProductDto(1L, "Product 1", "Description 1", new BigDecimal("100.00"), new BigDecimal("0"), null, categoryDto);
-        productDto2 = new ProductDto(2L, "Product 2", "Description 2", new BigDecimal("200.00"), new BigDecimal("0"), null, categoryDto);
-        product1 = new Product(1L, "Product 1", "Description 1", new BigDecimal("100.00"), new BigDecimal("0"), null, category);
-        product2 = new Product(2L, "Product 2", "Description 2", new BigDecimal("200.00"), new BigDecimal("0"), null, category);
+        product1 = Instancio.of(Product.class).withSeed(10).create();
+        product2 = Instancio.of(Product.class).withSeed(20).create();
+
+        product3 = ProductMapper.fromProductDtoToProduct(productDto1);
+        productDto3 = ProductMapper.fromProductToProductDto(product3);
     }
 
-    @Nested
-    class GetAllTests {
-        @Test
-        void getAll_ShouldReturnProductsPage() {
-            when(productRepository.findAll(1, 10)).thenReturn(List.of(product1, product2));
-            when(productRepository.getTotalProducts()).thenReturn(2L);
-
-            Page<ProductDto> page = productService.getAll(1, 10);
-
-            assertAll(
-                    () -> assertEquals(2, page.data().size()),
-                    () -> assertEquals(productDto1.id(), page.data().getFirst().id()),
-                    () -> assertEquals(productDto2.id(), page.data().getLast().id())
-            );
-        }
-
-        @Test
-        void getAll_ShouldReturnEmptyPage_WhenNoProductsFound() {
-            when(productRepository.findAll(1, 10)).thenReturn(List.of());
-            when(productRepository.getTotalProducts()).thenReturn(0L);
-
-            Page<ProductDto> page = productService.getAll(1, 10);
-
-            assertTrue(page.data().isEmpty());
-        }
-    }
-
+    @DisplayName("GetAll Should return all products paginated")
     @Test
-    void getTotalProducts_ShouldReturnCorrectCount() {
-        when(productRepository.getTotalProducts()).thenReturn(5L);
+    void getAllTest() {
+        Page<ProductDto> productDtoPage = new Page<>(
+                List.of(productDto1, productDto2),
+                1,
+                2,
+                2L
+        );
+        when(productRepository.findAll(1,2)).thenReturn(productDtoPage);
 
-        long totalProducts = productService.getTotalProducts();
+        Page<ProductDto> result = productService.getAll(1, 2);
 
-        assertEquals(5L, totalProducts);
+        assertAll(
+                () -> assertEquals(2, result.data().size()),
+                () -> assertEquals(productDto1.id(), result.data().get(0).id()),
+                () -> assertEquals(productDto2.id(), result.data().get(1).id()),
+                () -> assertEquals(1, result.pageNumber()),
+                () -> assertEquals(2, result.pageSize()),
+                () -> assertEquals(2L, result.totalElements())
+        );
     }
 
     @Nested
-    class GetByIdTests {
+    class findByIdTest {
+        @DisplayName("When id is valid, should return product")
         @Test
-        void getById_ShouldReturnProduct_WhenProductExists() {
-            when(productRepository.findById(1L)).thenReturn(Optional.of(product1));
+        void whenIdIsValid_ShouldReturnProduct() {
+            when(productRepository.findById(1L)).thenReturn(Optional.of(productDto1));
 
             ProductDto result = productService.getById(1L);
 
-            assertEquals(productDto1.id(), result.id());
-        }
-
-        @Test
-        void getById_ShouldThrowException_WhenProductDoesNotExist() {
-            when(productRepository.findById(1L)).thenReturn(java.util.Optional.empty());
-
-            assertThrows(ResourceNotFoundException.class, () -> productService.getById(1L));
-        }
-    }
-
-    @Nested
-    class GetProductsByCategoryIdTests {
-        @Test
-        void getProductsByCategoryId_ShouldReturnProducts_WhenProductsExist() {
-            when(productRepository.findProductsByCategoryId(1L)).thenReturn(List.of(product1, product2));
-
-            List<ProductDto> results = productService.getProductsByCategoryId(1L);
-
             assertAll(
-                    () -> assertEquals(2, results.size()),
-                    () -> assertEquals(productDto1.id(), results.getFirst().id()),
-                    () -> assertEquals(productDto2.id(), results.getLast().id())
+                    () -> assertEquals(productDto1.id(), result.id()),
+                    () -> assertEquals(productDto1.name(), result.name())
             );
         }
 
+        @DisplayName("When id is null, should throw RuntimeException")
         @Test
-        void getProductsByCategoryId_ShouldReturnEmptyList_WhenNoProductsFound() {
-            when(productRepository.findProductsByCategoryId(1L)).thenReturn(List.of());
+        void whenIdIsNull_ShouldThrowRuntimeException() {
+            assertThrows(RuntimeException.class, () -> productService.getById(null));
+        }
 
-            List<ProductDto> results = productService.getProductsByCategoryId(1L);
+        @DisplayName("When product not found, should throw ResourceNotFoundException")
+        @Test
+        void whenProductNotFound_ShouldThrowResourceNotFoundException() {
+            when(productRepository.findById(99L)).thenReturn(Optional.empty());
 
-            assertTrue(results.isEmpty());
+            assertThrows(ResourceNotFoundException.class, () -> productService.getById(99L));
         }
     }
 
     @Nested
-    class DeleteByIdTests {
+    class GetProductsByCategoryIdTest {
+        @DisplayName("When category id is valid, should return products list")
         @Test
-        void deleteById_ShouldDeleteProduct_WhenProductExists() {
-            when(productRepository.findById(1L)).thenReturn(Optional.of(product1));
+        void whenCategoryIdIsValid_ShouldReturnProductsList() {
+            when(productRepository.findProductsByCategoryId(1L)).thenReturn(List.of(productDto1, productDto2));
+            when(categoryRepository.findById(1L)).thenReturn(Optional.of(new Category(1L, "Electronics")));
 
-            productService.deleteById(1L);
+            List<ProductDto> result = productService.getProductsByCategoryId(1L);
 
-            verify(productRepository).deleteById(1L);
+            assertAll(
+                    () -> assertEquals(2, result.size()),
+                    () -> assertEquals(productDto1.id(), result.get(0).id()),
+                    () -> assertEquals(productDto2.id(), result.get(1).id())
+            );
         }
 
+        @DisplayName("When category id is null, should throw RuntimeException")
         @Test
-        void deleteById_ShouldThrowException_WhenProductDoesNotExist() {
-            when(productRepository.findById(1L)).thenReturn(Optional.empty());
+        void whenCategoryIdIsNull_ShouldThrowRuntimeException() {
+             assertThrows(RuntimeException.class, () -> productService.getProductsByCategoryId(null));
+        }
 
-            assertThrows(ResourceNotFoundException.class, () -> productService.deleteById(1L));
+        @DisplayName("When category not found, should throw ResourceNotFoundException")
+        @Test
+        void whenCategoryNotFound_ShouldThrowResourceNotFoundException() {
+            when(categoryRepository.findById(99L)).thenReturn(Optional.empty());
+           assertThrows(ResourceNotFoundException.class, () -> productService.getProductsByCategoryId(99L));
         }
     }
 
-    @Test
-    void create_ShouldReturnCreatedProduct() {
-        when(productRepository.save(any(Product.class))).thenReturn(product1);
+    @Nested
+    class deleteByIdTest {
+        @DisplayName("When id is valid, should delete product")
+        @Test
+        void whenIdIsValid_ShouldDeleteProduct() {
+            when(productRepository.findById(1L)).thenReturn(Optional.of(productDto1));
+            doNothing().when(productRepository).deleteById(1L);
 
-        ProductDto result = productService.create(productDto1);
+            assertDoesNotThrow(() -> productService.deleteById(1L));
+            verify(productRepository, times(1)).deleteById(1L);
+        }
 
-        verify(productRepository).save(product1);
-        assertEquals(productDto1.name(), result.name());
+        @DisplayName("When id is null, should throw RuntimeException")
+        @Test
+        void whenIdIsNull_ShouldThrowRuntimeException() {
+            assertThrows(RuntimeException.class, () -> productService.deleteById(null));
+        }
+
+        @DisplayName("When product not found, should throw ResourceNotFoundException")
+        @Test
+        void whenProductNotFound_ShouldThrowResourceNotFoundException() {
+            when(productRepository.findById(99L)).thenReturn(Optional.empty());
+
+            assertThrows(ResourceNotFoundException.class, () -> productService.deleteById(99L));
+        }
     }
 
-    @Test
-    void update_ShouldReturnUpdatedProduct() {
-        when(productRepository.update(any(Product.class))).thenReturn(product1);
+    @Nested
+    class CreateProductTest {
+        @DisplayName("When category exists, should create product")
+        @Test
+        void whenCategoryExists_ShouldCreateProduct() {
+            when(categoryRepository.findById(productDto3.category().id())).thenReturn(Optional.of(new Category(productDto3.category().id(), productDto3.category().name())));
+            when(productRepository.save(productDto3)).thenReturn(productDto3);
 
-        ProductDto result = productService.update(productDto1);
+            ProductDto result = productService.create(productDto3);
 
-        verify(productRepository).update(product1);
-        assertEquals(productDto1.name(), result.name());
+            assertAll(
+                    () -> assertEquals(productDto3.id(), result.id()),
+                    () -> assertEquals(productDto3.name(), result.name())
+            );
+        }
+
+        @DisplayName("When category does not exist, should throw ResourceNotFoundException")
+        @Test
+        void whenCategoryDoesNotExist_ShouldThrowResourceNotFoundException() {
+            when(categoryRepository.findById(productDto1.category().id())).thenReturn(Optional.empty());
+
+            assertThrows(ResourceNotFoundException.class, () -> productService.create(productDto1));
+        }
     }
+
+    @Nested
+    class UpdateProductTest {
+        @DisplayName("When product and category exist, should update product")
+        @Test
+        void whenProductAndCategoryExist_ShouldUpdateProduct() {
+            when(productRepository.findById(productDto3.id())).thenReturn(Optional.of(productDto3));
+            when(categoryRepository.findById(productDto3.category().id())).thenReturn(Optional.of(new Category(productDto3.category().id(), productDto3.category().name())));
+            when(productRepository.save(productDto3)).thenReturn(productDto3);
+
+            ProductDto result = productService.update(productDto3);
+
+            assertAll(
+                    () -> assertEquals(productDto3.id(), result.id()),
+                    () -> assertEquals(productDto3.name(), result.name())
+            );
+        }
+
+        @DisplayName("When product does not exist, should throw ResourceNotFoundException")
+        @Test
+        void whenProductDoesNotExist_ShouldThrowResourceNotFoundException() {
+            when(productRepository.findById(productDto1.id())).thenReturn(Optional.empty());
+            assertThrows(ResourceNotFoundException.class, () -> productService.update(productDto1));
+        }
+
+        @DisplayName("When category does not exist, should throw ResourceNotFoundException")
+        @Test
+        void whenCategoryDoesNotExist_ShouldThrowResourceNotFoundException() {
+            when(productRepository.findById(productDto1.id())).thenReturn(Optional.of(productDto1));
+            when(categoryRepository.findById(productDto1.category().id())).thenReturn(Optional.empty());
+            assertThrows(ResourceNotFoundException.class, () -> productService.update(productDto1));
+        }
+    }
+
+    @DisplayName("Count Should return total number of products")
+    @Test
+    void countTest() {
+        when(productRepository.getTotalProducts()).thenReturn(5L);
+
+        Long result = productService.getTotalProducts();
+
+        assertEquals(5L, result);
+    }
+
 }

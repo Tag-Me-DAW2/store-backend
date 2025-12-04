@@ -1,7 +1,5 @@
 package com.tagme.tagme_store_back.domain.dto;
 
-import com.tagme.tagme_store_back.domain.model.Category;
-
 import java.math.BigDecimal;
 import java.sql.Blob;
 
@@ -11,6 +9,7 @@ public record ProductDto(
         String description,
         BigDecimal basePrice,
         BigDecimal discountPercentage,
+        BigDecimal price,
         Blob image,
         CategoryDto category
 ) {

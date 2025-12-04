@@ -4,19 +4,7 @@ import com.tagme.tagme_store_back.domain.dto.CategoryDto;
 import com.tagme.tagme_store_back.domain.model.Category;
 
 public class CategoryMapper {
-    private static CategoryMapper INSTANCE;
-
-    private CategoryMapper() {
-    }
-
-    public static CategoryMapper getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new CategoryMapper();
-        }
-        return INSTANCE;
-    }
-
-    public CategoryDto toDto(Category category) {
+    public static CategoryDto fromCategoryToCategoryDto(Category category) {
         if (category == null) {
             return null;
         }
@@ -26,7 +14,7 @@ public class CategoryMapper {
         );
     }
 
-    public Category toModel(CategoryDto categoryDto) {
+    public static Category fromCategoryDtoToCategory (CategoryDto categoryDto) {
         if (categoryDto == null) {
             return null;
         }
