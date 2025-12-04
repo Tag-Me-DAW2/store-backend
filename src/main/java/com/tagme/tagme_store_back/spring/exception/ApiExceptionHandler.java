@@ -1,6 +1,7 @@
 package com.tagme.tagme_store_back.spring.exception;
 
 
+import com.tagme.tagme_store_back.domain.exception.InvalidCredentialsException;
 import com.tagme.tagme_store_back.domain.exception.ResourceNotFoundException;
 import com.tagme.tagme_store_back.domain.exception.ValidationException;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,13 @@ public class ApiExceptionHandler {
     @ExceptionHandler({ValidationException.class,IllegalArgumentException.class})
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ErrorMessage handleValidationException(Exception ex) {
+        return new ErrorMessage(ex);
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(InvalidCredentialsException.class)
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ErrorMessage handleInvalidCredentialsException(InvalidCredentialsException ex) {
         return new ErrorMessage(ex);
     }
 

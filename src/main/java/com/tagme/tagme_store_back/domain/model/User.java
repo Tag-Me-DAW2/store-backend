@@ -89,7 +89,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "UserService{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +

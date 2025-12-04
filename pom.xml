@@ -59,6 +59,17 @@
             <artifactId>jakarta.validation-api</artifactId>
             <version>3.0.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.password4j</groupId>
+            <artifactId>password4j</artifactId>
+            <version>1.8.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.instancio</groupId>
+            <artifactId>instancio-junit</artifactId>
+            <version>5.5.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 	<build>

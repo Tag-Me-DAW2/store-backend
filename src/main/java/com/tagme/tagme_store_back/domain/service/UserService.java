@@ -6,5 +6,6 @@ public interface UserService {
     UserDto getById(Long id);
     UserDto create(UserDto userDto);
     UserDto update(UserDto userDto);
+    UserDto getByToken(String token);
     void delete(Long id);
 }
