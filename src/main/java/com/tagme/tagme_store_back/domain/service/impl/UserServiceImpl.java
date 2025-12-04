@@ -15,6 +15,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getById(Long id) {
+        if (id == null) {
+            throw new BusinessException("User id cannot be null");
+        }
+
         return userRepository.findById(id).orElseThrow(
                 () -> new BusinessException("User with id " + id + " not found")
         );
@@ -31,7 +35,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto update(UserDto userDto) {
-        if(userRepository.findByEmail(userDto.email()).isEmpty()) {
+        if(userRepository.findById(userDto.id()).isEmpty()) {
             throw new BusinessException("Email " + userDto.email() + " not found");
         }
 
