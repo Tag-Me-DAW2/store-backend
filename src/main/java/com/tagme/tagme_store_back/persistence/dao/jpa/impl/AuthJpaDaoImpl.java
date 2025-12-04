@@ -1,7 +1,9 @@
 package com.tagme.tagme_store_back.persistence.dao.jpa.impl;
 
+import com.tagme.tagme_store_back.domain.exception.ResourceNotFoundException;
 import com.tagme.tagme_store_back.persistence.dao.jpa.AuthJpaDao;
 import com.tagme.tagme_store_back.persistence.dao.jpa.entity.SessionJpaEntity;
+import com.tagme.tagme_store_back.persistence.dao.jpa.entity.UserJpaEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -16,10 +18,15 @@ public class AuthJpaDaoImpl implements AuthJpaDao {
     @Override
     @Transactional
     public UUID createSession(Long userId) {
+        UserJpaEntity user = entityManager.find(UserJpaEntity.class, userId);
+        if (user == null) {
+            throw new ResourceNotFoundException("User with ID " + userId + " does not exist.");
+        }
+
         UUID uuid = UUID.randomUUID();
         LocalDateTime createdAt = LocalDateTime.now();
 
-        SessionJpaEntity sessionJpaEntity = new SessionJpaEntity(userId, uuid.toString(), createdAt);
+        SessionJpaEntity sessionJpaEntity = new SessionJpaEntity(user, uuid.toString(), createdAt);
         entityManager.persist(sessionJpaEntity);
 
         return uuid;

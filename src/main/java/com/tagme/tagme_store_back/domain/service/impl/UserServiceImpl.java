@@ -2,7 +2,6 @@ package com.tagme.tagme_store_back.domain.service.impl;
 
 import com.tagme.tagme_store_back.domain.dto.UserDto;
 import com.tagme.tagme_store_back.domain.exception.BusinessException;
-import com.tagme.tagme_store_back.domain.exception.InvalidCredentialsException;
 import com.tagme.tagme_store_back.domain.mapper.UserMapper;
 import com.tagme.tagme_store_back.domain.model.User;
 import com.tagme.tagme_store_back.domain.repository.UserRepository;
@@ -10,7 +9,7 @@ import com.tagme.tagme_store_back.domain.service.UserService;
 import com.tagme.tagme_store_back.domain.utils.PasswordUtils;
 
 public class UserServiceImpl implements UserService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;

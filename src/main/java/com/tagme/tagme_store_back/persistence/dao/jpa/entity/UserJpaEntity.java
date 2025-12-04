@@ -12,6 +12,8 @@ public class UserJpaEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "username", nullable = false, unique = true)
+    private String username;
     @Column(name = "email", nullable = false, unique = true)
     private String email;
     @Column(name = "password", nullable = false, updatable = false)
@@ -24,18 +26,20 @@ public class UserJpaEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private UserRole role;
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     public UserJpaEntity() {}
 
-    public UserJpaEntity(String email, String password, String firstName, String lastName, String phone, UserRole role, LocalDateTime createdAt) {
+    public UserJpaEntity(Long id, String username, String email, String password, String firstName, String lastName, String phone, UserRole role) {
+        this.id = id;
+        this.username = username;
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
         this.role = role;
-        this.createdAt = createdAt;
     }
 
     public Long getId() {
@@ -44,6 +48,14 @@ public class UserJpaEntity implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
@@ -96,9 +108,5 @@ public class UserJpaEntity implements Serializable {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 }

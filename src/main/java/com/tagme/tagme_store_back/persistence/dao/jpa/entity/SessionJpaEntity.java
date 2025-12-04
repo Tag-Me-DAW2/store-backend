@@ -8,19 +8,24 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "sessions")
 public class SessionJpaEntity implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserJpaEntity user;
+
     @Column(name = "token", nullable = false, unique = true)
     private String token;
+
     private LocalDateTime createdAt;
 
     public SessionJpaEntity() {}
 
-    public SessionJpaEntity(Long userId, String token, LocalDateTime createdAt) {
-        this.userId = userId;
+    public SessionJpaEntity(UserJpaEntity user, String token, LocalDateTime createdAt) {
+        this.user = user;
         this.token = token;
         this.createdAt = createdAt;
     }
@@ -33,12 +38,12 @@ public class SessionJpaEntity implements Serializable {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public UserJpaEntity getUser() {
+        return user;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUser(UserJpaEntity user) {
+        this.user = user;
     }
 
     public String getToken() {
