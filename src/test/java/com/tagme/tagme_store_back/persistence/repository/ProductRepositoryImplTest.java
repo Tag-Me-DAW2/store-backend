@@ -130,8 +130,7 @@ class ProductRepositoryImplTest {
             ProductJpaEntity savedEntity = ProductMapper.fromProductDtoToProductJpaEntity(newProductDto);
             savedEntity.setId(1L);
 
-            when(productDao.insert(any(ProductJpaEntity.class)))
-                    .thenReturn(savedEntity);
+            when(productDao.insert(any(ProductJpaEntity.class))).thenReturn(savedEntity);
 
             ProductDto result = productRepository.save(newProductDto);
 

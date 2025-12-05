@@ -38,11 +38,11 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Optional<UserDto> findByToken(String token) {
-        return Optional.empty();
+        return userJpaDao.findByToken(token).map(UserMapper::fromUserJpaEntityToUserDto);
     }
 
     @Override
     public Optional<UserDto> findByEmail(String email) {
-        return Optional.empty();
+        return userJpaDao.findByEmail(email).map(UserMapper::fromUserJpaEntityToUserDto);
     }
 }
