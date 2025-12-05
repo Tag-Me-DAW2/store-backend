@@ -24,6 +24,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<ProductDto> getAll(int page, int size) {
+        if(page < 1 || size < 1) {
+            throw new BusinessException("Page and size must be greater than 0");
+        }
+
         Page<ProductDto> productDtoPage = productRepository.findAll(page, size);
 
         List<ProductDto> itemsDto = productDtoPage.data()

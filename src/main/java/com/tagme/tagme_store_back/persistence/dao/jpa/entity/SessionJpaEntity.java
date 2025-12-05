@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "sessions")
+@Table(name = "tb_sessions")
 public class SessionJpaEntity implements Serializable {
 
     @Id
@@ -14,12 +14,13 @@ public class SessionJpaEntity implements Serializable {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "usr_id", nullable = false)
     private UserJpaEntity user;
 
     @Column(name = "token", nullable = false, unique = true)
     private String token;
 
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     public SessionJpaEntity() {}

@@ -42,4 +42,9 @@ public class AuthJpaDaoImpl implements AuthJpaDao {
             entityManager.remove(session);
         }
     }
+
+    @Override
+    public Long count() {
+        return entityManager.createQuery("SELECT COUNT(s) FROM SessionJpaEntity s", Long.class).getSingleResult();
+    }
 }

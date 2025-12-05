@@ -1,4 +1,4 @@
-package com.tagme.tagme_store_back.spring;
+package com.tagme.tagme_store_back.persistence;
 
 import com.tagme.tagme_store_back.domain.repository.AuthRepository;
 import com.tagme.tagme_store_back.domain.repository.UserRepository;
@@ -12,15 +12,26 @@ import com.tagme.tagme_store_back.persistence.dao.jpa.impl.AuthJpaDaoImpl;
 import com.tagme.tagme_store_back.persistence.dao.jpa.impl.UserJpaDaoImpl;
 import com.tagme.tagme_store_back.persistence.repository.AuthRepositoryImpl;
 import com.tagme.tagme_store_back.persistence.repository.UserRepositoryImpl;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import org.flywaydb.core.Flyway;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.testcontainers.containers.MariaDBContainer;
+import org.testcontainers.utility.DockerImageName;
 
-@Configuration
+import javax.sql.DataSource;
+
+//@Configuration
+@TestConfiguration
 @EnableJpaRepositories(basePackages = "com.tagme.tagme_store_back.persistence.dao.jpa")
 @EntityScan(basePackages = "com.tagme.tagme_store_back.persistence.dao.jpa.entity")
-public class SpringConfig {
+public class TestConfig {
 
     @Bean
     public UserJpaDao userJpaDao() {
@@ -28,27 +39,7 @@ public class SpringConfig {
     }
 
     @Bean
-    public UserRepository userRepository(UserJpaDao userJpaDao) {
-        return new UserRepositoryImpl(userJpaDao);
-    }
-
-    @Bean
-    public UserService userService(UserRepository userRepository) {
-        return new UserServiceImpl(userRepository);
-    }
-
-    @Bean
     public AuthJpaDao authJpaDao() {
         return new AuthJpaDaoImpl();
-    }
-
-    @Bean
-    public AuthRepository authRepository(AuthJpaDao authJpaDao) {
-        return new AuthRepositoryImpl(authJpaDao);
-    }
-
-    @Bean
-    public AuthService authService(AuthRepository authRepository, UserRepository userRepository) {
-        return new AuthServiceImpl(authRepository, userRepository);
     }
 }

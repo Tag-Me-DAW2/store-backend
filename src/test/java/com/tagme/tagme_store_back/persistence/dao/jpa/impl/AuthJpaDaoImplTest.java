@@ -1,14 +1,54 @@
 package com.tagme.tagme_store_back.persistence.dao.jpa.impl;
 
+import com.tagme.tagme_store_back.annotation.DaoTest;
+import com.tagme.tagme_store_back.domain.exception.ResourceNotFoundException;
+import com.tagme.tagme_store_back.persistence.dao.jpa.AuthJpaDao;
 import com.tagme.tagme_store_back.spring.SpringConfig;
-import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
+
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest
-@ContextConfiguration(classes = SpringConfig.class)
-// Meter flyway to test JPA repositories
-class AuthJpaDaoImplTest {
+@DaoTest
+class AuthJpaDaoImplTest extends BaseJpaDaoTest<AuthJpaDao> {
 
+    @Nested
+    class CreateSessionTests {
+        @DisplayName("Create Session with Valid User ID should return UUID")
+        @Test
+        void createSession_ValidUserId_ShouldReturnUUID() {
+            Long userId = 1L;
+            UUID result = dao.createSession(userId);
+            assertNotNull(result);
+        }
+
+        @DisplayName("If user does not exist, should throw exception")
+        @Test
+        void createSession_NonExistentUserId_ShouldThrowException() {
+            Long nonExistentUserId = 999L;
+            assertThrows(ResourceNotFoundException.class, () -> dao.createSession(nonExistentUserId));
+        }
+    }
+
+    @Nested
+    class DeleteSessionTests {
+        @DisplayName("Logout with Valid Token should remove session")
+        @Test
+        void logout_ValidToken_ShouldNotThrowException() {
+            String validToken = "example-token-1234567890";
+            Long totalSessionsBefore = dao.count();
+            dao.logout(validToken);
+            Long totalSessionsAfter = dao.count();
+
+            assertEquals(totalSessionsBefore - 1, totalSessionsAfter);
+        }
+    }
 }

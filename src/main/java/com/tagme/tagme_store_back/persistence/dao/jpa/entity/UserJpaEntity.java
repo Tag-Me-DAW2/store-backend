@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "users")
+@Table(name = "tb_users")
 public class UserJpaEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +20,7 @@ public class UserJpaEntity implements Serializable {
     private String password;
     @Column(name = "first_name", nullable = false)
     private String firstName;
-    @Column(name = "last_name", nullable = false)
+    @Column(name = "last_name", nullable = true)
     private String lastName;
     private String phone;
     @Enumerated(EnumType.STRING)

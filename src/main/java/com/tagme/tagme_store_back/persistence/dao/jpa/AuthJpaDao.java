@@ -5,4 +5,5 @@ import java.util.UUID;
 public interface AuthJpaDao {
     UUID createSession(Long userId);
     void logout(String token);
+    Long count();
 }

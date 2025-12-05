@@ -1,21 +1,21 @@
 package com.tagme.tagme_store_back.persistence.dao.jpa.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-@Table(name = "categories")
+@Table(name = "tb_categories")
 public class CategoryJpaEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+    @Column(nullable = false, unique = true)
     String name;
+    @Column(name = "creation_date", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
     public CategoryJpaEntity() {
     }
