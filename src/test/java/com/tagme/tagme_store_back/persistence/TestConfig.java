@@ -27,7 +27,6 @@ import org.testcontainers.utility.DockerImageName;
 
 import javax.sql.DataSource;
 
-//@Configuration
 @TestConfiguration
 @EnableJpaRepositories(basePackages = "com.tagme.tagme_store_back.persistence.dao.jpa")
 @EntityScan(basePackages = "com.tagme.tagme_store_back.persistence.dao.jpa.entity")
