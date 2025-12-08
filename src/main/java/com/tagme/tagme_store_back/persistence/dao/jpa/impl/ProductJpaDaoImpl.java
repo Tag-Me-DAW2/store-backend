@@ -10,7 +10,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 
-public class ProductDaoImpl implements ProductDao {
+public class ProductJpaDaoImpl implements ProductDao {
 
     @PersistenceContext
     private EntityManager entityManager;

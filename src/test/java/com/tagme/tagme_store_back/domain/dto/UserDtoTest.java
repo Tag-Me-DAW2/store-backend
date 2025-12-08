@@ -65,6 +65,7 @@ class UserDtoTest {
                 Arguments.of("email", "user@domain .com"),
                 Arguments.of("email", "user@dom@in.com"),
                 Arguments.of("email", ".user@dom@in.com"),
+                Arguments.of("email", ".user@domin.com"),
                 Arguments.of("email", "@"),
 
                 Arguments.of("firstName", null),

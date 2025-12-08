@@ -9,7 +9,7 @@ import com.tagme.tagme_store_back.persistence.dao.jpa.entity.CategoryJpaEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
-public class CategoryDaoImpl implements CategoryDao {
+public class CategoryJpaDaoImpl implements CategoryDao {
 
     @PersistenceContext
     private EntityManager entityManager;

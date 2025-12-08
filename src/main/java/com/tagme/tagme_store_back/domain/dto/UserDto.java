@@ -1,6 +1,7 @@
 package com.tagme.tagme_store_back.domain.dto;
 
 import com.tagme.tagme_store_back.domain.model.UserRole;
+import com.tagme.tagme_store_back.domain.validation.ValidEmail;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -12,8 +13,7 @@ public record UserDto(
         String username,
         @NotBlank(message = "Password cannot be empty or null")
         String password,
-        @NotBlank(message = "Email cannot be empty or null")
-        @Email(message = "Email must be a valid email address")
+        @ValidEmail
         String email,
         @NotBlank(message = "First name cannot be empty or null")
         String firstName,
