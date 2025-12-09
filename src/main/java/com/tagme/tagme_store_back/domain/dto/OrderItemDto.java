@@ -1,0 +1,28 @@
+package com.tagme.tagme_store_back.domain.dto;
+
+
+
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+
+import java.math.BigDecimal;
+
+public record OrderItemDto(
+        Long id,
+        @NotNull(message = "Product cannot be null")
+        ProductDto productDto,
+        @NotNull(message = "Order cannot be null")
+        OrderDto orderDto,
+        @Min(value = 1, message = "Quantity must be at least 1")
+        Long quantity,
+        @Min(value = 0, message = "Base price must be non-negative")
+        BigDecimal basePrice,
+        @NotNull(message = "Discount percentage cannot be null")
+        @DecimalMin(value = "0.0", message = "Discount percentage must be non-negative")
+        @DecimalMax(value = "100.0", message = "Discount percentage cannot exceed 100")
+        BigDecimal discountPercentage,
+        BigDecimal total
+) {
+}
