@@ -5,6 +5,7 @@ import com.tagme.tagme_store_back.persistence.dao.jpa.UserJpaDao;
 import com.tagme.tagme_store_back.persistence.dao.jpa.entity.UserJpaEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 
 import java.util.Optional;
 
@@ -53,12 +54,21 @@ public class UserJpaDaoImpl implements UserJpaDao {
 
     @Override
     public UserJpaEntity update(UserJpaEntity entity) {
-        UserJpaEntity managedEntity = entityManager.find(UserJpaEntity.class, entity.getId());
-        if (managedEntity == null) {
+
+        UserJpaEntity managed = entityManager.find(UserJpaEntity.class, entity.getId());
+
+        if (managed == null) {
             throw new ResourceNotFoundException("User not found");
         }
 
-        return entityManager.merge(entity);
+        managed.setUsername(entity.getUsername());
+        managed.setEmail(entity.getEmail());
+        managed.setFirstName(entity.getFirstName());
+        managed.setLastName(entity.getLastName());
+        managed.setPhone(entity.getPhone());
+        managed.setRole(entity.getRole());
+
+        return managed;
     }
 
     @Override

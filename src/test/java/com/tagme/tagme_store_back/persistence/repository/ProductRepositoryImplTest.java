@@ -1,11 +1,8 @@
 package com.tagme.tagme_store_back.persistence.repository;
 
 import com.tagme.tagme_store_back.domain.dto.ProductDto;
-import com.tagme.tagme_store_back.domain.model.Category;
 import com.tagme.tagme_store_back.domain.model.Page;
-import com.tagme.tagme_store_back.domain.model.Product;
-import com.tagme.tagme_store_back.persistence.dao.jpa.ProductDao;
-import com.tagme.tagme_store_back.persistence.dao.jpa.entity.CategoryJpaEntity;
+import com.tagme.tagme_store_back.persistence.dao.jpa.ProductJpaDao;
 import com.tagme.tagme_store_back.persistence.dao.jpa.entity.ProductJpaEntity;
 import com.tagme.tagme_store_back.persistence.mapper.ProductMapper;
 import org.instancio.Instancio;
@@ -18,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +25,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class ProductRepositoryImplTest {
     @Mock
-    private ProductDao productDao;
+    private ProductJpaDao productDao;
 
     @InjectMocks
     private ProductRepositoryImpl productRepository;

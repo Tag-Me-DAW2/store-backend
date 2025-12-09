@@ -101,6 +101,10 @@ public class ProductJpaEntity implements Serializable {
         this.category = category;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

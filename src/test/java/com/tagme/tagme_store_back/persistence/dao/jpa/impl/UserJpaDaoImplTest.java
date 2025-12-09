@@ -110,5 +110,26 @@ class UserJpaDaoImplTest extends BaseJpaDaoTest<UserJpaDao> {
 
             assertThrows(ResourceNotFoundException.class, () -> dao.update(userToUpdate));
         }
+
+        @DisplayName("Password update is not possible")
+        @Test
+        void passwordUpdateNotPossible() {
+            Long userId = 1L;
+
+            UserJpaEntity managed = dao.findById(userId).get();
+            String originalPassword = managed.getPassword();
+
+            UserJpaEntity detached = new UserJpaEntity();
+            detached.setId(managed.getId());
+            detached.setUsername(managed.getUsername());
+            detached.setEmail(managed.getEmail());
+            detached.setPassword("newpassword");
+
+            dao.update(detached);
+
+            UserJpaEntity reloaded = dao.findById(userId).get();
+
+            assertEquals(originalPassword, reloaded.getPassword());
+        }
     }
 }

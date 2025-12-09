@@ -7,13 +7,13 @@ import com.tagme.tagme_store_back.domain.dto.ProductDto;
 import com.tagme.tagme_store_back.domain.model.Page;
 import com.tagme.tagme_store_back.domain.repository.ProductRepository;
 import com.tagme.tagme_store_back.persistence.dao.jpa.entity.ProductJpaEntity;
-import com.tagme.tagme_store_back.persistence.dao.jpa.ProductDao;
+import com.tagme.tagme_store_back.persistence.dao.jpa.ProductJpaDao;
 import com.tagme.tagme_store_back.persistence.mapper.ProductMapper;
 
 public class ProductRepositoryImpl implements ProductRepository {
-    private final ProductDao productDao;
+    private final ProductJpaDao productDao;
 
-    public ProductRepositoryImpl(ProductDao productDao) {
+    public ProductRepositoryImpl(ProductJpaDao productDao) {
         this.productDao = productDao;
     }
 

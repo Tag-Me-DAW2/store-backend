@@ -3,13 +3,13 @@ package com.tagme.tagme_store_back.persistence.dao.jpa.impl;
 import java.util.List;
 import java.util.Optional;
 
-import com.tagme.tagme_store_back.persistence.dao.jpa.CategoryDao;
+import com.tagme.tagme_store_back.persistence.dao.jpa.CategoryJpaDao;
 import com.tagme.tagme_store_back.persistence.dao.jpa.entity.CategoryJpaEntity;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
-public class CategoryJpaDaoImpl implements CategoryDao {
+public class CategoryJpaDaoImpl implements CategoryJpaDao {
 
     @PersistenceContext
     private EntityManager entityManager;

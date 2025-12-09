@@ -4,13 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import com.tagme.tagme_store_back.domain.exception.ResourceNotFoundException;
-import com.tagme.tagme_store_back.persistence.dao.jpa.ProductDao;
+import com.tagme.tagme_store_back.persistence.dao.jpa.ProductJpaDao;
 import com.tagme.tagme_store_back.persistence.dao.jpa.entity.ProductJpaEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 
-public class ProductJpaDaoImpl implements ProductDao {
+public class ProductJpaDaoImpl implements ProductJpaDao {
 
     @PersistenceContext
     private EntityManager entityManager;
