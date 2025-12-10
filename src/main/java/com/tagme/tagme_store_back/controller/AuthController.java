@@ -30,7 +30,7 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestHeader("Authorization") String token) {
-        authService.logout(token.replace("Bearer ", ""));
+        authService.logout(token.substring(7));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

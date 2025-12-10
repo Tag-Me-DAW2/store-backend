@@ -1,15 +1,11 @@
 package com.tagme.tagme_store_back.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tagme.tagme_store_back.controller.mapper.CategoryMapper;
 import com.tagme.tagme_store_back.controller.webModel.request.CategoryRequest;
-import com.tagme.tagme_store_back.controller.webModel.response.CategoryResponse;
 import com.tagme.tagme_store_back.domain.dto.CategoryDto;
-import com.tagme.tagme_store_back.domain.dto.ProductDto;
 import com.tagme.tagme_store_back.domain.exception.ResourceNotFoundException;
 import com.tagme.tagme_store_back.domain.service.AuthService;
 import com.tagme.tagme_store_back.domain.service.CategoryService;
-import com.tagme.tagme_store_back.domain.service.UserService;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -21,8 +17,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static org.instancio.Select.field;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
