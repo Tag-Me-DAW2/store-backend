@@ -5,6 +5,7 @@ import com.tagme.tagme_store_back.controller.webModel.request.ProductUpdateReque
 import com.tagme.tagme_store_back.controller.webModel.response.CategoryResponse;
 import com.tagme.tagme_store_back.controller.webModel.response.ProductDetailResponse;
 import com.tagme.tagme_store_back.controller.webModel.response.ProductSummaryResponse;
+import com.tagme.tagme_store_back.domain.dto.CategoryDto;
 import com.tagme.tagme_store_back.domain.dto.ProductDto;
 import com.tagme.tagme_store_back.domain.model.Product;
 import org.springframework.web.multipart.MultipartFile;
@@ -58,7 +59,7 @@ public class ProductMapper {
                 productInsertRequest.discountPercentage(),
                 null,
                 convertToBlob(productInsertRequest.image()),
-                CategoryMapper.fromCategoryResponseToCategoryDto(productInsertRequest.category())
+                new CategoryDto(productInsertRequest.categoryId(), null)
         );
     }
 
@@ -74,7 +75,7 @@ public class ProductMapper {
                 productUpdateRequest.discountPercentage(),
                 null,
                 convertToBlob(productUpdateRequest.image()),
-                CategoryMapper.fromCategoryResponseToCategoryDto(productUpdateRequest.category())
+                new CategoryDto(productUpdateRequest.categoryId(), null)
         );
     }
 

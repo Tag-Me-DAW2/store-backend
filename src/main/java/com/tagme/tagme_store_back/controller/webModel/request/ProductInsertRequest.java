@@ -12,6 +12,6 @@ public record ProductInsertRequest(
         BigDecimal basePrice,
         BigDecimal discountPercentage,
         String image,
-        CategoryResponse category
+        Long categoryId
 ) {
 }

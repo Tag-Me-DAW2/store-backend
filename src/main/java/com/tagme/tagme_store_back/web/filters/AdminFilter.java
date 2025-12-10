@@ -1,6 +1,6 @@
 package com.tagme.tagme_store_back.web.filters;
 
-import com.tagme.tagme_store_back.controller.webModel.UserResponse;
+import com.tagme.tagme_store_back.controller.webModel.response.UserResponse;
 import com.tagme.tagme_store_back.domain.model.UserRole;
 import com.tagme.tagme_store_back.web.context.AuthContext;
 import jakarta.servlet.*;
