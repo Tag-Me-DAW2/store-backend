@@ -1,6 +1,7 @@
 package com.tagme.tagme_store_back.domain.service.impl;
 
 import com.tagme.tagme_store_back.controller.webModel.request.LoginRequest;
+import com.tagme.tagme_store_back.domain.dto.LoginDto;
 import com.tagme.tagme_store_back.domain.dto.UserDto;
 import com.tagme.tagme_store_back.domain.exception.InvalidCredentialsException;
 import com.tagme.tagme_store_back.domain.repository.AuthRepository;
@@ -20,13 +21,13 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public String login(LoginRequest loginRequest) {
-        UserDto userDto = userRepository.findByEmail(loginRequest.email()).orElseThrow(() ->
+    public String login(LoginDto loginDto) {
+        UserDto userDto = userRepository.findByEmail(loginDto.email()).orElseThrow(() ->
                 new InvalidCredentialsException("Email o contraseña incorrectos")
         );
 
         boolean validPassword = PasswordUtils.verifyPassword(
-                loginRequest.password(),
+                loginDto.password(),
                 userDto.password()
         );
 

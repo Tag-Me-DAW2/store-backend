@@ -1,6 +1,7 @@
 package com.tagme.tagme_store_back.domain.service.impl;
 
 import com.tagme.tagme_store_back.controller.webModel.request.LoginRequest;
+import com.tagme.tagme_store_back.domain.dto.LoginDto;
 import com.tagme.tagme_store_back.domain.dto.UserDto;
 import com.tagme.tagme_store_back.domain.exception.InvalidCredentialsException;
 import com.tagme.tagme_store_back.domain.repository.AuthRepository;
@@ -35,7 +36,7 @@ class AuthServiceImplTest {
     @InjectMocks
     private AuthServiceImpl authService;
 
-    private LoginRequest loginRequest;
+    private LoginDto loginDto;
     private UserDto userDto;
 
     @Nested
@@ -43,31 +44,31 @@ class AuthServiceImplTest {
         @DisplayName("Test login method should work normally")
         @Test
         void testLoginSuccessful() {
-            loginRequest = Instancio.of(LoginRequest.class).withSeed(10).set(Select.field("password"),"password123").create();
+            loginDto = Instancio.of(LoginDto.class).withSeed(10).set(Select.field("password"),"password123").create();
             userDto = Instancio.of(UserDto.class).withSeed(10).set(Select.field("password"), PasswordUtils.hashPassword("password123")).create();
             UUID uuid = UUID.randomUUID();
 
             when(userRepository.findByEmail(any())).thenReturn(Optional.ofNullable(userDto));
             when(authRepository.createSession(any())).thenReturn(uuid);
 
-            assertEquals(uuid.toString(), authService.login(loginRequest).toString());
+            assertEquals(uuid.toString(), authService.login(loginDto).toString());
         }
 
         @DisplayName("Test login method should throw InvalidCredentialsException when email is incorrect or not present")
         @Test
         void testLoginInvalidEmail() {
-            loginRequest = Instancio.of(LoginRequest.class).withSeed(20).set(field("password"), "password123").create();
+            loginDto = Instancio.of(LoginDto.class).withSeed(20).set(field("password"), "password123").create();
             when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
-            assertThrows(InvalidCredentialsException.class, () -> authService.login(loginRequest));
+            assertThrows(InvalidCredentialsException.class, () -> authService.login(loginDto));
         }
 
         @DisplayName("Test login method should throw InvalidCredentialsException when password is incorrect")
         @Test
         void testLoginInvalidPassword() {
-            loginRequest = Instancio.of(LoginRequest.class).withSeed(30).set(field("password"), "wrongpassword").create();
+            loginDto = Instancio.of(LoginDto.class).withSeed(30).set(field("password"), "wrongpassword").create();
             userDto = Instancio.of(UserDto.class).withSeed(30).set(field("password"), PasswordUtils.hashPassword("correctpassword")).create();
             when(userRepository.findByEmail(any())).thenReturn(Optional.ofNullable(userDto));
-            assertThrows(InvalidCredentialsException.class, () -> authService.login(loginRequest));
+            assertThrows(InvalidCredentialsException.class, () -> authService.login(loginDto));
         }
     }
 
