@@ -1,16 +1,29 @@
 package com.tagme.tagme_store_back.spring;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tagme.tagme_store_back.domain.repository.AuthRepository;
+import com.tagme.tagme_store_back.domain.repository.CategoryRepository;
+import com.tagme.tagme_store_back.domain.repository.ProductRepository;
 import com.tagme.tagme_store_back.domain.repository.UserRepository;
 import com.tagme.tagme_store_back.domain.service.AuthService;
+import com.tagme.tagme_store_back.domain.service.CategoryService;
+import com.tagme.tagme_store_back.domain.service.ProductService;
 import com.tagme.tagme_store_back.domain.service.UserService;
 import com.tagme.tagme_store_back.domain.service.impl.AuthServiceImpl;
+import com.tagme.tagme_store_back.domain.service.impl.CategoryServiceImpl;
+import com.tagme.tagme_store_back.domain.service.impl.ProductServiceImpl;
 import com.tagme.tagme_store_back.domain.service.impl.UserServiceImpl;
 import com.tagme.tagme_store_back.persistence.dao.jpa.AuthJpaDao;
+import com.tagme.tagme_store_back.persistence.dao.jpa.CategoryJpaDao;
+import com.tagme.tagme_store_back.persistence.dao.jpa.ProductJpaDao;
 import com.tagme.tagme_store_back.persistence.dao.jpa.UserJpaDao;
 import com.tagme.tagme_store_back.persistence.dao.jpa.impl.AuthJpaDaoImpl;
+import com.tagme.tagme_store_back.persistence.dao.jpa.impl.CategoryJpaDaoImpl;
+import com.tagme.tagme_store_back.persistence.dao.jpa.impl.ProductJpaDaoImpl;
 import com.tagme.tagme_store_back.persistence.dao.jpa.impl.UserJpaDaoImpl;
 import com.tagme.tagme_store_back.persistence.repository.AuthRepositoryImpl;
+import com.tagme.tagme_store_back.persistence.repository.CategoryRepositoryImpl;
+import com.tagme.tagme_store_back.persistence.repository.ProductRepositoryImpl;
 import com.tagme.tagme_store_back.persistence.repository.UserRepositoryImpl;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
@@ -50,5 +63,40 @@ public class SpringConfig {
     @Bean
     public AuthService authService(AuthRepository authRepository, UserRepository userRepository) {
         return new AuthServiceImpl(authRepository, userRepository);
+    }
+
+    @Bean
+    public CategoryJpaDao categoryJpaDao() {
+        return new CategoryJpaDaoImpl();
+    }
+
+    @Bean
+    public CategoryRepository categoryRepository(CategoryJpaDao categoryJpaDao) {
+        return new CategoryRepositoryImpl(categoryJpaDao);
+    }
+
+    @Bean
+    public CategoryService categoryService(CategoryRepository categoryRepository) {
+        return new CategoryServiceImpl(categoryRepository);
+    }
+
+    @Bean
+    public ProductJpaDao productJpaDao() {
+        return new ProductJpaDaoImpl();
+    }
+
+    @Bean
+    public ProductRepository productRepository(ProductJpaDao productJpaDao) {
+        return new ProductRepositoryImpl(productJpaDao);
+    }
+
+    @Bean
+    public ProductService productService(ProductRepository productRepository, CategoryRepository categoryRepository) {
+        return new ProductServiceImpl(productRepository, categoryRepository);
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 }

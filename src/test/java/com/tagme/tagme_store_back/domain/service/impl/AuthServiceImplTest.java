@@ -1,6 +1,6 @@
 package com.tagme.tagme_store_back.domain.service.impl;
 
-import com.tagme.tagme_store_back.controller.webModel.LoginRequest;
+import com.tagme.tagme_store_back.controller.webModel.request.LoginRequest;
 import com.tagme.tagme_store_back.domain.dto.UserDto;
 import com.tagme.tagme_store_back.domain.exception.InvalidCredentialsException;
 import com.tagme.tagme_store_back.domain.repository.AuthRepository;
@@ -8,7 +8,6 @@ import com.tagme.tagme_store_back.domain.repository.UserRepository;
 import com.tagme.tagme_store_back.domain.utils.PasswordUtils;
 import org.instancio.Instancio;
 import org.instancio.Select;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

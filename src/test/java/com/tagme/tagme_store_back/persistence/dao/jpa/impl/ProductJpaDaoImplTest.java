@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,7 +31,7 @@ class ProductJpaDaoImplTest extends BaseJpaDaoTest<ProductJpaDao> {
             assertAll(
                     () -> assertNotNull(result),
                     () -> assertEquals(size, result.size()),
-                    () -> assertEquals(1L, result.get(0).getId()),
+                    () -> assertEquals(1L, result.getFirst().getId()),
                     () -> assertEquals(5L, result.getLast().getId())
             );
         }
@@ -42,16 +43,17 @@ class ProductJpaDaoImplTest extends BaseJpaDaoTest<ProductJpaDao> {
         @Test
         void findByExistingId() {
             Long productId = 1L;
-            ProductJpaEntity expectedProduct = dao.findById(productId).get();
+            Optional<ProductJpaEntity> expectedProduct = dao.findById(productId);
 
-            assertNotNull(expectedProduct);
+            assertTrue(expectedProduct.isPresent());
         }
 
         @DisplayName("Given a non-existing product ID, when findById is called, then an empty Optional is returned")
         @Test
         void findByNonExistingId() {
             Long productId = 999L;
-            assertTrue(dao.findById(productId).isEmpty());
+            Optional<ProductJpaEntity> product = dao.findById(productId);
+            assertTrue(product.isEmpty());
         }
     }
 
@@ -76,8 +78,10 @@ class ProductJpaDaoImplTest extends BaseJpaDaoTest<ProductJpaDao> {
             Long categoryId = 999L;
             List<ProductJpaEntity> products = dao.findProductsByCategoryId(categoryId);
 
-            assertNotNull(products);
-            assertTrue(products.isEmpty());
+            assertAll(
+                    () -> assertNotNull(products),
+                    () -> assertTrue(products.isEmpty())
+            );
         }
     }
 
@@ -109,13 +113,14 @@ class ProductJpaDaoImplTest extends BaseJpaDaoTest<ProductJpaDao> {
 
             assertAll(
                     () -> assertNotNull(insertedProduct),
-                    () -> assertNotNull(insertedProduct.getId())
+                    () -> assertNotNull(insertedProduct.getId()),
+                    () -> assertEquals(newProduct.getName(), insertedProduct.getName())
             );
         }
     }
 
     @Nested
-    class  UpdateTests {
+    class UpdateTests {
         @DisplayName("Update existing product should be reflected")
         @Test
         void updateExistingProduct() {
@@ -141,4 +146,12 @@ class ProductJpaDaoImplTest extends BaseJpaDaoTest<ProductJpaDao> {
         }
     }
 
+    @Test
+    void count_ShouldReturnTotalNumberOfProducts() {
+        Long expectedCount = (long) dao.findAll(1, Integer.MAX_VALUE).size();
+
+        Long count = dao.count();
+
+        assertEquals(expectedCount, count);
+    }
 }

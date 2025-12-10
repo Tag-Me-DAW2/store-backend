@@ -1,4 +1,4 @@
-package com.tagme.tagme_store_back.controller.webModel;
+package com.tagme.tagme_store_back.controller.webModel.response;
 
 public record UserResponse(
         Long id,

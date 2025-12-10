@@ -41,6 +41,10 @@ public class CategoryJpaEntity implements Serializable {
         this.name = name;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

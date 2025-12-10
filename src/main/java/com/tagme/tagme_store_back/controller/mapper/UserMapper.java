@@ -1,6 +1,6 @@
 package com.tagme.tagme_store_back.controller.mapper;
 
-import com.tagme.tagme_store_back.controller.webModel.UserResponse;
+import com.tagme.tagme_store_back.controller.webModel.response.UserResponse;
 import com.tagme.tagme_store_back.domain.dto.UserDto;
 
 public class UserMapper {

@@ -1,6 +1,6 @@
 package com.tagme.tagme_store_back.web.context;
 
-import com.tagme.tagme_store_back.controller.webModel.UserResponse;
+import com.tagme.tagme_store_back.controller.webModel.response.UserResponse;
 
 public class AuthContext {
     private static final ThreadLocal<UserResponse> contextHolder = new ThreadLocal<>();

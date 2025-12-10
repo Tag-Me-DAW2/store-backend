@@ -1,7 +1,7 @@
 package com.tagme.tagme_store_back.web.filters;
 
 import com.tagme.tagme_store_back.controller.mapper.UserMapper;
-import com.tagme.tagme_store_back.controller.webModel.UserResponse;
+import com.tagme.tagme_store_back.controller.webModel.response.UserResponse;
 import com.tagme.tagme_store_back.domain.service.UserService;
 import com.tagme.tagme_store_back.web.context.AuthContext;
 import jakarta.servlet.*;

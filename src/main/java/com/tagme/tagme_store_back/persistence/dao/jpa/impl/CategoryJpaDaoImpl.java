@@ -13,39 +13,37 @@ public class CategoryJpaDaoImpl implements CategoryJpaDao {
 
     @PersistenceContext
     private EntityManager entityManager;
-    
+
     @Override
     public List<CategoryJpaEntity> findAll() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findAll'");
+        String sql = "SELECT c FROM CategoryJpaEntity c";
+        return entityManager.createQuery(sql, CategoryJpaEntity.class).getResultList();
     }
 
     @Override
     public Optional<CategoryJpaEntity> findById(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findById'");
+        return Optional.ofNullable(entityManager.find(CategoryJpaEntity.class, id));
     }
 
     @Override
     public void deleteById(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteById'");
+        entityManager.remove(entityManager.find(CategoryJpaEntity.class, id));
     }
 
     @Override
     public CategoryJpaEntity insert(CategoryJpaEntity categoryJpaEntity) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'save'");
+        entityManager.persist(categoryJpaEntity);
+        return categoryJpaEntity;
     }
 
     @Override
     public CategoryJpaEntity update(CategoryJpaEntity categoryJpaEntity) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+        return entityManager.merge(categoryJpaEntity);
     }
 
     @Override
     public Long count() {
-        return 0L;
+        String sql = "SELECT COUNT(c) FROM CategoryJpaEntity c";
+        return entityManager.createQuery(sql, Long.class).getSingleResult();
     }
 }

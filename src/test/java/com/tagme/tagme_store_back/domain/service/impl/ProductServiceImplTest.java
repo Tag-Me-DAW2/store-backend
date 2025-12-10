@@ -117,7 +117,7 @@ class ProductServiceImplTest {
         @Test
         void whenCategoryIdIsValid_ShouldReturnProductsList() {
             when(productRepository.findProductsByCategoryId(1L)).thenReturn(List.of(productDto1, productDto2));
-            when(categoryRepository.findById(1L)).thenReturn(Optional.of(new Category(1L, "Electronics")));
+            when(categoryRepository.findById(1L)).thenReturn(Optional.of(new CategoryDto(1L, "Electronics")));
 
             List<ProductDto> result = productService.getProductsByCategoryId(1L);
 
@@ -174,7 +174,7 @@ class ProductServiceImplTest {
         @DisplayName("When category exists, should create product")
         @Test
         void whenCategoryExists_ShouldCreateProduct() {
-            when(categoryRepository.findById(productDto3.category().id())).thenReturn(Optional.of(new Category(productDto3.category().id(), productDto3.category().name())));
+            when(categoryRepository.findById(productDto3.category().id())).thenReturn(Optional.of(new CategoryDto(productDto3.category().id(), productDto3.category().name())));
             when(productRepository.save(productDto3)).thenReturn(productDto3);
 
             ProductDto result = productService.create(productDto3);
@@ -200,7 +200,7 @@ class ProductServiceImplTest {
         @Test
         void whenProductAndCategoryExist_ShouldUpdateProduct() {
             when(productRepository.findById(productDto3.id())).thenReturn(Optional.of(productDto3));
-            when(categoryRepository.findById(productDto3.category().id())).thenReturn(Optional.of(new Category(productDto3.category().id(), productDto3.category().name())));
+            when(categoryRepository.findById(productDto3.category().id())).thenReturn(Optional.of(new CategoryDto(productDto3.category().id(), productDto3.category().name())));
             when(productRepository.save(productDto3)).thenReturn(productDto3);
 
             ProductDto result = productService.update(productDto3);

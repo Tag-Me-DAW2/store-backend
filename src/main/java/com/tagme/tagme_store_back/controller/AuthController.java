@@ -1,6 +1,6 @@
 package com.tagme.tagme_store_back.controller;
 
-import com.tagme.tagme_store_back.controller.webModel.LoginRequest;
+import com.tagme.tagme_store_back.controller.webModel.request.LoginRequest;
 import com.tagme.tagme_store_back.domain.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
