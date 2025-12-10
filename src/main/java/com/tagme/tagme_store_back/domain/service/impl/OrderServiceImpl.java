@@ -48,7 +48,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void delete(Long orderId) {
+    public void deleteById(Long orderId) {
         if (orderRepository.getStatus(orderId).isEmpty()) {
             throw new RuntimeException("The order with id " + orderId + " does not exist.");
         }
