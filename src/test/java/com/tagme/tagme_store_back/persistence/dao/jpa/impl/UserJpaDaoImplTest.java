@@ -113,4 +113,34 @@ class UserJpaDaoImplTest extends BaseJpaDaoTest<UserJpaDao> {
             assertEquals(originalPassword, reloaded.getPassword());
         }
     }
+
+    @Nested
+    class DeleteByIdTests {
+        @DisplayName("Given an existing user ID, when deleteById is called, then the user is deleted")
+        @Test
+        void deleteByExistingId() {
+            Long userId = 1L;
+            Long countBeforeDelete = dao.count();
+            dao.deleteById(userId);
+            Long countAfterDelete = dao.count();
+            assertAll(
+                    () -> assertEquals(countBeforeDelete - 1, countAfterDelete),
+                    () -> assertTrue(dao.findById(userId).isEmpty())
+            );
+        }
+
+        @DisplayName("Given a non-existing user ID, when deleteById is called, shoul throw RuntimeException")
+        @Test
+        void deleteByNonExistingId() {
+            Long userId = 999L;
+            assertThrows(RuntimeException.class, () -> dao.deleteById(userId));
+        }
+
+        @DisplayName("Given a null user ID, when deleteById is called, then should throw RuntameException")
+        @Test
+        void deleteByNullId() {
+            Long userId = null;
+            assertThrows(RuntimeException.class, () -> dao.deleteById(userId));
+        }
+    }
 }

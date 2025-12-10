@@ -69,8 +69,7 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("User id cannot be null");
         }
 
-        UserDto userDto = getById(id);
-        if(userDto == null) throw new ResourceNotFoundException("User with id " + id + " not found");
+        getById(id); // Verify user exists
 
         userRepository.deleteById(id);
     }
