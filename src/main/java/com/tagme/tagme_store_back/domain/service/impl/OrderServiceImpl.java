@@ -12,6 +12,7 @@ import com.tagme.tagme_store_back.domain.model.User;
 import com.tagme.tagme_store_back.domain.repository.OrderRepository;
 import com.tagme.tagme_store_back.domain.repository.UserRepository;
 import com.tagme.tagme_store_back.domain.service.OrderService;
+import jakarta.transaction.Transactional;
 
 public class OrderServiceImpl implements OrderService {
     private OrderRepository orderRepository;
@@ -23,6 +24,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderDto create(OrderDto orderDto) {
         Order order = OrderMapper.fromOrderDtoToOrder(orderDto);
         OrderDto orderToCreate = OrderMapper.fromOrderToOrderDto(order);
@@ -30,6 +32,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderDto update(OrderDto orderDto) {
         Order order = OrderMapper.fromOrderDtoToOrder(orderDto);
 
@@ -44,6 +47,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void delete(Long orderId) {
         if (orderRepository.getStatus(orderId).isEmpty()) {
             throw new RuntimeException("The order with id " + orderId + " does not exist.");
