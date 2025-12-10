@@ -33,25 +33,6 @@ class UserJpaDaoImplTest extends BaseJpaDaoTest<UserJpaDao> {
     }
 
     @Nested
-    class FindByTokenTests {
-        @DisplayName("Given an existing token, when findByToken is called, then the corresponding user is returned")
-        @Test
-        void findByExistingToken() {
-            String token = "example-token-1234567890";
-            UserJpaEntity expectedUser = dao.findByToken(token).get();
-
-            assertNotNull(expectedUser);
-        }
-
-        @DisplayName("Given a non-existing token, when findByToken is called, then an empty Optional is returned")
-        @Test
-        void findByNonExistingToken() {
-            String token = "invalid-token";
-            assertTrue(dao.findByToken(token).isEmpty());
-        }
-    }
-
-    @Nested
     class FindByIdTests {
         @DisplayName("Given an existing user ID, when findById is called, then the corresponding user is returned")
         @Test

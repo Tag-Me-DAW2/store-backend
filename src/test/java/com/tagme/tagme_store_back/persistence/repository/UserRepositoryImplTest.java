@@ -103,27 +103,6 @@ class UserRepositoryImplTest {
     }
 
     @Nested
-    class FindByTokenTests {
-        @DisplayName("findByToken with valid token should return UserDto")
-        @Test
-        void findByValidToken_ShouldReturnUserDto() {
-            String token = "valid-token";
-            when(userJpaDao.findByToken(token)).thenReturn(Optional.of(userJpaEntity));
-            Optional<UserDto> result = userRepositoryImpl.findByToken(token);
-            assertEquals(userDto, result.get());
-        }
-
-        @DisplayName("findByToken with invalid token should return empty Optional")
-        @Test
-        void findByInvalidToken_ShouldReturnEmptyOptional() {
-            String token = "invalid-token";
-            when(userJpaDao.findByToken(token)).thenReturn(Optional.empty());
-            Optional<UserDto> result = userRepositoryImpl.findByToken(token);
-            assertTrue(result.isEmpty());
-        }
-    }
-
-    @Nested
     class FindByEmailTests {
         @DisplayName("findByEmail with valid email should return UserDto")
         @Test

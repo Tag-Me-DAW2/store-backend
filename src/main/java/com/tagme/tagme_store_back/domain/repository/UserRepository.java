@@ -8,6 +8,5 @@ public interface UserRepository {
     Optional<UserDto> findById(Long id);
     UserDto save(UserDto userDto);
     void deleteById(Long id);
-    Optional<UserDto> findByToken(String token);
     Optional<UserDto> findByEmail(String email);
 }

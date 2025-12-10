@@ -47,4 +47,9 @@ public class AuthServiceImpl implements AuthService {
 
         authRepository.logout(token);
     }
+
+    @Override
+    public UserDto getByToken(String token) {
+        return authRepository.findByToken(token).orElse(null);
+    }
 }

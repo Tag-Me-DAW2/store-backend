@@ -3,6 +3,7 @@ package com.tagme.tagme_store_back.persistence.dao.jpa.impl;
 import com.tagme.tagme_store_back.annotation.DaoTest;
 import com.tagme.tagme_store_back.domain.exception.ResourceNotFoundException;
 import com.tagme.tagme_store_back.persistence.dao.jpa.AuthJpaDao;
+import com.tagme.tagme_store_back.persistence.dao.jpa.entity.UserJpaEntity;
 import com.tagme.tagme_store_back.spring.SpringConfig;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -49,6 +50,25 @@ class AuthJpaDaoImplTest extends BaseJpaDaoTest<AuthJpaDao> {
             Long totalSessionsAfter = dao.count();
 
             assertEquals(totalSessionsBefore - 1, totalSessionsAfter);
+        }
+    }
+
+    @Nested
+    class FindByTokenTests {
+        @DisplayName("Given an existing token, when findByToken is called, then the corresponding user is returned")
+        @Test
+        void findByExistingToken() {
+            String token = "example-token-1234567890";
+            UserJpaEntity expectedUser = dao.findByToken(token).get();
+
+            assertNotNull(expectedUser);
+        }
+
+        @DisplayName("Given a non-existing token, when findByToken is called, then an empty Optional is returned")
+        @Test
+        void findByNonExistingToken() {
+            String token = "invalid-token";
+            assertTrue(dao.findByToken(token).isEmpty());
         }
     }
 }

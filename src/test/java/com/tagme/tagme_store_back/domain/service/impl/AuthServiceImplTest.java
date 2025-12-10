@@ -95,4 +95,29 @@ class AuthServiceImplTest {
             assertThrows(InvalidCredentialsException.class, () -> authService.logout(token));
         }
     }
+
+    @Nested
+    class GetByTokenTests {
+        @DisplayName("Given existing token, when getByToken is called, then return the corresponding UserDto")
+        @Test
+        void testGetByTokenExisting() {
+            String token = "valid-token";
+            when(authRepository.findByToken(any())).thenReturn(Optional.ofNullable(userDto));
+
+            UserDto actualUser = authService.getByToken(token);
+
+            assertEquals(userDto, actualUser);
+        }
+
+        @DisplayName("Given non-existing token, when getByToken is called, then return null")
+        @Test
+        void testGetByTokenNonExisting() {
+            String token = "invalid-token";
+            when(authRepository.findByToken(any())).thenReturn(Optional.empty());
+
+            UserDto actualUser = authService.getByToken(token);
+
+            assertNull(actualUser);
+        }
+    }
 }

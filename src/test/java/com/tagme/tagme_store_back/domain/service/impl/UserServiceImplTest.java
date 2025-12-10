@@ -143,29 +143,4 @@ class UserServiceImplTest {
             assertThrows(RuntimeException.class, () -> userService.deleteById(null));
         }
     }
-
-    @Nested
-    class GetByTokenTests {
-        @DisplayName("Given existing token, when getByToken is called, then return the corresponding UserDto")
-        @Test
-        void testGetByTokenExisting() {
-            String token = "valid-token";
-            when(userRepository.findByToken(any())).thenReturn(Optional.of(userDto1));
-
-            UserDto actualUser = userService.getByToken(token);
-
-            assertEquals(userDto1, actualUser);
-        }
-
-        @DisplayName("Given non-existing token, when getByToken is called, then return null")
-        @Test
-        void testGetByTokenNonExisting() {
-            String token = "invalid-token";
-            when(userRepository.findByToken(any())).thenReturn(Optional.empty());
-
-            UserDto actualUser = userService.getByToken(token);
-
-            assertNull(actualUser);
-        }
-    }
 }

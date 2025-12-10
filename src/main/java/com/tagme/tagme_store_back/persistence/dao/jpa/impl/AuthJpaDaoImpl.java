@@ -9,6 +9,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 public class AuthJpaDaoImpl implements AuthJpaDao {
@@ -46,5 +47,19 @@ public class AuthJpaDaoImpl implements AuthJpaDao {
     @Override
     public Long count() {
         return entityManager.createQuery("SELECT COUNT(s) FROM SessionJpaEntity s", Long.class).getSingleResult();
+    }
+
+    @Override
+    public Optional<UserJpaEntity> findByToken(String token) {
+        String sql = "SELECT s.user FROM SessionJpaEntity s WHERE s.token = :token";
+
+        try {
+            UserJpaEntity user = entityManager.createQuery(sql, UserJpaEntity.class)
+                    .setParameter("token", token)
+                    .getSingleResult();
+            return Optional.ofNullable(user);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 }

@@ -28,20 +28,6 @@ public class UserJpaDaoImpl implements UserJpaDao {
     }
 
     @Override
-    public Optional<UserJpaEntity> findByToken(String token) {
-        String sql = "SELECT s.user FROM SessionJpaEntity s WHERE s.token = :token";
-
-        try {
-            UserJpaEntity user = entityManager.createQuery(sql, UserJpaEntity.class)
-                    .setParameter("token", token)
-                    .getSingleResult();
-            return Optional.ofNullable(user);
-        } catch (Exception e) {
-            return Optional.empty();
-        }
-    }
-
-    @Override
     public Optional<UserJpaEntity> findById(Long id) {
         return Optional.ofNullable(entityManager.find(UserJpaEntity.class, id));
     }

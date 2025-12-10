@@ -2,7 +2,7 @@ package com.tagme.tagme_store_back.web.filters;
 
 import com.tagme.tagme_store_back.controller.mapper.UserMapper;
 import com.tagme.tagme_store_back.controller.webModel.response.UserResponse;
-import com.tagme.tagme_store_back.domain.service.UserService;
+import com.tagme.tagme_store_back.domain.service.AuthService;
 import com.tagme.tagme_store_back.web.context.AuthContext;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,7 +19,7 @@ import java.io.IOException;
 public class AuhtFilter implements Filter {
 
     @Autowired
-    private UserService userService;
+    private AuthService authService;
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -33,7 +33,7 @@ public class AuhtFilter implements Filter {
         }
 
         String token = authHeader.substring(7);
-        UserResponse userResponse = UserMapper.fromUserDtoToUserResponse(userService.getByToken(token));
+        UserResponse userResponse = UserMapper.fromUserDtoToUserResponse(authService.getByToken(token));
 
         if(userResponse != null) {
             AuthContext.setUser(userResponse);

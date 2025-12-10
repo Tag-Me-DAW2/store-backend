@@ -8,6 +8,7 @@ import com.tagme.tagme_store_back.domain.dto.CategoryDto;
 import com.tagme.tagme_store_back.domain.dto.ProductDto;
 import com.tagme.tagme_store_back.domain.exception.ResourceNotFoundException;
 import com.tagme.tagme_store_back.domain.model.Page;
+import com.tagme.tagme_store_back.domain.service.AuthService;
 import com.tagme.tagme_store_back.domain.service.ProductService;
 import com.tagme.tagme_store_back.domain.service.UserService;
 import org.instancio.Instancio;
@@ -37,7 +38,7 @@ class ProductControllerTest {
     private ProductService productService;
 
     @MockitoBean
-    private UserService userService;
+    private AuthService authService;
 
     @Autowired
     private MockMvc mockMvc;

@@ -63,11 +63,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getByToken(String token) {
-        return userRepository.findByToken(token).orElse(null);
-    }
-
-    @Override
     @Transactional
     public void deleteById(Long id) {
         if (id == null) {
