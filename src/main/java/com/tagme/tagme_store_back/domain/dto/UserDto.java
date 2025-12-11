@@ -11,7 +11,6 @@ public record UserDto(
         Long id,
         @NotBlank(message = "Username cannot be empty or null")
         String username,
-        @NotBlank(message = "Password cannot be empty or null")
         String password,
         @ValidEmail
         String email,

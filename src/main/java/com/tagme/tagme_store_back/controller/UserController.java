@@ -1,0 +1,63 @@
+package com.tagme.tagme_store_back.controller;
+
+import com.tagme.tagme_store_back.controller.mapper.UserMapper;
+import com.tagme.tagme_store_back.controller.webModel.request.UserInsertRequest;
+import com.tagme.tagme_store_back.controller.webModel.request.UserUpdateRequest;
+import com.tagme.tagme_store_back.controller.webModel.response.UserResponse;
+import com.tagme.tagme_store_back.domain.dto.UserDto;
+import com.tagme.tagme_store_back.domain.exception.BusinessException;
+import com.tagme.tagme_store_back.domain.service.UserService;
+import com.tagme.tagme_store_back.domain.validation.DtoValidator;
+import com.tagme.tagme_store_back.web.context.AuthContext;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/users")
+public class UserController {
+    private UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
+        UserResponse userResponse = UserMapper.fromUserDtoToUserResponse(userService.getById(id));
+        return ResponseEntity.ok(userResponse);
+    }
+
+    @PostMapping
+    public ResponseEntity<UserResponse> createUser(@RequestBody UserInsertRequest userInsertRequest) {
+        UserDto userDto = UserMapper.fromUserInsertRequestToUserDto(userInsertRequest);
+        DtoValidator.validate(userDto);
+
+        UserResponse createdUser = UserMapper.fromUserDtoToUserResponse(userService.create(userDto));
+        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @RequestBody UserUpdateRequest userUpdateRequest) {
+        if(!id.equals(userUpdateRequest.id())) {
+            throw new BusinessException("ID in path and request body do not match");
+        }
+
+        UserDto userDto = UserMapper.fromUserUpdateRequestToUserDto(userUpdateRequest);
+        DtoValidator.validate(userDto);
+
+        UserResponse updatedUser = UserMapper.fromUserDtoToUserResponse(userService.update(userDto));
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<UserResponse> deleteUser(@PathVariable Long id) {
+        UserResponse sessionUser = AuthContext.getUser();
+        if(!sessionUser.id().equals(id)) {
+            throw new BusinessException("Users can only delete their own accounts");
+        }
+
+        userService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+}

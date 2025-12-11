@@ -49,10 +49,6 @@ class UserDtoTest {
                 Arguments.of("username", ""),
                 Arguments.of("username", " "),
 
-                Arguments.of("password", null),
-                Arguments.of("password", ""),
-                Arguments.of("password", " "),
-
                 Arguments.of("email", null),
                 Arguments.of("email", ""),
                 Arguments.of("email", " "),
