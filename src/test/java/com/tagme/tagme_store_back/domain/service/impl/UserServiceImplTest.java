@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
+import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -82,6 +83,17 @@ class UserServiceImplTest {
             when(userRepository.findByEmail(any())).thenReturn(Optional.of(userDto1));
 
             assertThrows(BusinessException.class, () -> userService.create(userDto1));
+        }
+
+        @DisplayName("Given empty password, when create is called, then throw BusinessException")
+        @Test
+        void testCreateEmptyPassword() {
+            UserDto userWithEmptyPassword = Instancio.of(UserDto.class)
+                    .set(field(UserDto::password), "")
+                    .create();
+            when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
+
+            assertThrows(BusinessException.class, () -> userService.create(userWithEmptyPassword));
         }
     }
 

@@ -36,6 +36,10 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException("Email " + userDto.email() + " is already in use");
         }
 
+        if (userDto.password().isEmpty()) {
+            throw new BusinessException("Password cannot be empty");
+        }
+
         User userModel = UserMapper.fromUserDtoToUser(userDto);
         userModel.setPassword(PasswordUtils.hashPassword(userModel.getPassword()));
         UserDto userHashed = UserMapper.fromUserToUserDto(userModel);
