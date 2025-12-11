@@ -15,8 +15,8 @@ public class UserMapper {
         return new UserDto(
                 userJpaEntity.getId(),
                 userJpaEntity.getUsername(),
-                userJpaEntity.getEmail(),
                 userJpaEntity.getPassword(),
+                userJpaEntity.getEmail(),
                 userJpaEntity.getFirstName(),
                 userJpaEntity.getLastName(),
                 userJpaEntity.getPhone(),

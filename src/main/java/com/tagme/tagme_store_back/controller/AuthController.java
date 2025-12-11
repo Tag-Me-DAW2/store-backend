@@ -9,8 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin("http://localhost:4200")
 public class AuthController {
 
     private final AuthService authService;
@@ -20,12 +23,12 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequest loginRequest) {
         DtoValidator.validate(loginRequest);
 
         LoginDto loginDto = LoginMapper.fromLoginRequestToLoginDto(loginRequest);
         String token = authService.login(loginDto);
-        return new ResponseEntity<>(token, HttpStatus.OK);
+        return ResponseEntity.ok(Map.of("token", token));
     }
 
     @PostMapping("/logout")
