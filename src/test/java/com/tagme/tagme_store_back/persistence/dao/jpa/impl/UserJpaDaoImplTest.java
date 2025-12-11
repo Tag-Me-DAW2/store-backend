@@ -129,14 +129,14 @@ class UserJpaDaoImplTest extends BaseJpaDaoTest<UserJpaDao> {
             );
         }
 
-        @DisplayName("Given a non-existing user ID, when deleteById is called, shoul throw RuntimeException")
+        @DisplayName("Given a non-existing user ID, when deleteById is called, should throw ResourceNotFoundException")
         @Test
         void deleteByNonExistingId() {
             Long userId = 999L;
-            assertThrows(RuntimeException.class, () -> dao.deleteById(userId));
+            assertThrows(ResourceNotFoundException.class, () -> dao.deleteById(userId));
         }
 
-        @DisplayName("Given a null user ID, when deleteById is called, then should throw RuntameException")
+        @DisplayName("Given a null user ID, when deleteById is called, then should throw RuntimeException")
         @Test
         void deleteByNullId() {
             Long userId = null;

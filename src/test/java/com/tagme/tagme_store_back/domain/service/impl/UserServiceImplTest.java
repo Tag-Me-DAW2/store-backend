@@ -129,12 +129,12 @@ class UserServiceImplTest {
             assertDoesNotThrow(() -> userService.deleteById(userDto1.id()));
         }
 
-        @DisplayName("Given non-existing user ID, when delete is called, then throw RuntimeException")
+        @DisplayName("Given non-existing user ID, when delete is called, then throw ResourceNotFoundException")
         @Test
         void testDeleteNonExistingUser() {
             when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-            assertThrows(RuntimeException.class, () -> userService.deleteById(9999999L));
+            assertThrows(ResourceNotFoundException.class, () -> userService.deleteById(9999999L));
         }
 
         @DisplayName("Given null user ID, when delete is called, then throw RuntimeException")

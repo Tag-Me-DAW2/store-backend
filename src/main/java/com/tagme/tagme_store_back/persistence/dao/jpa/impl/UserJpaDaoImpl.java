@@ -59,6 +59,10 @@ public class UserJpaDaoImpl implements UserJpaDao {
 
     @Override
     public void deleteById(Long id) {
+        UserJpaEntity managed = entityManager.find(UserJpaEntity.class, id);
+        if (managed == null) {
+            throw new ResourceNotFoundException("User not found");
+        }
         entityManager.remove(entityManager.find(UserJpaEntity.class, id));
     }
 
