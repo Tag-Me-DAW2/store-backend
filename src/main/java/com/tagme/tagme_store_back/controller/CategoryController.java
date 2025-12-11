@@ -33,33 +33,4 @@ public class CategoryController {
         CategoryResponse categoryResponse = CategoryMapper.fromCategoryDtoToCategoryResponse(categoryService.getById(id));
         return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
     }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategoryById(@PathVariable Long id) {
-        categoryService.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    @PostMapping
-    public ResponseEntity<CategoryResponse> createCategory(@RequestBody CategoryRequest categoryInsertRequest) {
-        CategoryDto categoryDto = categoryService.create(CategoryMapper.fromCategoryRequestToCategoryDto(categoryInsertRequest));
-        DtoValidator.validate(categoryDto);
-
-        CategoryResponse categoryResponse = CategoryMapper.fromCategoryDtoToCategoryResponse(categoryService.create(categoryDto));
-
-        return new ResponseEntity<>(categoryResponse, HttpStatus.CREATED);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<CategoryResponse> updateCategory(@PathVariable Long id, @RequestBody CategoryRequest categoryRequest) {
-        if (!id.equals(categoryRequest.id())) {
-            throw new BusinessException("ID in path and request body must match");
-        }
-        CategoryDto categoryDto = CategoryMapper.fromCategoryRequestToCategoryDto(categoryRequest);
-        DtoValidator.validate(categoryDto);
-
-        CategoryResponse categoryResponse = CategoryMapper.fromCategoryDtoToCategoryResponse(categoryService.update(categoryDto));
-
-        return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
-    }
 }

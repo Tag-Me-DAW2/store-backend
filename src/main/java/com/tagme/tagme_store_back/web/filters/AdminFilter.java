@@ -23,7 +23,7 @@ public class AdminFilter implements Filter {
         if (path.startsWith("/admin")) {
             UserResponse user = AuthContext.getUser();
 
-            if (!user.role().equals(UserRole.ADMIN)) {
+            if (!user.role().toString().equals(UserRole.ADMIN.toString())) {
                 httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden");
                 return;
             }
