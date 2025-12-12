@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
+import java.sql.Blob;
+
 public record UserDto(
         Long id,
         @NotBlank(message = "Username cannot be empty or null")
@@ -19,6 +21,8 @@ public record UserDto(
         String lastName,
         @Pattern(regexp = "^\\+?[1-9]\\d{6,14}$", message = "Phone number must be a valid international phone number")
         String phone,
+        @NotNull(message = "Image cannot be null")
+        Blob profilePicture,
         @NotNull(message = "Role cannot be null")
         UserRole role
 ) {

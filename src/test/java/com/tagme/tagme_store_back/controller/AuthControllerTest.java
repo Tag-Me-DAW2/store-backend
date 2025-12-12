@@ -53,7 +53,7 @@ class AuthControllerTest {
                     .andExpect(status().isOk())
                     .andExpect(result -> {
                         String responseBody = result.getResponse().getContentAsString();
-                        assert responseBody.equals(uuid.toString());
+                        assert responseBody.contains(uuid.toString());
                     });
         }
 

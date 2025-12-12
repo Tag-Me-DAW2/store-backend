@@ -1,11 +1,11 @@
 -- ==========================================
 -- USERS
 -- ==========================================
-INSERT INTO tb_users (username, email, password, first_name, last_name, phone, role)
+INSERT INTO tb_users (username, email, password, first_name, last_name, phone, profile_picture, role)
 VALUES
-    ('admin', 'admin@example.com', '$2a$10$2yH7qG19E2Hq8dH1kzPrQeJmGCWl7ZTWWc7hD5VbZ3X2t8iE1iL6y', 'System', 'Admin', '600000000', 'ADMIN'),
-    ('jdoe', 'john.doe@example.com', '$2a$10$2yH7qG19E2Hq8dH1kzPrQeJmGCWl7ZTWWc7hD5VbZ3X2t8iE1iL6y', 'John', 'Doe', '611111111', 'CUSTOMER'),
-    ('msmith', 'mary.smith@example.com', '$2a$10$2yH7qG19E2Hq8dH1kzPrQeJmGCWl7ZTWWc7hD5VbZ3X2t8iE1iL6y', 'Mary', 'Smith', '622222222', 'CUSTOMER');
+    ('admin', 'admin@example.com', '$2a$10$2yH7qG19E2Hq8dH1kzPrQeJmGCWl7ZTWWc7hD5VbZ3X2t8iE1iL6y', 'System', 'Admin', '600000000',0x00, 'ADMIN'),
+    ('jdoe', 'john.doe@example.com', '$2a$10$2yH7qG19E2Hq8dH1kzPrQeJmGCWl7ZTWWc7hD5VbZ3X2t8iE1iL6y', 'John', 'Doe', '611111111',0x00, 'CUSTOMER'),
+    ('msmith', 'mary.smith@example.com', '$2a$10$2yH7qG19E2Hq8dH1kzPrQeJmGCWl7ZTWWc7hD5VbZ3X2t8iE1iL6y', 'Mary', 'Smith', '622222222',0x00, 'CUSTOMER');
 
 -- ==========================================
 -- CATEGORIES

@@ -1,5 +1,6 @@
 package com.tagme.tagme_store_back.domain.model;
 
+import java.sql.Blob;
 import java.util.Objects;
 
 public class User {
@@ -10,9 +11,10 @@ public class User {
     private String firstName;
     private String lastName;
     private String phone;
+    private Blob profilePicture;
     private UserRole role;
 
-    public User(Long id, String username, String password, String email, String firstName, String lastName, String phone, UserRole role) {
+    public User(Long id, String username, String password, String email, String firstName, String lastName, String phone, Blob profilePicture, UserRole role) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -20,6 +22,7 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
+        this.profilePicture = profilePicture;
         this.role = role;
     }
 
@@ -79,6 +82,14 @@ public class User {
         this.phone = phone;
     }
 
+    public Blob getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(Blob photo) {
+        this.profilePicture = photo;
+    }
+
     public UserRole getRole() {
         return role;
     }
@@ -97,6 +108,7 @@ public class User {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", phone='" + phone + '\'' +
+                ", profilePicture=" + profilePicture + '\'' +
                 ", role=" + role +
                 '}';
     }
@@ -105,11 +117,11 @@ public class User {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(phone, user.phone) && role == user.role;
+        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(phone, user.phone) && Objects.equals(profilePicture, user.profilePicture) && role == user.role;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, password, email, firstName, lastName, phone, role);
+        return Objects.hash(id, username, password, email, firstName, lastName, phone, profilePicture, role);
     }
 }

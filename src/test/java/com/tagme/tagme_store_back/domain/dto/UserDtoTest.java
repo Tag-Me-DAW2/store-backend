@@ -34,9 +34,13 @@ class UserDtoTest {
 
     @Test
     void userDto_Creation_ShouldSucceed() throws SQLException {
+        byte[] imageData = "test image data".getBytes();
+        Blob testBlob = new SerialBlob(imageData);
+
         UserDto userDto = Instancio.of(UserDto.class)
                 .set(field("email"), "pepe@example.com")
                 .set(field("phone"), "+34612345678")
+                .set(field("profilePicture"), testBlob)
                 .withSeed(10)
                 .create();
 
@@ -73,6 +77,8 @@ class UserDtoTest {
                 Arguments.of("phone", "12345"),
                 Arguments.of("phone", "0140123456789"),
                 Arguments.of("phone", "+346905074450793112412"),
+
+                Arguments.of("profilePicture", null),
 
                 Arguments.of("role", null)
         );

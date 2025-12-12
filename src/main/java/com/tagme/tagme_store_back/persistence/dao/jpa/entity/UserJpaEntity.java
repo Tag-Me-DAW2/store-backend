@@ -23,6 +23,9 @@ public class UserJpaEntity implements Serializable {
     @Column(name = "last_name", nullable = true)
     private String lastName;
     private String phone;
+    @Lob
+    @Column(name = "profile_picture", nullable = false)
+    private byte[] profilePicture;
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private UserRole role;
@@ -31,7 +34,7 @@ public class UserJpaEntity implements Serializable {
 
     public UserJpaEntity() {}
 
-    public UserJpaEntity(Long id, String username, String email, String password, String firstName, String lastName, String phone, UserRole role) {
+    public UserJpaEntity(Long id, String username, String email, String password, String firstName, String lastName, String phone, byte[] profilePicture, UserRole role) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -39,6 +42,7 @@ public class UserJpaEntity implements Serializable {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
+        this.profilePicture = profilePicture;
         this.role = role;
     }
 
@@ -96,6 +100,14 @@ public class UserJpaEntity implements Serializable {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public byte[] getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(byte[] profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
     public UserRole getRole() {

@@ -13,6 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -29,7 +32,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserResponse> createUser(@RequestBody UserInsertRequest userInsertRequest) {
+    public ResponseEntity<UserResponse> createUser(@RequestBody UserInsertRequest userInsertRequest) throws SQLException, IOException {
         UserDto userDto = UserMapper.fromUserInsertRequestToUserDto(userInsertRequest);
         DtoValidator.validate(userDto);
 
@@ -38,7 +41,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @RequestBody UserUpdateRequest userUpdateRequest) {
+    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @RequestBody UserUpdateRequest userUpdateRequest) throws SQLException, IOException {
         if(!id.equals(userUpdateRequest.id())) {
             throw new BusinessException("ID in path and request body do not match");
         }

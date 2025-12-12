@@ -6,6 +6,7 @@ CREATE TABLE `tb_users` (
                           `first_name` varchar(50) NOT NULL,
                           `last_name` varchar(50) DEFAULT NULL,
                           `phone` varchar(20) DEFAULT NULL,
+                          `profile_picture` LONGBLOB DEFAULT NULL,
                           `role` ENUM('CUSTOMER','ADMIN') NOT NULL DEFAULT 'CUSTOMER',
                           `creation_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                            PRIMARY KEY (`id`)
