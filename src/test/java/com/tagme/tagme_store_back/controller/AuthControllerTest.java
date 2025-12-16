@@ -1,3 +1,4 @@
+// java
 package com.tagme.tagme_store_back.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,27 +8,28 @@ import com.tagme.tagme_store_back.controller.webModel.response.UserResponse;
 import com.tagme.tagme_store_back.domain.dto.LoginDto;
 import com.tagme.tagme_store_back.domain.dto.UserDto;
 import com.tagme.tagme_store_back.domain.exception.InvalidCredentialsException;
-import com.tagme.tagme_store_back.domain.exception.ResourceNotFoundException;
 import com.tagme.tagme_store_back.domain.service.AuthService;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AuthController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class AuthControllerTest {
     @MockitoBean
     private AuthService authService;
@@ -86,7 +88,7 @@ class AuthControllerTest {
 
             mockMvc.perform(post("/auth/logout")
                             .header("Authorization", "Bearer " + token))
-                            .andDo(print())
+                    .andDo(print())
                     .andExpect(status().isNoContent());
         }
 
@@ -101,4 +103,38 @@ class AuthControllerTest {
                     .andExpect(status().isUnauthorized());
         }
     }
+
+    @Nested
+    class getUserByTokenTests {
+        @DisplayName("Given a valid token, when getUserByToken is called, then the corresponding user is returned")
+        @Test
+        void getUserByValidToken() throws Exception {
+            String token = "valid-token";
+            UserDto userDto = Instancio.of(UserDto.class).create();
+            UserResponse userResponse = UserMapper.fromUserDtoToUserResponse(userDto);
+
+            when(authService.getByToken(anyString())).thenReturn(userDto);
+
+            mockMvc.perform(get("/auth")
+                            .header("Authorization", "Bearer " + token))
+                    .andExpect(status().isOk())
+                    .andExpect(result -> {
+                        String responseBody = result.getResponse().getContentAsString();
+                        assert responseBody.contains(userResponse.username());
+                    });
+        }
+
+        @DisplayName("Given an invalid token, when getUserByToken is called, then an unauthorized status is returned")
+        @Test
+        void getUserByInvalidToken() throws Exception {
+            String token = "invalid-token";
+
+            when(authService.getByToken(anyString())).thenThrow(new InvalidCredentialsException("Invalid token"));
+
+            mockMvc.perform(get("/auth")
+                            .header("Authorization", "Bearer " + token))
+                    .andExpect(status().isUnauthorized());
+        }
+    }
+
 }

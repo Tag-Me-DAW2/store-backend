@@ -1,7 +1,9 @@
 package com.tagme.tagme_store_back.controller;
 
 import com.tagme.tagme_store_back.controller.mapper.LoginMapper;
+import com.tagme.tagme_store_back.controller.mapper.UserMapper;
 import com.tagme.tagme_store_back.controller.webModel.request.LoginRequest;
+import com.tagme.tagme_store_back.controller.webModel.response.UserResponse;
 import com.tagme.tagme_store_back.domain.dto.LoginDto;
 import com.tagme.tagme_store_back.domain.service.AuthService;
 import com.tagme.tagme_store_back.domain.validation.DtoValidator;
@@ -35,5 +37,11 @@ public class AuthController {
     public ResponseEntity<Void> logout(@RequestHeader("Authorization") String token) {
         authService.logout(token.substring(7));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping
+    public ResponseEntity<UserResponse> getUserByToken(@RequestHeader("Authorization") String token) {
+        UserResponse userResponse = UserMapper.fromUserDtoToUserResponse(authService.getByToken(token.substring(7)));
+        return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 }
