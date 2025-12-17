@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/admin/categories")
+@CrossOrigin("*")
 public class AdminCategoryController {
     private CategoryService categoryService;
 

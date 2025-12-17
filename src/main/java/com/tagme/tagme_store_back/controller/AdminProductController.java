@@ -17,6 +17,7 @@ import java.sql.SQLException;
 
 @RestController
 @RequestMapping("/admin/products")
+@CrossOrigin("*")
 public class AdminProductController {
     private ProductService productService;
 
