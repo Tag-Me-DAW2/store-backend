@@ -1,6 +1,7 @@
 package com.tagme.tagme_store_back.persistence.repository;
 
 import com.tagme.tagme_store_back.domain.dto.CategoryDto;
+import com.tagme.tagme_store_back.domain.model.Page;
 import com.tagme.tagme_store_back.persistence.dao.jpa.CategoryJpaDao;
 import com.tagme.tagme_store_back.persistence.dao.jpa.entity.CategoryJpaEntity;
 import org.instancio.Instancio;
@@ -46,26 +47,26 @@ class CategoryRepositoryImplTest {
     class FindAllTests {
         @Test
         void findAll_ShouldReturnListOfCategoryDto() {
-            when(categoryDao.findAll()).thenReturn(List.of(categoryJpaEntity1, categoryJpaEntity2));
-            List<CategoryDto> result = categoryRepositoryImpl.findAll();
+            when(categoryDao.findAll(anyInt(), anyInt())).thenReturn(List.of(categoryJpaEntity1, categoryJpaEntity2));
+            Page<CategoryDto> result = categoryRepositoryImpl.findAll(1, 10);
 
             assertAll(
                     () -> assertNotNull(result),
-                    () -> assertEquals(categoryDto1, result.getFirst()),
-                    () -> assertEquals(categoryDto2, result.getLast()),
-                    () -> verify(categoryDao).findAll()
+                    () -> assertEquals(categoryDto1, result.data().getFirst()),
+                    () -> assertEquals(categoryDto2, result.data().getLast()),
+                    () -> verify(categoryDao).findAll(1,10)
             );
         }
 
         @Test
         void findAll_WhenNoCategories_ShouldReturnEmptyList() {
-            when(categoryDao.findAll()).thenReturn(List.of());
-            List<CategoryDto> result = categoryRepositoryImpl.findAll();
+            when(categoryDao.findAll(anyInt(), anyInt())).thenReturn(List.of());
+            Page<CategoryDto> result = categoryRepositoryImpl.findAll(1, 10);
 
             assertAll(
                     () -> assertNotNull(result),
-                    () -> assertTrue(result.isEmpty()),
-                    () -> verify(categoryDao).findAll()
+                    () -> assertTrue(result.data().isEmpty()),
+                    () -> verify(categoryDao).findAll(1, 10)
             );
         }
     }

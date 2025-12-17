@@ -5,6 +5,7 @@ import com.tagme.tagme_store_back.controller.webModel.request.CategoryRequest;
 import com.tagme.tagme_store_back.controller.webModel.response.CategoryResponse;
 import com.tagme.tagme_store_back.domain.dto.CategoryDto;
 import com.tagme.tagme_store_back.domain.exception.BusinessException;
+import com.tagme.tagme_store_back.domain.model.Page;
 import com.tagme.tagme_store_back.domain.service.CategoryService;
 import com.tagme.tagme_store_back.domain.validation.DtoValidator;
 import org.springframework.http.HttpStatus;
@@ -24,9 +25,16 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoryResponse>> getAllCategories() {
-        List<CategoryResponse> categories = categoryService.getAll().stream().map(CategoryMapper::fromCategoryDtoToCategoryResponse).toList();
-        return new ResponseEntity<>(categories, HttpStatus.OK);
+    public ResponseEntity<Page<CategoryResponse>> getAllCategories(@RequestParam(required = false, defaultValue = "1") int page, @RequestParam(required = false, defaultValue = "10") int size) {
+        Page<CategoryDto> categoryDtos = categoryService.getAll(page, size);
+
+        List<CategoryResponse> categoryList = categoryDtos.data().stream()
+                .map(CategoryMapper::fromCategoryDtoToCategoryResponse)
+                .toList();
+
+        Page<CategoryResponse> categoryResponsePage = new Page<>(categoryList, page, size, categoryDtos.totalElements(), categoryDtos.totalPages());
+
+        return new ResponseEntity<>(categoryResponsePage, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

@@ -5,5 +5,5 @@ import java.util.List;
 import com.tagme.tagme_store_back.persistence.dao.jpa.entity.CategoryJpaEntity;
 
 public interface CategoryJpaDao extends GenericJpaDao<CategoryJpaEntity> {
-    List<CategoryJpaEntity> findAll();
+    List<CategoryJpaEntity> findAll(int page, int size);
 }

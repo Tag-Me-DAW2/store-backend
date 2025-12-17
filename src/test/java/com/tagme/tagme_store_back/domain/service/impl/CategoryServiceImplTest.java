@@ -3,6 +3,7 @@ package com.tagme.tagme_store_back.domain.service.impl;
 import com.tagme.tagme_store_back.domain.dto.CategoryDto;
 import com.tagme.tagme_store_back.domain.exception.ResourceNotFoundException;
 import com.tagme.tagme_store_back.domain.model.Category;
+import com.tagme.tagme_store_back.domain.model.Page;
 import com.tagme.tagme_store_back.domain.repository.CategoryRepository;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,29 +47,29 @@ class CategoryServiceImplTest {
     class GetAllTests {
         @Test
         void getAll_ShouldReturnListOfCategoryDtos() {
-            when(categoryRepository.findAll()).thenReturn(List.of(categoryDto1, categoryDto2));
+            when(categoryRepository.findAll(1, 10)).thenReturn(new Page<>(List.of(categoryDto1, categoryDto2), 1, 10, 2L));
 
-            List<CategoryDto> result = categoryService.getAll();
+            Page<CategoryDto> result = categoryService.getAll(1, 10);
 
             assertAll(
                     () -> assertNotNull(result),
-                    () -> assertEquals(2, result.size()),
-                    () -> verify(categoryRepository).findAll(),
-                    () -> assertEquals(categoryDto1, result.getFirst()),
-                    () -> assertEquals(categoryDto2, result.getLast())
+                    () -> assertEquals(2, result.totalElements()),
+                    () -> verify(categoryRepository).findAll(1, 10),
+                    () -> assertEquals(categoryDto1, result.data().get(0)),
+                    () -> assertEquals(categoryDto2, result.data().get(1))
             );
         }
 
         @Test
         void getAll_ShouldReturnEmptyList_WhenNoCategoriesExist() {
-            when(categoryRepository.findAll()).thenReturn(List.of());
+            when(categoryRepository.findAll(1, 10)).thenReturn(new Page<>(List.of(), 1, 10, 0L));
 
-            List<CategoryDto> result = categoryService.getAll();
+            Page<CategoryDto> result = categoryService.getAll(1, 10);
 
             assertAll(
                     () -> assertNotNull(result),
-                    () -> assertTrue(result.isEmpty()),
-                    () -> verify(categoryRepository).findAll()
+                    () -> assertTrue(result.data().isEmpty()),
+                    () -> verify(categoryRepository).findAll(1, 10)
             );
         }
     }

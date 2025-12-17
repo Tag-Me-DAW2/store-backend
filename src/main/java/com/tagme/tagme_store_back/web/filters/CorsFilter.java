@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
-@Order(0) // 🔥 EL PRIMERO SIEMPRE
+@Order(0)
 public class CorsFilter implements Filter {
 
     @Override

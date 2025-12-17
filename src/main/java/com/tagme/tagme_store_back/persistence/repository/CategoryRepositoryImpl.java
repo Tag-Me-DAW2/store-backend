@@ -1,6 +1,7 @@
 package com.tagme.tagme_store_back.persistence.repository;
 
 import com.tagme.tagme_store_back.domain.dto.CategoryDto;
+import com.tagme.tagme_store_back.domain.model.Page;
 import com.tagme.tagme_store_back.domain.repository.CategoryRepository;
 import com.tagme.tagme_store_back.persistence.dao.jpa.CategoryJpaDao;
 import com.tagme.tagme_store_back.persistence.mapper.CategoryMapper;
@@ -16,8 +17,13 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     }
 
     @Override
-    public List<CategoryDto> findAll() {
-        return categoryDao.findAll().stream().map(CategoryMapper::fromCategoryJpaEntityToCategoryDto).toList();
+    public Page<CategoryDto> findAll(int page, int size) {
+        List<CategoryDto> content = categoryDao.findAll(page, size).stream()
+                .map(CategoryMapper::fromCategoryJpaEntityToCategoryDto)
+                .toList();
+
+        long totalElements = categoryDao.count();
+        return new Page<>(content, page, size, totalElements);
     }
 
     @Override

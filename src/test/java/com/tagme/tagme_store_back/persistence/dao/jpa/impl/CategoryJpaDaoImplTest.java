@@ -21,7 +21,7 @@ class CategoryJpaDaoImplTest extends BaseJpaDaoTest<CategoryJpaDao> {
         @Test
         void findAll_ShouldReturnAllCategories() {
             Long total = dao.count();
-            List<CategoryJpaEntity> categories = dao.findAll();
+            List<CategoryJpaEntity> categories = dao.findAll(1, 10);
 
             assertAll(
                     () -> assertFalse(categories.isEmpty()),
@@ -32,7 +32,7 @@ class CategoryJpaDaoImplTest extends BaseJpaDaoTest<CategoryJpaDao> {
         @Test
         @Sql(statements = "DELETE FROM tb_categories")
         void findAll_ShouldReturnEmptyList_WhenNoCategoriesExist() {
-            List<CategoryJpaEntity> categories = dao.findAll();
+            List<CategoryJpaEntity> categories = dao.findAll(1, 10);
 
             assertTrue(categories.isEmpty());
         }
@@ -118,7 +118,7 @@ class CategoryJpaDaoImplTest extends BaseJpaDaoTest<CategoryJpaDao> {
 
     @Test
     void count_ShouldReturnTotalNumberOfCategories() {
-        Long expectedCount = (long) dao.findAll().size();
+        Long expectedCount = (long) dao.findAll(1, 10).size();
 
         Long actualCount = dao.count();
 

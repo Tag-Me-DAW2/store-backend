@@ -8,6 +8,7 @@ import com.tagme.tagme_store_back.persistence.dao.jpa.entity.CategoryJpaEntity;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 
 public class CategoryJpaDaoImpl implements CategoryJpaDao {
 
@@ -15,9 +16,16 @@ public class CategoryJpaDaoImpl implements CategoryJpaDao {
     private EntityManager entityManager;
 
     @Override
-    public List<CategoryJpaEntity> findAll() {
-        String sql = "SELECT c FROM CategoryJpaEntity c";
-        return entityManager.createQuery(sql, CategoryJpaEntity.class).getResultList();
+    public List<CategoryJpaEntity> findAll(int page, int size) {
+        int pageIndex = Math.max(page - 1, 0);
+
+        String sql = "SELECT c FROM CategoryJpaEntity c ORDER BY c.id";
+        TypedQuery<CategoryJpaEntity> query = entityManager
+                .createQuery(sql, CategoryJpaEntity.class)
+                .setFirstResult(pageIndex * size)
+                .setMaxResults(size);
+
+        return query.getResultList();
     }
 
     @Override

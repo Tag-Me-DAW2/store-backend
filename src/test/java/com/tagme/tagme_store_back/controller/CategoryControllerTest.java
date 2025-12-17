@@ -2,6 +2,7 @@ package com.tagme.tagme_store_back.controller;
 
 import com.tagme.tagme_store_back.domain.dto.CategoryDto;
 import com.tagme.tagme_store_back.domain.exception.ResourceNotFoundException;
+import com.tagme.tagme_store_back.domain.model.Page;
 import com.tagme.tagme_store_back.domain.service.AuthService;
 import com.tagme.tagme_store_back.domain.service.CategoryService;
 import org.instancio.Instancio;
@@ -44,24 +45,34 @@ class CategoryControllerTest {
         @Test
         void getAllCategories_ShouldReturnCategories_WhenCategoriesExist() throws Exception {
             List<CategoryDto> categories = List.of(categoryDto1, categoryDto2);
-            when(categoryService.getAll()).thenReturn(categories);
+            when(categoryService.getAll(1, 10)).thenReturn(new Page<>(categories, 1, 10, categories.size(), 1));
 
-            mockMvc.perform(get("/categories"))
+            mockMvc.perform(get("/categories")
+                            .param("page", "1")
+                            .param("size", "10"))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.length()").value(categories.size()))
-                    .andExpect(jsonPath("$[0].id").value(categories.getFirst().id()))
-                    .andExpect(jsonPath("$[0].name").value(categories.getFirst().name()))
-                    .andExpect(jsonPath("$[1].id").value(categories.getLast().id()))
-                    .andExpect(jsonPath("$[1].name").value(categories.getLast().name()));
+                    .andExpect(jsonPath("$.data").isArray())
+                    .andExpect(jsonPath("$.data.length()").value(2))
+                    .andExpect(jsonPath("$.data[0].id").value(categoryDto1.id()))
+                    .andExpect(jsonPath("$.data[0].name").value(categoryDto1.name()))
+                    .andExpect(jsonPath("$.data[1].id").value(categoryDto2.id()))
+                    .andExpect(jsonPath("$.data[1].name").value(categoryDto2.name()))
+                    .andExpect(jsonPath("$.totalElements").value(2))
+                    .andExpect(jsonPath("$.totalPages").value(1));
         }
 
         @Test
         void getAllCategories_ShouldReturnEmptyList_WhenNoCategoriesExist() throws Exception {
-            when(categoryService.getAll()).thenReturn(List.of());
+            when(categoryService.getAll(1, 10)).thenReturn(new Page<>(List.of(), 1, 10, 0, 0));
 
-            mockMvc.perform(get("/categories"))
+            mockMvc.perform(get("/categories")
+                            .param("page", "1")
+                            .param("size", "10"))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.length()").value(0));
+                    .andExpect(jsonPath("$.data").isArray())
+                    .andExpect(jsonPath("$.data.length()").value(0))
+                    .andExpect(jsonPath("$.totalElements").value(0))
+                    .andExpect(jsonPath("$.totalPages").value(0));
         }
     }
 

@@ -2,12 +2,13 @@ package com.tagme.tagme_store_back.domain.repository;
 
 import com.tagme.tagme_store_back.domain.dto.CategoryDto;
 import com.tagme.tagme_store_back.domain.model.Category;
+import com.tagme.tagme_store_back.domain.model.Page;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface CategoryRepository {
-    List<CategoryDto> findAll();
+    Page<CategoryDto> findAll(int page, int size);
     Optional<CategoryDto> findById(Long id);
     void deleteById(Long id);
     CategoryDto save(CategoryDto categoryDto);
