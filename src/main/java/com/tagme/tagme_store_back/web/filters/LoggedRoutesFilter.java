@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Component
-@Order(2)
+@Order(3)
 public class LoggedRoutesFilter implements Filter {
     private final List<String> protectedRoutes = List.of(
             "/admin"

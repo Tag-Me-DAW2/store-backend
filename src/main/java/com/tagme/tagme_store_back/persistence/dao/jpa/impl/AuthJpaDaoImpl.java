@@ -26,6 +26,11 @@ public class AuthJpaDaoImpl implements AuthJpaDao {
         UUID uuid = UUID.randomUUID();
         LocalDateTime createdAt = LocalDateTime.now();
 
+        // Borrar sesiones antiguas del usuario
+        entityManager.createQuery("DELETE FROM SessionJpaEntity s WHERE s.user.id = :userId")
+                .setParameter("userId", userId)
+                .executeUpdate();
+
         SessionJpaEntity sessionJpaEntity = new SessionJpaEntity(user, uuid.toString(), createdAt);
         entityManager.persist(sessionJpaEntity);
 

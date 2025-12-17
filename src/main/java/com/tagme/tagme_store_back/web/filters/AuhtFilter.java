@@ -15,7 +15,7 @@ import java.io.IOException;
 
 
 @Component
-@Order(1)
+@Order(2)
 public class AuhtFilter implements Filter {
 
     @Autowired
