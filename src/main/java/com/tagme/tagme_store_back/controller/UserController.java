@@ -18,6 +18,7 @@ import java.sql.SQLException;
 
 @RestController
 @RequestMapping("/users")
+@CrossOrigin("*")
 public class UserController {
     private UserService userService;
 
