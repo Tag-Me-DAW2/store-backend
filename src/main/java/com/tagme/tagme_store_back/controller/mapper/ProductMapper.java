@@ -43,6 +43,8 @@ public class ProductMapper {
         return new ProductSummaryResponse(
                 productDto.id(),
                 productDto.name(),
+                productDto.discountPercentage(),
+                productDto.price(),
                 CategoryMapper.fromCategoryDtoToCategoryResponse(productDto.category())
         );
     }
