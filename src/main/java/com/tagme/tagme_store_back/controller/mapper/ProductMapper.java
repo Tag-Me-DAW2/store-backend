@@ -40,11 +40,15 @@ public class ProductMapper {
         if (productDto == null) {
             return null;
         }
+
+        byte[] imageBytes = convertToBytes(productDto.image());
+
         return new ProductSummaryResponse(
                 productDto.id(),
                 productDto.name(),
                 productDto.discountPercentage(),
                 productDto.price(),
+                imageBytes != null ? Base64.getEncoder().encodeToString(imageBytes) : null,
                 CategoryMapper.fromCategoryDtoToCategoryResponse(productDto.category())
         );
     }

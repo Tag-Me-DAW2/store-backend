@@ -8,6 +8,7 @@ import com.tagme.tagme_store_back.domain.model.Category;
 import com.tagme.tagme_store_back.domain.model.Page;
 import com.tagme.tagme_store_back.domain.repository.CategoryRepository;
 import com.tagme.tagme_store_back.domain.service.CategoryService;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 
@@ -48,12 +49,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
         categoryRepository.deleteById(id);
     }
 
     @Override
+    @Transactional
     public CategoryDto create(CategoryDto categoryDto) {
         CategoryDto insertCategory = CategoryMapper
                 .fromCategoryToCategoryDto(CategoryMapper
@@ -65,6 +68,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public CategoryDto update(CategoryDto categoryDto) {
         categoryRepository.findById(categoryDto.id()).orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + categoryDto.id()));
         CategoryDto updateCategory = CategoryMapper
