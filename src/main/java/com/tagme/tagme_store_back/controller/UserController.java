@@ -36,8 +36,13 @@ public class UserController {
         Page<UserDto> userDtos = userService.getAll(page, size);
 
         List<UserResponse> userResponseList = userDtos.data().stream()
-                .map(UserMapper::fromUserDtoToUserResponse)
-                .toList();
+                .map(dto -> {
+                    try {
+                        return UserMapper.fromUserDtoToUserResponse(dto);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).toList();
 
         Page<UserResponse> userResponsePage = new Page<>(userResponseList, page, size, userDtos.totalElements(), userDtos.totalPages());
 
@@ -45,7 +50,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) throws IOException{
         UserResponse userResponse = UserMapper.fromUserDtoToUserResponse(userService.getById(id));
         return ResponseEntity.ok(userResponse);
     }

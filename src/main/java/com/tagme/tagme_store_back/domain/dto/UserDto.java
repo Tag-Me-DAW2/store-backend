@@ -23,6 +23,8 @@ public record UserDto(
         String phone,
         @NotNull(message = "Image cannot be null")
         Blob profilePicture,
+        @NotNull
+        String profilePictureName,
         @NotNull(message = "Role cannot be null")
         UserRole role
 ) {

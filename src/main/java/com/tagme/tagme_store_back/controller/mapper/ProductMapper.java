@@ -16,13 +16,16 @@ import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Base64;
 
+import static com.tagme.tagme_store_back.web.utils.MimeUtil.getMimeType;
+
 public class ProductMapper {
-    public static ProductDetailResponse fromProductDtoToProductDetailResponse(ProductDto productDto) {
+    public static ProductDetailResponse fromProductDtoToProductDetailResponse(ProductDto productDto) throws IOException {
         if (productDto == null) {
             return null;
         }
 
         byte[] imageBytes = convertToBytes(productDto.image());
+        String mimeType = getMimeType(productDto.imageName()) ;
 
         return new ProductDetailResponse(
                 productDto.id(),
@@ -31,24 +34,26 @@ public class ProductMapper {
                 productDto.basePrice(),
                 productDto.discountPercentage(),
                 productDto.price(),
-                imageBytes != null ? Base64.getEncoder().encodeToString(imageBytes) : null,
+                imageBytes != null ? "data:" + mimeType + ";base64,"+Base64.getEncoder().encodeToString(imageBytes) : null,
+                productDto.imageName(),
                 CategoryMapper.fromCategoryDtoToCategoryResponse(productDto.category())
         );
     }
 
-    public static ProductSummaryResponse fromProductDtoToProductSummaryResponse(ProductDto productDto) {
+    public static ProductSummaryResponse fromProductDtoToProductSummaryResponse(ProductDto productDto) throws IOException {
         if (productDto == null) {
             return null;
         }
 
         byte[] imageBytes = convertToBytes(productDto.image());
+        String mimeType = getMimeType(productDto.imageName());
 
         return new ProductSummaryResponse(
                 productDto.id(),
                 productDto.name(),
                 productDto.discountPercentage(),
                 productDto.price(),
-                imageBytes != null ? Base64.getEncoder().encodeToString(imageBytes) : null,
+                imageBytes != null ? "data:" + mimeType + ";base64,"+Base64.getEncoder().encodeToString(imageBytes) : null,
                 CategoryMapper.fromCategoryDtoToCategoryResponse(productDto.category())
         );
     }
@@ -65,6 +70,7 @@ public class ProductMapper {
                 productInsertRequest.discountPercentage(),
                 null,
                 convertToBlob(productInsertRequest.image()),
+                productInsertRequest.imageName(),
                 new CategoryDto(productInsertRequest.categoryId(), null)
         );
     }
@@ -81,6 +87,7 @@ public class ProductMapper {
                 productUpdateRequest.discountPercentage(),
                 null,
                 convertToBlob(productUpdateRequest.image()),
+                productUpdateRequest.imageName(),
                 new CategoryDto(productUpdateRequest.categoryId(), null)
         );
     }

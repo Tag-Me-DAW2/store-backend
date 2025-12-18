@@ -21,6 +21,8 @@ public record ProductDto(
         BigDecimal price,
         @NotNull(message = "Image cannot be null")
         Blob image,
+        @NotNull(message = "Image name cannot be null")
+        String imageName,
         @NotNull
         CategoryDto category
 ) {

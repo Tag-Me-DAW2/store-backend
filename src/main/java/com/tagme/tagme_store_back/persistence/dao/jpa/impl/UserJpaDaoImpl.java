@@ -68,6 +68,7 @@ public class UserJpaDaoImpl implements UserJpaDao {
         managed.setPhone(entity.getPhone());
         managed.setRole(entity.getRole());
         managed.setProfilePicture(entity.getProfilePicture());
+        managed.setProfilePictureName(entity.getProfilePictureName());
 
         return managed;
     }

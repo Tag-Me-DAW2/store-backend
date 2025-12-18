@@ -26,6 +26,8 @@ public class UserJpaEntity implements Serializable {
     @Lob
     @Column(name = "profile_picture", nullable = false)
     private byte[] profilePicture;
+    @Column(name = "profile_picture_name", nullable = false)
+    private String profilePictureName;
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private UserRole role;
@@ -34,7 +36,7 @@ public class UserJpaEntity implements Serializable {
 
     public UserJpaEntity() {}
 
-    public UserJpaEntity(Long id, String username, String email, String password, String firstName, String lastName, String phone, byte[] profilePicture, UserRole role) {
+    public UserJpaEntity(Long id, String username, String email, String password, String firstName, String lastName, String phone, byte[] profilePicture, String profilePictureName, UserRole role) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -43,6 +45,7 @@ public class UserJpaEntity implements Serializable {
         this.lastName = lastName;
         this.phone = phone;
         this.profilePicture = profilePicture;
+        this.profilePictureName = profilePictureName;
         this.role = role;
     }
 
@@ -120,5 +123,13 @@ public class UserJpaEntity implements Serializable {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public String getProfilePictureName() {
+        return profilePictureName;
+    }
+
+    public void setProfilePictureName(String profilePictureName) {
+        this.profilePictureName = profilePictureName;
     }
 }

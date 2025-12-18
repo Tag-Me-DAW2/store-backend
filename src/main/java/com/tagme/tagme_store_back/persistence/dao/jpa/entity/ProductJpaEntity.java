@@ -25,6 +25,8 @@ public class ProductJpaEntity implements Serializable {
     @Lob
     @Column(nullable = false)
     private byte[] image;
+    @Column(name = "image_name", nullable = false)
+    private String imageName;
     @OneToOne
     @JoinColumn(name = "category_id", nullable = true)
     private CategoryJpaEntity category;
@@ -35,13 +37,14 @@ public class ProductJpaEntity implements Serializable {
     }
 
     public ProductJpaEntity(Long id, String name, String description, BigDecimal basePrice,
-            BigDecimal discountPercentage, byte[] image, CategoryJpaEntity category) {
+            BigDecimal discountPercentage, byte[] image, String imageName, CategoryJpaEntity category) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.basePrice = basePrice;
         this.discountPercentage = discountPercentage;
         this.image = image;
+        this.imageName = imageName;
         this.category = category;
     }
 
@@ -117,4 +120,11 @@ public class ProductJpaEntity implements Serializable {
         return Objects.hash(id, name, description, basePrice, discountPercentage, Arrays.hashCode(image), category);
     }
 
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
 }

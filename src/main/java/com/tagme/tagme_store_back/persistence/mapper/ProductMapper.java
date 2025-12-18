@@ -31,6 +31,7 @@ public class ProductMapper {
                 productDto.basePrice(),
                 productDto.discountPercentage(),
                 imageBytes,
+                productDto.imageName(),
                 CategoryMapper.fromCategoryDtoToCategoryJpaEntity(productDto.category())
         );
     }
@@ -59,6 +60,7 @@ public class ProductMapper {
                 productJpaEntity.getDiscountPercentage(),
                 null,
                 blobImage,
+                productJpaEntity.getImageName(),
                 CategoryMapper.fromCategoryJpaEntityToCategoryDto(productJpaEntity.getCategory())
         );
     }

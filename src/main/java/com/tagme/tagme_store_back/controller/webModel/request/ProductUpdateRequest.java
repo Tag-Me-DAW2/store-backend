@@ -13,6 +13,7 @@ public record ProductUpdateRequest(
         BigDecimal basePrice,
         BigDecimal discountPercentage,
         String image,
+        String imageName,
         Long categoryId
 ) {
 }

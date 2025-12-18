@@ -18,6 +18,7 @@ public class UserMapper {
                 user.getLastName(),
                 user.getPhone(),
                 user.getProfilePicture(),
+                user.getProfilePictureName(),
                 user.getRole()
         );
     }
@@ -36,6 +37,7 @@ public class UserMapper {
                 userDto.lastName(),
                 userDto.phone(),
                 userDto.profilePicture(),
+                userDto.profilePictureName(),
                 userDto.role()
         );
     }

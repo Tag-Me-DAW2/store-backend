@@ -8,6 +8,7 @@ public record UserInsertRequest(
         String lastName,
         String phone,
         String profilePicture,
+        String profilePictureName,
         String role
 ) {
 }

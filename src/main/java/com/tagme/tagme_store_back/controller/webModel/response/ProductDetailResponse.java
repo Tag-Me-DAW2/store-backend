@@ -17,6 +17,7 @@ public record ProductDetailResponse(
         BigDecimal discountPercentage,
         BigDecimal price,
         String image,
+        String imageName,
         CategoryResponse category
 ) {
 }

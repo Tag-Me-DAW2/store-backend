@@ -7,6 +7,7 @@ CREATE TABLE `tb_users` (
                           `last_name` varchar(50) DEFAULT NULL,
                           `phone` varchar(20) DEFAULT NULL,
                           `profile_picture` LONGBLOB DEFAULT NULL,
+                          `profile_picture_name` varchar(255) DEFAULT NULL,
                           `role` ENUM('CUSTOMER','ADMIN') NOT NULL DEFAULT 'CUSTOMER',
                           `creation_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                            PRIMARY KEY (`id`)
@@ -38,6 +39,7 @@ CREATE TABLE `tb_products` (
                                base_price DECIMAL(19,2) NOT NULL,
                                discount_percentage DECIMAL(5,2) NOT NULL,
                                image LONGBLOB DEFAULT NULL,
+                               image_name VARCHAR(255) DEFAULT NULL,
                                category_id INT(11),
                                `creation_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                CONSTRAINT `tb_products_FK` FOREIGN KEY (category_id) REFERENCES tb_categories(id) ON DELETE SET NULL ON UPDATE CASCADE

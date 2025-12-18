@@ -12,13 +12,16 @@ import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Base64;
 
+import static com.tagme.tagme_store_back.web.utils.MimeUtil.getMimeType;
+
 public class UserMapper {
-    public static UserResponse fromUserDtoToUserResponse(UserDto userDto) {
+    public static UserResponse fromUserDtoToUserResponse(UserDto userDto) throws IOException {
         if (userDto == null) {
             return null;
         }
 
         byte[] imageBytes = convertToBytes(userDto.profilePicture());
+        String mimeType = getMimeType(userDto.profilePictureName());
 
         return new UserResponse(
                 userDto.id(),
@@ -27,7 +30,8 @@ public class UserMapper {
                 userDto.firstName(),
                 userDto.lastName(),
                 userDto.phone(),
-                imageBytes != null ? Base64.getEncoder().encodeToString(imageBytes) : null,
+                imageBytes != null ? "data:" + mimeType + ";base64," + Base64.getEncoder().encodeToString(imageBytes) : null,
+                userDto.profilePictureName(),
                 userDto.role().name()
         );
     }
@@ -46,6 +50,7 @@ public class UserMapper {
                 request.lastName(),
                 request.phone(),
                 convertToBlob(request.profilePicture()),
+                request.profilePictureName(),
                 UserRole.valueOf(request.role())
         );
     }
@@ -64,6 +69,7 @@ public class UserMapper {
                 request.lastName(),
                 request.phone(),
                 convertToBlob(request.profilePicture()),
+                request.profilePictureName(),
                 UserRole.valueOf(request.role())
         );
     }

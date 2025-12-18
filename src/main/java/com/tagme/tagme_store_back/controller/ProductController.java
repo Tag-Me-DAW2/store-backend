@@ -29,11 +29,17 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ProductSummaryResponse>> getAllProducts(@RequestParam(required = false, defaultValue = "1") int page, @RequestParam(required = false, defaultValue = "10") int size) {
+    public ResponseEntity<Page<ProductSummaryResponse>> getAllProducts(@RequestParam(required = false, defaultValue = "1") int page, @RequestParam(required = false, defaultValue = "10") int size){
         Page<ProductDto> productDtoPage = productService.getAll(page, size);
 
         List<ProductSummaryResponse> productsList = productDtoPage.data().stream()
-                .map(ProductMapper::fromProductDtoToProductSummaryResponse).toList();
+                .map(dto -> {
+            try {
+                return ProductMapper.fromProductDtoToProductSummaryResponse(dto);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }).toList();
 
         Page<ProductSummaryResponse> responsePage = new Page<>(productsList, page, size, productDtoPage.totalElements(), productDtoPage.totalPages());
 
@@ -41,7 +47,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDetailResponse> getProductById(@PathVariable Long id) {
+    public ResponseEntity<ProductDetailResponse> getProductById(@PathVariable Long id) throws IOException {
         ProductDetailResponse product = ProductMapper.fromProductDtoToProductDetailResponse(productService.getById(id));
 
         return new ResponseEntity<>(product, HttpStatus.OK);

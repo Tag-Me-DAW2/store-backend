@@ -34,6 +34,7 @@ public class UserMapper {
                 userJpaEntity.getLastName(),
                 userJpaEntity.getPhone(),
                 blobImage,
+                userJpaEntity.getProfilePictureName(),
                 userJpaEntity.getRole()
         );
     }
@@ -63,6 +64,7 @@ public class UserMapper {
                 userDto.lastName(),
                 userDto.phone(),
                 imageBytes,
+                userDto.profilePictureName(),
                 userDto.role()
         );
     }

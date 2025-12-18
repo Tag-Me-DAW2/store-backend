@@ -12,9 +12,10 @@ public class User {
     private String lastName;
     private String phone;
     private Blob profilePicture;
+    private String profilePictureName;
     private UserRole role;
 
-    public User(Long id, String username, String password, String email, String firstName, String lastName, String phone, Blob profilePicture, UserRole role) {
+    public User(Long id, String username, String password, String email, String firstName, String lastName, String phone, Blob profilePicture, String profilePictureName, UserRole role) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -23,6 +24,7 @@ public class User {
         this.lastName = lastName;
         this.phone = phone;
         this.profilePicture = profilePicture;
+        this.profilePictureName = profilePictureName;
         this.role = role;
     }
 
@@ -98,9 +100,17 @@ public class User {
         this.role = role;
     }
 
+    public String getProfilePictureName() {
+        return profilePictureName;
+    }
+
+    public void setProfilePictureName(String profilePictureName) {
+        this.profilePictureName = profilePictureName;
+    }
+
     @Override
     public String toString() {
-        return "UserService{" +
+        return "User{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
@@ -108,7 +118,8 @@ public class User {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", phone='" + phone + '\'' +
-                ", profilePicture=" + profilePicture + '\'' +
+                ", profilePicture=" + profilePicture +
+                ", profilePictureName='" + profilePictureName + '\'' +
                 ", role=" + role +
                 '}';
     }
@@ -117,11 +128,11 @@ public class User {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(phone, user.phone) && Objects.equals(profilePicture, user.profilePicture) && role == user.role;
+        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(phone, user.phone) && Objects.equals(profilePicture, user.profilePicture) && Objects.equals(profilePictureName, user.profilePictureName) && role == user.role;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, password, email, firstName, lastName, phone, profilePicture, role);
+        return Objects.hash(id, username, password, email, firstName, lastName, phone, profilePicture, profilePictureName, role);
     }
 }

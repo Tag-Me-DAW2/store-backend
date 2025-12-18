@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Map;
 
 @RestController
@@ -40,7 +41,7 @@ public class AuthController {
     }
 
     @GetMapping
-    public ResponseEntity<UserResponse> getUserByToken(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<UserResponse> getUserByToken(@RequestHeader("Authorization") String token) throws IOException {
         UserResponse userResponse = UserMapper.fromUserDtoToUserResponse(authService.getByToken(token.substring(7)));
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
