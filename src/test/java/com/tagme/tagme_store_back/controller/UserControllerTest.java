@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tagme.tagme_store_back.controller.webModel.request.UserInsertRequest;
 import com.tagme.tagme_store_back.controller.webModel.request.UserUpdateRequest;
 import com.tagme.tagme_store_back.domain.dto.UserDto;
+import com.tagme.tagme_store_back.domain.exception.BusinessException;
 import com.tagme.tagme_store_back.domain.exception.ResourceNotFoundException;
+import com.tagme.tagme_store_back.domain.model.Page;
 import com.tagme.tagme_store_back.domain.model.UserRole;
 import com.tagme.tagme_store_back.domain.service.AuthService;
 import com.tagme.tagme_store_back.domain.service.UserService;
@@ -16,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.List;
 
 import static org.instancio.Select.field;
 import static org.mockito.Mockito.*;
@@ -35,6 +39,57 @@ public class UserControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    // java
+    @Nested
+    class GetAllTests {
+        @DisplayName("Given valid page and size, when getAll is called, then return paged users")
+        @Test
+        void getAllWithParams() throws Exception {
+            UserDto userDto = Instancio.of(UserDto.class).withSeed(30).create();
+
+            var page = new Page<>(
+                    List.of(userDto), 1, 1, 1L);
+
+            when(userService.getAll(1, 1)).thenReturn(page);
+
+            mockMvc.perform(get("/users").param("page", "1").param("size", "1"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data.length()").value(1))
+                    .andExpect(jsonPath("$.data[0].id").value(userDto.id()))
+                    .andExpect(jsonPath("$.data[0].username").value(userDto.username()))
+                    .andExpect(jsonPath("$.pageNumber").value(1))
+                    .andExpect(jsonPath("$.pageSize").value(1))
+                    .andExpect(jsonPath("$.totalElements").value(1));
+        }
+
+        @DisplayName("Given no params, when getAll is called, then use default page and size")
+        @Test
+        void getAllDefaultParams() throws Exception {
+            UserDto userDto = Instancio.of(UserDto.class).withSeed(31).create();
+
+            var page = new Page<>(
+                    List.of(userDto), 1, 10, 1L);
+
+            when(userService.getAll(1, 10)).thenReturn(page);
+
+            mockMvc.perform(get("/users"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data.length()").value(1))
+                    .andExpect(jsonPath("$.pageNumber").value(1))
+                    .andExpect(jsonPath("$.pageSize").value(10));
+        }
+
+        @DisplayName("Given invalid pagination, when service throws BusinessException, then return 400")
+        @Test
+        void getAllInvalidParams() throws Exception {
+            when(userService.getAll(anyInt(), anyInt()))
+                    .thenThrow(new BusinessException("Invalid pagination"));
+
+            mockMvc.perform(get("/users").param("page", "0").param("size", "1"))
+                    .andExpect(status().isBadRequest());
+        }
+    }
 
     @Nested
     class GetUserByIdTests {

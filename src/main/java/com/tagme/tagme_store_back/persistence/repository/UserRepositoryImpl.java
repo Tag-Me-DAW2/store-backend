@@ -1,11 +1,15 @@
 package com.tagme.tagme_store_back.persistence.repository;
 
+import com.tagme.tagme_store_back.domain.dto.ProductDto;
 import com.tagme.tagme_store_back.domain.dto.UserDto;
+import com.tagme.tagme_store_back.domain.model.Page;
 import com.tagme.tagme_store_back.domain.repository.UserRepository;
 import com.tagme.tagme_store_back.persistence.dao.jpa.UserJpaDao;
 import com.tagme.tagme_store_back.persistence.dao.jpa.entity.UserJpaEntity;
+import com.tagme.tagme_store_back.persistence.mapper.ProductMapper;
 import com.tagme.tagme_store_back.persistence.mapper.UserMapper;
 
+import java.util.List;
 import java.util.Optional;
 
 public class UserRepositoryImpl implements UserRepository {
@@ -13,6 +17,16 @@ public class UserRepositoryImpl implements UserRepository {
 
     public UserRepositoryImpl(UserJpaDao userJpaDao) {
         this.userJpaDao = userJpaDao;
+    }
+
+    @Override
+    public Page<UserDto> findAll(int page, int size) {
+        List<UserDto> content = userJpaDao.findAll(page, size).stream()
+                .map(UserMapper::fromUserJpaEntityToUserDto)
+                .toList();
+
+        long totalElements = userJpaDao.count();
+        return new Page<>(content, page, size, totalElements);
     }
 
     @Override

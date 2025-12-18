@@ -14,14 +14,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserRepositoryImplTest {
@@ -38,6 +37,26 @@ class UserRepositoryImplTest {
     void setUp() {
         userJpaEntity = Instancio.of(UserJpaEntity.class).create();
         userDto = UserMapper.fromUserJpaEntityToUserDto(userJpaEntity);
+    }
+
+    @Nested
+    class GetAllTests {
+        @DisplayName("Given valid page and size, when findAll is called, then return the paged result")
+        @Test
+        void testFindAllValidPagination() {
+            when(userJpaDao.findAll(anyInt(), anyInt()))
+                    .thenReturn(List.of(userJpaEntity));
+            when(userJpaDao.count()).thenReturn(1L);
+
+            var result = userRepositoryImpl.findAll(1, 1);
+
+            assertNotNull(result);
+            assertEquals(1, result.data().size());
+            assertEquals(userDto.id(), result.data().get(0).id());
+            assertEquals(1, result.pageNumber());
+            assertEquals(1, result.pageSize());
+            assertEquals(1L, result.totalElements());
+        }
     }
 
     @Nested

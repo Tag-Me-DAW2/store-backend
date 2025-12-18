@@ -13,6 +13,51 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DaoTest
 class UserJpaDaoImplTest extends BaseJpaDaoTest<UserJpaDao> {
+
+    @Nested
+    class FindAllTests {
+        @DisplayName("Given valid page and size, when findAll is called, then return the expected page")
+        @Test
+        void findAllValidPagination() {
+            int page = 1;
+            int size = 1;
+
+            var result = dao.findAll(page, size);
+
+            assertNotNull(result);
+            assertEquals(size, result.size());
+            assertEquals(1L, result.get(0).getId());
+        }
+
+        @DisplayName("Given page 0, when findAll is called, then it is treated as first page")
+        @Test
+        void findAllPageZeroTreatedAsFirst() {
+            var pageZero = dao.findAll(0, 1);
+            var firstPage = dao.findAll(1, 1);
+
+            assertEquals(firstPage.size(), pageZero.size());
+            if (!firstPage.isEmpty()) {
+                assertEquals(firstPage.get(0).getId(), pageZero.get(0).getId());
+            }
+        }
+
+        @DisplayName("Given size 0, when findAll is called, then return an empty list")
+        @Test
+        void findAllSizeZeroReturnsEmpty() {
+            var result = dao.findAll(1, 0);
+            assertTrue(result.isEmpty());
+        }
+
+        @DisplayName("Given a very large size, when findAll is called, then return all seeded rows")
+        @Test
+        void findAllLargeSizeReturnsAll() {
+            int total = Math.toIntExact(dao.count());
+            var result = dao.findAll(1, total + 10);
+
+            assertEquals(total, result.size());
+        }
+    }
+
     @Nested
     class FindByEmailTests {
         @DisplayName("Given an existing email, when findByEmail is called, then the corresponding user is returned")

@@ -1,11 +1,15 @@
 package com.tagme.tagme_store_back.controller;
 
+import com.tagme.tagme_store_back.controller.mapper.CategoryMapper;
 import com.tagme.tagme_store_back.controller.mapper.UserMapper;
 import com.tagme.tagme_store_back.controller.webModel.request.UserInsertRequest;
 import com.tagme.tagme_store_back.controller.webModel.request.UserUpdateRequest;
+import com.tagme.tagme_store_back.controller.webModel.response.CategoryResponse;
 import com.tagme.tagme_store_back.controller.webModel.response.UserResponse;
+import com.tagme.tagme_store_back.domain.dto.CategoryDto;
 import com.tagme.tagme_store_back.domain.dto.UserDto;
 import com.tagme.tagme_store_back.domain.exception.BusinessException;
+import com.tagme.tagme_store_back.domain.model.Page;
 import com.tagme.tagme_store_back.domain.service.UserService;
 import com.tagme.tagme_store_back.domain.validation.DtoValidator;
 import com.tagme.tagme_store_back.web.context.AuthContext;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -24,6 +29,19 @@ public class UserController {
 
     public UserController(UserService userService) {
         this.userService = userService;
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<UserResponse>> getAllCategories(@RequestParam(required = false, defaultValue = "1") int page, @RequestParam(required = false, defaultValue = "10") int size) {
+        Page<UserDto> userDtos = userService.getAll(page, size);
+
+        List<UserResponse> userResponseList = userDtos.data().stream()
+                .map(UserMapper::fromUserDtoToUserResponse)
+                .toList();
+
+        Page<UserResponse> userResponsePage = new Page<>(userResponseList, page, size, userDtos.totalElements(), userDtos.totalPages());
+
+        return new ResponseEntity<>(userResponsePage, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

@@ -3,6 +3,7 @@ package com.tagme.tagme_store_back.domain.service.impl;
 import com.tagme.tagme_store_back.domain.dto.UserDto;
 import com.tagme.tagme_store_back.domain.exception.BusinessException;
 import com.tagme.tagme_store_back.domain.exception.ResourceNotFoundException;
+import com.tagme.tagme_store_back.domain.model.Page;
 import com.tagme.tagme_store_back.domain.repository.UserRepository;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,8 +20,7 @@ import java.util.Optional;
 
 import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,6 +38,34 @@ class UserServiceImplTest {
         userDto1 = Instancio.of(UserDto.class).create();
     }
 
+    @Nested
+    class GetAllTests {
+        @DisplayName("Given valid page and size, when getAll is called, then return the paged result")
+        @Test
+        void testGetAllValidPagination() {
+            Page<UserDto> repoPage = new Page<>(List.of(userDto1), 1, 1, 1L);
+
+            when(userRepository.findAll(anyInt(), anyInt()))
+                    .thenReturn(repoPage);
+
+            var result = userService.getAll(1, 1);
+
+            assertNotNull(result);
+            assertEquals(1, result.data().size());
+            assertEquals(userDto1.id(), result.data().get(0).id());
+            assertEquals(1, result.pageNumber());
+            assertEquals(1, result.pageSize());
+            assertEquals(1L, result.totalElements());
+        }
+
+        @DisplayName("Given invalid page or size, when getAll is called, then throw BusinessException")
+        @Test
+        void testGetAllInvalidParams() {
+            assertThrows(BusinessException.class, () -> userService.getAll(0, 1));
+            assertThrows(BusinessException.class, () -> userService.getAll(1, 0));
+            assertThrows(BusinessException.class, () -> userService.getAll(-1, -5));
+        }
+    }
     @Nested
     class GetByIdTests {
         @DisplayName("Given existing user ID, when getById is called, then return the corresponding UserDto")
