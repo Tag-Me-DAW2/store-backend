@@ -1,5 +1,6 @@
 package com.tagme.tagme_store_back.controller;
 
+import com.github.dockerjava.api.exception.UnauthorizedException;
 import com.tagme.tagme_store_back.controller.mapper.CategoryMapper;
 import com.tagme.tagme_store_back.controller.mapper.UserMapper;
 import com.tagme.tagme_store_back.controller.webModel.request.UserInsertRequest;
@@ -80,6 +81,10 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<UserResponse> deleteUser(@PathVariable Long id) {
         UserResponse sessionUser = AuthContext.getUser();
+        if (sessionUser == null) {
+            throw new UnauthorizedException("Authentication required to delete user");
+        }
+
         if(!sessionUser.id().equals(id) && !sessionUser.role().toString().equals("ADMIN")) {
             throw new BusinessException("Users can only delete their own accounts");
         }
