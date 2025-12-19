@@ -80,7 +80,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<UserResponse> deleteUser(@PathVariable Long id) {
         UserResponse sessionUser = AuthContext.getUser();
-        if(!sessionUser.id().equals(id)) {
+        if(!sessionUser.id().equals(id) && !sessionUser.role().toString().equals("ADMIN")) {
             throw new BusinessException("Users can only delete their own accounts");
         }
 
