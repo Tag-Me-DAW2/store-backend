@@ -27,7 +27,7 @@ CREATE TABLE `tb_sessions` (
 
 CREATE TABLE `tb_categories` (
                           `id` int(11) NOT NULL AUTO_INCREMENT,
-                          `name` varchar(100) DEFAULT NULL,
+                          `name` varchar(100) NOT NULL,
                           `creation_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                           PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
