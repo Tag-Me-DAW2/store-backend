@@ -10,6 +10,7 @@ import com.tagme.tagme_store_back.controller.webModel.response.UserResponse;
 import com.tagme.tagme_store_back.domain.dto.CategoryDto;
 import com.tagme.tagme_store_back.domain.dto.UserDto;
 import com.tagme.tagme_store_back.domain.exception.BusinessException;
+import com.tagme.tagme_store_back.domain.exception.InvalidCredentialsException;
 import com.tagme.tagme_store_back.domain.model.Page;
 import com.tagme.tagme_store_back.domain.service.UserService;
 import com.tagme.tagme_store_back.domain.validation.DtoValidator;
@@ -82,7 +83,7 @@ public class UserController {
     public ResponseEntity<UserResponse> deleteUser(@PathVariable Long id) {
         UserResponse sessionUser = AuthContext.getUser();
         if (sessionUser == null) {
-            throw new UnauthorizedException("Authentication required to delete user");
+            throw new InvalidCredentialsException("Authentication required to delete user");
         }
 
         if(!sessionUser.id().equals(id) && !sessionUser.role().toString().equals("ADMIN")) {
