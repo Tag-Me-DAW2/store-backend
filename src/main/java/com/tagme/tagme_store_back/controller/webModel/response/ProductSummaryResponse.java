@@ -8,6 +8,7 @@ public record ProductSummaryResponse(
         BigDecimal discountPercentage,
         BigDecimal price,
         String image,
-        CategoryResponse category
+        CategoryResponse category,
+        String material
 ) {
 }

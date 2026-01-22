@@ -45,6 +45,28 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Page<ProductDto> getFilteredProducts(int page, int size, String name, Long categoryId, String material, Double minPrice, Double maxPrice) {
+        if(page < 1 || size < 1) {
+            throw new BusinessException("Page and size must be greater than 0");
+        }
+
+        Page<ProductDto> productDtoPage = productRepository.findFilteredProducts(page, size, name, categoryId, material, minPrice, maxPrice);
+
+        List<ProductDto> itemsDto = productDtoPage.data()
+                .stream()
+                .map(ProductMapper::fromProductDtoToProduct)
+                .map(ProductMapper::fromProductToProductDto)
+                .toList();
+
+        return new Page<>(
+                itemsDto,
+                productDtoPage.pageNumber(),
+                productDtoPage.pageSize(),
+                productDtoPage.totalElements()
+        );
+    }
+
+    @Override
     public ProductDto getById(Long id) {
         if (id == null) {
             throw new RuntimeException("Id cannot be null");

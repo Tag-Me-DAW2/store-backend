@@ -8,6 +8,7 @@ import com.tagme.tagme_store_back.controller.webModel.response.ProductSummaryRes
 import com.tagme.tagme_store_back.domain.dto.CategoryDto;
 import com.tagme.tagme_store_back.domain.dto.ProductDto;
 import com.tagme.tagme_store_back.domain.model.Product;
+import com.tagme.tagme_store_back.domain.model.ProductMaterial;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.sql.rowset.serial.SerialBlob;
@@ -36,7 +37,8 @@ public class ProductMapper {
                 productDto.price(),
                 imageBytes != null ? "data:" + mimeType + ";base64,"+Base64.getEncoder().encodeToString(imageBytes) : null,
                 productDto.imageName(),
-                CategoryMapper.fromCategoryDtoToCategoryResponse(productDto.category())
+                CategoryMapper.fromCategoryDtoToCategoryResponse(productDto.category()),
+                productDto.material().name()
         );
     }
 
@@ -54,7 +56,8 @@ public class ProductMapper {
                 productDto.discountPercentage(),
                 productDto.price(),
                 imageBytes != null ? "data:" + mimeType + ";base64,"+Base64.getEncoder().encodeToString(imageBytes) : null,
-                CategoryMapper.fromCategoryDtoToCategoryResponse(productDto.category())
+                CategoryMapper.fromCategoryDtoToCategoryResponse(productDto.category()),
+                productDto.material().name()
         );
     }
 
@@ -71,7 +74,8 @@ public class ProductMapper {
                 null,
                 convertToBlob(productInsertRequest.image()),
                 productInsertRequest.imageName(),
-                new CategoryDto(productInsertRequest.categoryId(), null)
+                new CategoryDto(productInsertRequest.categoryId(), null),
+                ProductMaterial.valueOf(productInsertRequest.material())
         );
     }
 
@@ -88,7 +92,8 @@ public class ProductMapper {
                 null,
                 convertToBlob(productUpdateRequest.image()),
                 productUpdateRequest.imageName(),
-                new CategoryDto(productUpdateRequest.categoryId(), null)
+                new CategoryDto(productUpdateRequest.categoryId(), null),
+                ProductMaterial.valueOf(productUpdateRequest.material())
         );
     }
 

@@ -28,6 +28,16 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
+    public Page<ProductDto> findFilteredProducts(int page, int size, String name, Long categoryId, String material, Double minPrice, Double maxPrice) {
+        List<ProductDto> content = productDao.findFilteredProducts(page, size, name, categoryId, material, minPrice, maxPrice).stream()
+                .map(ProductMapper::fromProductJpaEntityToProductDto)
+                .toList();
+
+        long totalElements = productDao.countFilteredProducts(name, categoryId, material, minPrice, maxPrice);
+        return new Page<>(content, page, size, totalElements);
+    }
+
+    @Override
     public Optional<ProductDto> findById(Long id) {
         return productDao.findById(id).map(ProductMapper::fromProductJpaEntityToProductDto);
     }

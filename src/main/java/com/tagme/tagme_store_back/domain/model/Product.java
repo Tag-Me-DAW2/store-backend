@@ -15,8 +15,9 @@ public class Product {
     private Blob image;
     private String imageName;
     private Category category;
+    private ProductMaterial material;
 
-    public Product(Long id, String name, String description, BigDecimal basePrice, BigDecimal discountPercentage, Blob image, String imageName, Category category) {
+    public Product(Long id, String name, String description, BigDecimal basePrice, BigDecimal discountPercentage, Blob image, String imageName, Category category, ProductMaterial material) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -26,6 +27,7 @@ public class Product {
         this.image = image;
         this.imageName = imageName;
         this.category = category;
+        this.material = material;
     }
 
     public Long getId() {
@@ -104,6 +106,26 @@ public class Product {
         this.imageName = imageName;
     }
 
+    public ProductMaterial getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(ProductMaterial material) {
+        this.material = material;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Objects.equals(id, product.id) && Objects.equals(name, product.name) && Objects.equals(description, product.description) && Objects.equals(basePrice, product.basePrice) && Objects.equals(discountPercentage, product.discountPercentage) && Objects.equals(price, product.price) && Objects.equals(image, product.image) && Objects.equals(imageName, product.imageName) && Objects.equals(category, product.category) && material == product.material;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, basePrice, discountPercentage, price, image, imageName, category, material);
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -116,18 +138,7 @@ public class Product {
                 ", image=" + image +
                 ", imageName='" + imageName + '\'' +
                 ", category=" + category +
+                ", material=" + material +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Product product = (Product) o;
-        return Objects.equals(id, product.id) && Objects.equals(name, product.name) && Objects.equals(description, product.description) && Objects.equals(basePrice, product.basePrice) && Objects.equals(discountPercentage, product.discountPercentage) && Objects.equals(price, product.price) && Objects.equals(image, product.image) && Objects.equals(imageName, product.imageName) && Objects.equals(category, product.category);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, description, basePrice, discountPercentage, price, image, imageName, category);
     }
 }

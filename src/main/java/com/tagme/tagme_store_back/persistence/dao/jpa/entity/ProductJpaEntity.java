@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Objects;
 
+import com.tagme.tagme_store_back.domain.model.ProductMaterial;
 import jakarta.persistence.*;
 
 @Entity
@@ -30,6 +31,9 @@ public class ProductJpaEntity implements Serializable {
     @OneToOne
     @JoinColumn(name = "category_id", nullable = true)
     private CategoryJpaEntity category;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "material", nullable = true)
+    private ProductMaterial material;
     @Column(name = "creation_date", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -37,7 +41,7 @@ public class ProductJpaEntity implements Serializable {
     }
 
     public ProductJpaEntity(Long id, String name, String description, BigDecimal basePrice,
-            BigDecimal discountPercentage, byte[] image, String imageName, CategoryJpaEntity category) {
+                            BigDecimal discountPercentage, byte[] image, String imageName, CategoryJpaEntity category, ProductMaterial material) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -46,6 +50,7 @@ public class ProductJpaEntity implements Serializable {
         this.image = image;
         this.imageName = imageName;
         this.category = category;
+        this.material = material;
     }
 
     public Long getId() {
@@ -108,21 +113,30 @@ public class ProductJpaEntity implements Serializable {
         return createdAt;
     }
 
+    public ProductMaterial getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(ProductMaterial material) {
+        this.material = material;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         ProductJpaEntity that = (ProductJpaEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(basePrice, that.basePrice) && Objects.equals(discountPercentage, that.discountPercentage) && Objects.deepEquals(image, that.image) && Objects.equals(category, that.category);
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(basePrice, that.basePrice) && Objects.equals(discountPercentage, that.discountPercentage) && Objects.deepEquals(image, that.image) && Objects.equals(imageName, that.imageName) && Objects.equals(category, that.category) && material == that.material && Objects.equals(createdAt, that.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, basePrice, discountPercentage, Arrays.hashCode(image), category);
+        return Objects.hash(id, name, description, basePrice, discountPercentage, Arrays.hashCode(image), imageName, category, material, createdAt);
     }
 
     public String getImageName() {
         return imageName;
     }
+
 
     public void setImageName(String imageName) {
         this.imageName = imageName;

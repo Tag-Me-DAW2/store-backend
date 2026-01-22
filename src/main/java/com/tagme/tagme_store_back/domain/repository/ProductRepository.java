@@ -14,4 +14,5 @@ public interface ProductRepository {
     void deleteById(Long id);
     ProductDto save(ProductDto productDto);
     Long getTotalProducts();
+    Page<ProductDto> findFilteredProducts(int page, int size, String name, Long categoryId, String material, Double minPrice, Double maxPrice);
 }

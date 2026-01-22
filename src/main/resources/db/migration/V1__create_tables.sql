@@ -41,6 +41,7 @@ CREATE TABLE `tb_products` (
                                image LONGBLOB DEFAULT NULL,
                                image_name VARCHAR(255) DEFAULT NULL,
                                category_id INT(11),
+                               `material` ENUM('STEEL', 'PVC', 'WOOD', 'GOLDEN') NOT NULL DEFAULT 'PVC',
                                `creation_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                CONSTRAINT `tb_products_FK` FOREIGN KEY (category_id) REFERENCES tb_categories(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;

@@ -13,6 +13,7 @@ public record ProductInsertRequest(
         BigDecimal discountPercentage,
         String image,
         String imageName,
-        Long categoryId
+        Long categoryId,
+        String material
 ) {
 }

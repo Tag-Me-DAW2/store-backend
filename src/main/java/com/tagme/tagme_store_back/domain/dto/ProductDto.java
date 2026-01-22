@@ -1,6 +1,9 @@
 package com.tagme.tagme_store_back.domain.dto;
 
+import com.tagme.tagme_store_back.domain.model.Category;
+import com.tagme.tagme_store_back.domain.model.ProductMaterial;
 import jakarta.validation.constraints.*;
+import org.aspectj.weaver.ast.Not;
 
 import java.math.BigDecimal;
 import java.sql.Blob;
@@ -23,7 +26,8 @@ public record ProductDto(
         Blob image,
         @NotNull(message = "Image name cannot be null")
         String imageName,
-        @NotNull
-        CategoryDto category
+        @NotNull(message = "Category cannot be null")
+        CategoryDto category,
+        ProductMaterial material
 ) {
 }

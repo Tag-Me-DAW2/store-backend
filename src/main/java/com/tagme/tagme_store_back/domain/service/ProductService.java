@@ -13,4 +13,5 @@ public interface ProductService {
     void deleteById(Long id);
     ProductDto create(ProductDto product);
     ProductDto update(ProductDto product);
+    Page<ProductDto> getFilteredProducts(int page, int size, String name, Long categoryId, String material, Double minPrice, Double maxPrice);
 }

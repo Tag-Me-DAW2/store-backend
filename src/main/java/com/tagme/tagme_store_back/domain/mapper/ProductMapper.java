@@ -18,7 +18,8 @@ public class ProductMapper {
                 product.getPrice(),
                 product.getImage(),
                 product.getImageName(),
-                CategoryMapper.fromCategoryToCategoryDto(product.getCategory())
+                CategoryMapper.fromCategoryToCategoryDto(product.getCategory()),
+                product.getMaterial()
         );
     }
 
@@ -34,7 +35,8 @@ public class ProductMapper {
                 productDto.discountPercentage(),
                 productDto.image(),
                 productDto.imageName(),
-                CategoryMapper.fromCategoryDtoToCategory(productDto.category())
+                CategoryMapper.fromCategoryDtoToCategory(productDto.category()),
+                productDto.material()
         );
     }
 }

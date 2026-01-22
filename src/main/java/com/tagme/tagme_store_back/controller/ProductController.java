@@ -46,6 +46,32 @@ public class ProductController {
         return new ResponseEntity<>(responsePage, HttpStatus.OK);
     }
 
+    @GetMapping("/filter")
+    public ResponseEntity<Page<ProductSummaryResponse>> getFilteredProducts(
+            @RequestParam(required = false, defaultValue = "1") int page,
+            @RequestParam(required = false, defaultValue = "10") int size,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) String material,
+            @RequestParam(required = false, defaultValue = "0") Double minPrice,
+            @RequestParam(required = false) Double maxPrice
+    ) {
+        Page<ProductDto> productDtoPage = productService.getFilteredProducts(page, size, name, categoryId, material, minPrice, maxPrice);
+
+        List<ProductSummaryResponse> productsList = productDtoPage.data().stream()
+                .map(dto -> {
+                    try {
+                        return ProductMapper.fromProductDtoToProductSummaryResponse(dto);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).toList();
+
+        Page<ProductSummaryResponse> responsePage = new Page<>(productsList, page, size, productDtoPage.totalElements(), productDtoPage.totalPages());
+
+        return new ResponseEntity<>(responsePage, HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ProductDetailResponse> getProductById(@PathVariable Long id) throws IOException {
         ProductDetailResponse product = ProductMapper.fromProductDtoToProductDetailResponse(productService.getById(id));
