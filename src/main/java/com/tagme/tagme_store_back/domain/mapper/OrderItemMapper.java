@@ -12,7 +12,6 @@ public class OrderItemMapper {
         return new OrderItem(
                 orderItemDto.id(),
                 ProductMapper.fromProductDtoToProduct(orderItemDto.productDto()),
-                OrderMapper.fromOrderDtoToOrder(orderItemDto.orderDto()),
                 orderItemDto.quantity(),
                 orderItemDto.basePrice(),
                 orderItemDto.discountPercentage()
@@ -27,7 +26,6 @@ public class OrderItemMapper {
         return new OrderItemDto(
                 orderItem.getId(),
                 ProductMapper.fromProductToProductDto(orderItem.getProduct()),
-                OrderMapper.fromOrderToOrderDto(orderItem.getOrder()),
                 orderItem.getQuantity(),
                 orderItem.getBasePrice(),
                 orderItem.getDiscountPercentage(),

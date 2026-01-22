@@ -8,6 +8,7 @@ import com.tagme.tagme_store_back.controller.webModel.response.ProductSummaryRes
 import com.tagme.tagme_store_back.domain.dto.ProductDto;
 import com.tagme.tagme_store_back.domain.exception.BusinessException;
 import com.tagme.tagme_store_back.domain.model.Page;
+import com.tagme.tagme_store_back.domain.model.ProductSort;
 import com.tagme.tagme_store_back.domain.service.ProductService;
 import com.tagme.tagme_store_back.domain.validation.DtoValidator;
 import org.springframework.http.HttpStatus;
@@ -54,9 +55,10 @@ public class ProductController {
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) String material,
             @RequestParam(required = false, defaultValue = "0") Double minPrice,
-            @RequestParam(required = false) Double maxPrice
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false, defaultValue = "MOST_POPULAR") ProductSort sort
     ) {
-        Page<ProductDto> productDtoPage = productService.getFilteredProducts(page, size, name, categoryId, material, minPrice, maxPrice);
+        Page<ProductDto> productDtoPage = productService.getFilteredProducts(page, size, name, categoryId, material, minPrice, maxPrice, sort);
 
         List<ProductSummaryResponse> productsList = productDtoPage.data().stream()
                 .map(dto -> {

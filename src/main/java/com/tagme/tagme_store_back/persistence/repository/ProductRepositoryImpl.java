@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.tagme.tagme_store_back.domain.dto.ProductDto;
 import com.tagme.tagme_store_back.domain.model.Page;
+import com.tagme.tagme_store_back.domain.model.ProductSort;
 import com.tagme.tagme_store_back.domain.repository.ProductRepository;
 import com.tagme.tagme_store_back.persistence.dao.jpa.entity.ProductJpaEntity;
 import com.tagme.tagme_store_back.persistence.dao.jpa.ProductJpaDao;
@@ -28,8 +29,8 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public Page<ProductDto> findFilteredProducts(int page, int size, String name, Long categoryId, String material, Double minPrice, Double maxPrice) {
-        List<ProductDto> content = productDao.findFilteredProducts(page, size, name, categoryId, material, minPrice, maxPrice).stream()
+    public Page<ProductDto> findFilteredProducts(int page, int size, String name, Long categoryId, String material, Double minPrice, Double maxPrice, ProductSort sort) {
+        List<ProductDto> content = productDao.findFilteredProducts(page, size, name, categoryId, material, minPrice, maxPrice, sort).stream()
                 .map(ProductMapper::fromProductJpaEntityToProductDto)
                 .toList();
 

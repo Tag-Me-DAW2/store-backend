@@ -13,8 +13,6 @@ public record OrderItemDto(
         Long id,
         @NotNull(message = "Product cannot be null")
         ProductDto productDto,
-        @NotNull(message = "Order cannot be null")
-        OrderDto orderDto,
         @Min(value = 1, message = "Quantity must be at least 1")
         Long quantity,
         @Min(value = 0, message = "Base price must be non-negative")

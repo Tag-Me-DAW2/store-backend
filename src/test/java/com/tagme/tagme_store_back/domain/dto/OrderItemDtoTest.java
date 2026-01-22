@@ -20,8 +20,7 @@ class OrderItemDtoTest {
     @Test
     void createOrderDto() {
         ProductDto productDto = Instancio.of(ProductDto.class).create();
-        OrderDto orderDto = Instancio.of(OrderDto.class).create();
-        OrderItemDto orderItemDto = new OrderItemDto(1L, productDto, orderDto, 2L, new BigDecimal(50L), new BigDecimal(10L), new BigDecimal(40L));
+        OrderItemDto orderItemDto = new OrderItemDto(1L, productDto, 2L, new BigDecimal(50L), new BigDecimal(10L), new BigDecimal(40L));
 
         assertDoesNotThrow(() -> DtoValidator.validate(orderItemDto));
     }
@@ -29,7 +28,6 @@ class OrderItemDtoTest {
     static Stream<Arguments> invalidValues() {
         return Stream.of(
                 Arguments.of("productDto", null),
-                Arguments.of("orderDto", null),
                 Arguments.of("quantity", null),
                 Arguments.of("quantity", 0L),
                 Arguments.of("basePrice", new BigDecimal(-1L)),

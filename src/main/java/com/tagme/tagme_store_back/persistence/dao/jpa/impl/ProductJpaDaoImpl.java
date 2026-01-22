@@ -2,20 +2,18 @@ package com.tagme.tagme_store_back.persistence.dao.jpa.impl;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import com.tagme.tagme_store_back.domain.exception.ResourceNotFoundException;
 import com.tagme.tagme_store_back.domain.model.ProductMaterial;
+import com.tagme.tagme_store_back.domain.model.ProductSort;
 import com.tagme.tagme_store_back.persistence.dao.jpa.ProductJpaDao;
 import com.tagme.tagme_store_back.persistence.dao.jpa.entity.ProductJpaEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 
 public class ProductJpaDaoImpl implements ProductJpaDao {
 
@@ -36,16 +34,21 @@ public class ProductJpaDaoImpl implements ProductJpaDao {
     }
 
     @Override
-    public List<ProductJpaEntity> findFilteredProducts(int page, int size, String name, Long categoryId, String material, Double minPrice, Double maxPrice) {
+    public List<ProductJpaEntity> findFilteredProducts(int page, int size, String name, Long categoryId, String material, Double minPrice, Double maxPrice, ProductSort sort) {
         int pageIndex = Math.max(page - 1, 0);
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<ProductJpaEntity> cq = cb.createQuery(ProductJpaEntity.class);
         Root<ProductJpaEntity> p = cq.from(ProductJpaEntity.class);
 
-        List<Predicate> predicates = buildPredicates(cb, p, name, categoryId, material, minPrice, maxPrice);
+        Map querySetters = buildPredicates(cb, p, name, categoryId, material, minPrice, maxPrice, sort);
+        List<Predicate> predicates = (List<Predicate>) querySetters.keySet().iterator().next();
+        List<Order> orders = (List<Order>) querySetters.values().iterator().next();
 
         cq.where(predicates.toArray(new Predicate[0]));
+        if (!orders.isEmpty()) {
+            cq.orderBy(orders);
+        }
 
         TypedQuery<ProductJpaEntity> query = entityManager.createQuery(cq)
                 .setFirstResult(pageIndex * size)
@@ -60,7 +63,7 @@ public class ProductJpaDaoImpl implements ProductJpaDao {
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
         Root<ProductJpaEntity> p = cq.from(ProductJpaEntity.class);
 
-        List<Predicate> predicates = buildPredicates(cb, p, name, categoryId, material, minPrice, maxPrice);
+        List<Predicate> predicates = buildPredicates(cb, p, name, categoryId, material, minPrice, maxPrice, null).keySet().iterator().next();
 
         cq.select(cb.count(p)).where(predicates.toArray(new Predicate[0]));
 
@@ -107,8 +110,9 @@ public class ProductJpaDaoImpl implements ProductJpaDao {
         return entityManager.createQuery("SELECT COUNT(u) FROM ProductJpaEntity u", Long.class).getSingleResult();
     }
 
-    private List<Predicate> buildPredicates(CriteriaBuilder cb, Root<ProductJpaEntity> p, String name, Long categoryId, String material, Double minPrice, Double maxPrice) {
+    private Map<List<Predicate>, List<Order>> buildPredicates(CriteriaBuilder cb, Root<ProductJpaEntity> p, String name, Long categoryId, String material, Double minPrice, Double maxPrice, ProductSort sort) {
         List<Predicate> predicates = new java.util.ArrayList<>();
+        List<Order> orders = new java.util.ArrayList<>();
 
         if (name != null && !name.isEmpty()) {
             predicates.add(cb.like(cb.lower(p.get("name")), "%" + name.toLowerCase() + "%"));
@@ -135,6 +139,15 @@ public class ProductJpaDaoImpl implements ProductJpaDao {
             predicates.add(cb.lessThanOrEqualTo(p.get("basePrice"), BigDecimal.valueOf(maxPrice)));
         }
 
-        return predicates;
+        if (sort != null) {
+            switch (sort) {
+                case PRICE_ASC -> orders.add(cb.asc(p.get("basePrice")));
+                case PRICE_DESC -> orders.add(cb.desc(p.get("basePrice")));
+                case NAME_ASC -> orders.add(cb.asc(p.get("name")));
+                case NAME_DESC -> orders.add(cb.desc(p.get("name")));
+            }
+        }
+
+        return Map.of(predicates, orders);
     }
 }

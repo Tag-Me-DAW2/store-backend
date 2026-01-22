@@ -6,6 +6,7 @@ import com.tagme.tagme_store_back.domain.exception.ResourceNotFoundException;
 import com.tagme.tagme_store_back.domain.mapper.ProductMapper;
 import com.tagme.tagme_store_back.domain.model.Page;
 import com.tagme.tagme_store_back.domain.model.Product;
+import com.tagme.tagme_store_back.domain.model.ProductSort;
 import com.tagme.tagme_store_back.domain.repository.CategoryRepository;
 import com.tagme.tagme_store_back.domain.repository.ProductRepository;
 import com.tagme.tagme_store_back.domain.service.ProductService;
@@ -45,12 +46,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductDto> getFilteredProducts(int page, int size, String name, Long categoryId, String material, Double minPrice, Double maxPrice) {
+    public Page<ProductDto> getFilteredProducts(int page, int size, String name, Long categoryId, String material, Double minPrice, Double maxPrice, ProductSort sort) {
         if(page < 1 || size < 1) {
             throw new BusinessException("Page and size must be greater than 0");
         }
 
-        Page<ProductDto> productDtoPage = productRepository.findFilteredProducts(page, size, name, categoryId, material, minPrice, maxPrice);
+        Page<ProductDto> productDtoPage = productRepository.findFilteredProducts(page, size, name, categoryId, material, minPrice, maxPrice, sort);
 
         List<ProductDto> itemsDto = productDtoPage.data()
                 .stream()

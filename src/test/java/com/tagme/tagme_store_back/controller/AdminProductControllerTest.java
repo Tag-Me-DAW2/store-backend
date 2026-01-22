@@ -7,6 +7,7 @@ import com.tagme.tagme_store_back.controller.webModel.response.ProductDetailResp
 import com.tagme.tagme_store_back.domain.dto.ProductDto;
 import com.tagme.tagme_store_back.domain.dto.UserDto;
 import com.tagme.tagme_store_back.domain.exception.ResourceNotFoundException;
+import com.tagme.tagme_store_back.domain.model.ProductMaterial;
 import com.tagme.tagme_store_back.domain.model.UserRole;
 import com.tagme.tagme_store_back.domain.service.AuthService;
 import com.tagme.tagme_store_back.domain.service.ProductService;
@@ -71,12 +72,15 @@ class AdminProductControllerTest {
     class CreateProductTests {
         @Test
         void createProduct_ShouldReturnCreatedProduct_WhenValidRequest() throws Exception {
-            ProductDto createdProduct = Instancio.of(ProductDto.class).withSeed(30).create();
+            ProductDto createdProduct = Instancio.of(ProductDto.class).withSeed(30)
+                    .set(field(ProductDto.class, "material"), ProductMaterial.PVC)
+                    .create();
             when(productService.create(any(ProductDto.class))).thenReturn(createdProduct);
 
             String requestBody = objectMapper.writeValueAsString(
                     Instancio.of(ProductDetailResponse.class).withSeed(30)
                             .set(field(ProductDetailResponse.class, "image"), Base64.getEncoder().encodeToString("imagen prueba".getBytes()))
+                            .set(field(ProductDetailResponse.class, "material"), "PVC")
                             .create());
 
             mockMvc.perform(post("/admin/products")
@@ -107,20 +111,23 @@ class AdminProductControllerTest {
     class UpdateProductTests {
         @Test
         void updateProduct_ShouldReturnUpdatedProduct_WhenValidRequest() throws Exception {
-            ProductDto updatedProduct = Instancio.of(ProductDto.class).withSeed(40).create();
+            ProductDto updatedProduct = Instancio.of(ProductDto.class).withSeed(40)
+                    .set(field(ProductDto.class,"material"), ProductMaterial.PVC)
+                    .create();
             when(productService.update(any(ProductDto.class))).thenReturn(updatedProduct);
 
 
             ProductUpdateRequest productUpdateRequest = Instancio.of(ProductUpdateRequest.class)
                     .set(field(ProductUpdateRequest.class, "image"), Base64.getEncoder().encodeToString("imagen actualizada".getBytes()))
                     .set(field(ProductUpdateRequest.class, "discountPercentage"), BigDecimal.valueOf(100L))
+                    .set(field(ProductUpdateRequest.class, "material"), "PVC")
                     .withSeed(40)
                     .create();
 
             String requestBody = objectMapper.writeValueAsString(productUpdateRequest);
 
             System.out.println(productUpdateRequest+ " ");
-            System.out.println(requestBody+ "sadf");
+            System.out.println(requestBody+ " ");
             mockMvc.perform(put("/admin/products/{id}", updatedProduct.id())
                             .contentType("application/json")
                             .content(requestBody)

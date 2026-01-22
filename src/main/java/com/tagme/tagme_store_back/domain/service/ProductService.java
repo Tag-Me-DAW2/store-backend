@@ -2,6 +2,7 @@ package com.tagme.tagme_store_back.domain.service;
 
 import com.tagme.tagme_store_back.domain.dto.ProductDto;
 import com.tagme.tagme_store_back.domain.model.Page;
+import com.tagme.tagme_store_back.domain.model.ProductSort;
 
 import java.util.List;
 
@@ -13,5 +14,5 @@ public interface ProductService {
     void deleteById(Long id);
     ProductDto create(ProductDto product);
     ProductDto update(ProductDto product);
-    Page<ProductDto> getFilteredProducts(int page, int size, String name, Long categoryId, String material, Double minPrice, Double maxPrice);
+    Page<ProductDto> getFilteredProducts(int page, int size, String name, Long categoryId, String material, Double minPrice, Double maxPrice, ProductSort sort);
 }

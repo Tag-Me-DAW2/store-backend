@@ -3,6 +3,7 @@ package com.tagme.tagme_store_back.domain.repository;
 import com.tagme.tagme_store_back.domain.dto.ProductDto;
 import com.tagme.tagme_store_back.domain.model.Page;
 import com.tagme.tagme_store_back.domain.model.Product;
+import com.tagme.tagme_store_back.domain.model.ProductSort;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,5 +15,5 @@ public interface ProductRepository {
     void deleteById(Long id);
     ProductDto save(ProductDto productDto);
     Long getTotalProducts();
-    Page<ProductDto> findFilteredProducts(int page, int size, String name, Long categoryId, String material, Double minPrice, Double maxPrice);
+    Page<ProductDto> findFilteredProducts(int page, int size, String name, Long categoryId, String material, Double minPrice, Double maxPrice, ProductSort sort);
 }

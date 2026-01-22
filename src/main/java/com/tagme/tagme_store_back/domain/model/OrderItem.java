@@ -7,16 +7,14 @@ import java.util.Objects;
 public class OrderItem {
     private Long id;
     private Product product;
-    private Order order;
     private Long quantity;
     private BigDecimal basePrice;
     private BigDecimal discountPercentage;
     private BigDecimal total;
 
-    public OrderItem(Long id, Product product, Order order, Long quantity, BigDecimal basePrice, BigDecimal discountPercentage) {
+    public OrderItem(Long id, Product product, Long quantity, BigDecimal basePrice, BigDecimal discountPercentage) {
         this.id = id;
         this.product = product;
-        this.order = order;
         this.quantity = quantity;
         this.basePrice = basePrice;
         this.discountPercentage = discountPercentage;
@@ -54,14 +52,6 @@ public class OrderItem {
         this.product = product;
     }
 
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
-    }
-
     public Long getQuantity() {
         return quantity;
     }
@@ -96,14 +86,13 @@ public class OrderItem {
 
     @Override
     public boolean equals(Object o) {
-
         if (o == null || getClass() != o.getClass()) return false;
         OrderItem orderItem = (OrderItem) o;
-        return Objects.equals(id, orderItem.id) && Objects.equals(product, orderItem.product) && Objects.equals(order, orderItem.order) && Objects.equals(quantity, orderItem.quantity) && Objects.equals(basePrice, orderItem.basePrice) && Objects.equals(discountPercentage, orderItem.discountPercentage) && Objects.equals(total, orderItem.total);
+        return Objects.equals(id, orderItem.id) && Objects.equals(product, orderItem.product) && Objects.equals(quantity, orderItem.quantity) && Objects.equals(basePrice, orderItem.basePrice) && Objects.equals(discountPercentage, orderItem.discountPercentage) && Objects.equals(total, orderItem.total);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, product, order, quantity, basePrice, discountPercentage, total);
+        return Objects.hash(id, product, quantity, basePrice, discountPercentage, total);
     }
 }
