@@ -64,6 +64,27 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    public void updatePendingCart(OrderDto orderDto) {
+        UserDto user = userService.getById(orderDto.user().id());
+        OrderDto activeCart = getActiveCart(orderDto.user().id());
+
+        // Para que pase por la lógica de negocio
+        Order orderModel = OrderMapper.fromOrderDtoToOrder(orderDto);
+        OrderDto orderToUpdate = OrderMapper.fromOrderToOrderDto(orderModel);
+
+        OrderDto updatedCart = new OrderDto(
+                activeCart.id(),
+                user,
+                OrderStatus.PENDING,
+                orderToUpdate.orderItems(),
+                orderToUpdate.totalPrice(),
+                activeCart.createdAt()
+        );
+
+        orderRepository.save(updatedCart);
+    }
+
+    @Override
     public void updateCart(OrderDto orderDto) {
         UserDto user = userService.getById(orderDto.user().id());
         OrderDto activeCart = getActiveCart(orderDto.user().id());

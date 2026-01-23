@@ -8,5 +8,6 @@ public interface CartService {
     void createCart(Long userId);
     OrderDto getActiveCart(Long userId);
     OrderStatus getCartStatus(Long userId);
+    void updatePendingCart(OrderDto orderDto);
     void updateCart(OrderDto orderDto);
 }
