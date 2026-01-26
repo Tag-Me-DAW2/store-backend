@@ -66,6 +66,16 @@ public class UserController {
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
+    @PostMapping("/customer")
+    public ResponseEntity<UserResponse> createUserCustomer(@RequestBody UserInsertRequest userInsertRequest) throws SQLException, IOException {
+        UserDto userDto = UserMapper.fromUserInsertRequestToUserDtoCustomer(userInsertRequest);
+        DtoValidator.validate(userDto);
+
+        UserResponse createdUser = UserMapper.fromUserDtoToUserResponse(userService.create(userDto));
+        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    }
+
+
     @PutMapping("/{id}")
     public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @RequestBody UserUpdateRequest userUpdateRequest) throws SQLException, IOException {
         if(!id.equals(userUpdateRequest.id())) {

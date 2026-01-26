@@ -55,6 +55,25 @@ public class UserMapper {
         );
     }
 
+    public static UserDto fromUserInsertRequestToUserDtoCustomer(UserInsertRequest request) throws SQLException, IOException {
+        if (request == null) {
+            return null;
+        }
+
+        return new UserDto(
+                null,
+                request.username(),
+                request.password(),
+                request.email(),
+                request.firstName(),
+                request.lastName(),
+                request.phone(),
+                convertToBlob(request.profilePicture()),
+                request.profilePictureName(),
+                UserRole.valueOf("CUSTOMER")
+        );
+    }
+
     public static UserDto fromUserUpdateRequestToUserDto(UserUpdateRequest request) throws SQLException, IOException {
         if (request == null) {
             return null;
