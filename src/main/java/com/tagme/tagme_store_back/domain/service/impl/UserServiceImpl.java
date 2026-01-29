@@ -104,4 +104,15 @@ public class UserServiceImpl implements UserService {
 
         userRepository.deleteById(id);
     }
+
+    @Override
+    @Transactional
+    public void updatePassword(Long userId, String newPassword) {
+        UserDto userDto = getById(userId);
+        User userModel = UserMapper.fromUserDtoToUser(userDto);
+        userModel.setPassword(PasswordUtils.hashPassword(newPassword));
+        UserDto userToUpdate = UserMapper.fromUserToUserDto(userModel);
+
+        userRepository.updatePassword(userToUpdate);
+    }
 }

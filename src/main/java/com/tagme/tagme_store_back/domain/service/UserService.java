@@ -9,4 +9,5 @@ public interface UserService {
     UserDto create(UserDto userDto);
     UserDto update(UserDto userDto);
     void deleteById(Long id);
+    void updatePassword(Long userId, String newPassword);
 }

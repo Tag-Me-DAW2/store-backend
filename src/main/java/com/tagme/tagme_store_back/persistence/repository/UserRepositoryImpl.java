@@ -54,4 +54,10 @@ public class UserRepositoryImpl implements UserRepository {
     public Optional<UserDto> findByEmail(String email) {
         return userJpaDao.findByEmail(email).map(UserMapper::fromUserJpaEntityToUserDto);
     }
+
+    @Override
+    public void updatePassword(UserDto userDto) {
+        UserJpaEntity userJpaEntity = UserMapper.fromUserDtoToUserJpaEntity(userDto);
+        userJpaDao.updatePassword(userJpaEntity);
+    }
 }

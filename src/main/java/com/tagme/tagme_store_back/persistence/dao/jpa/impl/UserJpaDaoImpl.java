@@ -86,4 +86,15 @@ public class UserJpaDaoImpl implements UserJpaDao {
     public Long count() {
         return entityManager.createQuery("SELECT COUNT(u) FROM UserJpaEntity u", Long.class).getSingleResult();
     }
+
+    @Override
+    public void updatePassword(UserJpaEntity userJpaEntity) {
+        UserJpaEntity managed = entityManager.find(UserJpaEntity.class, userJpaEntity.getId());
+        if (managed == null) {
+            throw new ResourceNotFoundException("User not found");
+        }
+        managed.setPassword(userJpaEntity.getPassword());
+
+        entityManager.merge(managed);
+    }
 }

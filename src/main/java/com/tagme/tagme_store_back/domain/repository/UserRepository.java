@@ -11,4 +11,5 @@ public interface UserRepository {
     UserDto save(UserDto userDto);
     void deleteById(Long id);
     Optional<UserDto> findByEmail(String email);
+    void updatePassword(UserDto userDto);
 }

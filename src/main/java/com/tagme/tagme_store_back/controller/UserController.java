@@ -3,6 +3,7 @@ package com.tagme.tagme_store_back.controller;
 import com.github.dockerjava.api.exception.UnauthorizedException;
 import com.tagme.tagme_store_back.controller.mapper.CategoryMapper;
 import com.tagme.tagme_store_back.controller.mapper.UserMapper;
+import com.tagme.tagme_store_back.controller.webModel.request.PasswordRequest;
 import com.tagme.tagme_store_back.controller.webModel.request.UserInsertRequest;
 import com.tagme.tagme_store_back.controller.webModel.request.UserUpdateRequest;
 import com.tagme.tagme_store_back.controller.webModel.response.CategoryResponse;
@@ -87,6 +88,21 @@ public class UserController {
 
         UserResponse updatedUser = UserMapper.fromUserDtoToUserResponse(userService.update(userDto));
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+    }
+
+    @PutMapping("/password/{id}")
+    public ResponseEntity<UserResponse> updateUserPassword(@PathVariable Long id, @RequestBody PasswordRequest passwordRequest) throws SQLException, IOException {
+        if (passwordRequest.newPassword() == null || passwordRequest.newPasswordConfirmation() == null) {
+            throw new BusinessException("Old password and new password must be provided");
+        }
+
+        if (!passwordRequest.newPassword().equals(passwordRequest.newPasswordConfirmation())) {
+            throw new BusinessException("New password and confirmation must match");
+        }
+
+        userService.updatePassword(id, passwordRequest.newPassword());
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/{id}")

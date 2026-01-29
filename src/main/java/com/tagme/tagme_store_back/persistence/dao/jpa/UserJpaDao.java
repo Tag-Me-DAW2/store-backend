@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface UserJpaDao extends GenericJpaDao<UserJpaEntity> {
     Optional<UserJpaEntity> findByEmail(String email);
+    void updatePassword(UserJpaEntity userJpaEntity);
 }
