@@ -25,10 +25,13 @@ import com.tagme.tagme_store_back.persistence.repository.AuthRepositoryImpl;
 import com.tagme.tagme_store_back.persistence.repository.CategoryRepositoryImpl;
 import com.tagme.tagme_store_back.persistence.repository.ProductRepositoryImpl;
 import com.tagme.tagme_store_back.persistence.repository.UserRepositoryImpl;
+import jakarta.servlet.MultipartConfigElement;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.util.unit.DataSize;
 
 @Configuration
 @EnableJpaRepositories(basePackages = "com.tagme.tagme_store_back.persistence.dao.jpa")
@@ -98,5 +101,13 @@ public class SpringConfig {
     @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper();
+    }
+
+    @Bean
+    public MultipartConfigElement multipartConfigElement() {
+        MultipartConfigFactory factory = new MultipartConfigFactory();
+        factory.setMaxFileSize(DataSize.ofMegabytes(50));
+        factory.setMaxRequestSize(DataSize.ofMegabytes(50));
+        return factory.createMultipartConfig();
     }
 }
