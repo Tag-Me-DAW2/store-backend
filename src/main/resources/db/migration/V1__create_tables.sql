@@ -48,12 +48,12 @@ CREATE TABLE `tb_products` (
 
 CREATE TABLE `tb_orders` (
                             `id` int(11) NOT NULL AUTO_INCREMENT,
-                            `user_id` int(11) NOT NULL,
+                            `usr_id` int(11) NOT NULL,
                             `order_status` ENUM('PENDING', 'PROCESSING','PAYED') NOT NULL DEFAULT 'PENDING',
                             `creation_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                             PRIMARY KEY (`id`),
                             KEY `tb_orders_FK` (`usr_id`),
-                            CONSTRAINT `tb_orders_FK` FOREIGN KEY (`user_id`) REFERENCES `tb_users` (`id`)
+                            CONSTRAINT `tb_orders_FK` FOREIGN KEY (`usr_id`) REFERENCES `tb_users` (`id`)
                                ON DELETE CASCADE
                                ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
