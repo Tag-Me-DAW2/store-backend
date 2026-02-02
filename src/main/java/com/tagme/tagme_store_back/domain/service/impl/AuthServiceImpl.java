@@ -52,4 +52,16 @@ public class AuthServiceImpl implements AuthService {
     public UserDto getByToken(String token) {
         return authRepository.findByToken(token).orElse(null);
     }
+
+    @Override
+    public Boolean isCurrentPassword(Long userId, String currentPassword) {
+        UserDto userDto = userRepository.findById(userId).orElseThrow(() ->
+                new InvalidCredentialsException("Usuario no encontrado")
+        );
+
+        return PasswordUtils.verifyPassword(
+                currentPassword,
+                userDto.password()
+        );
+    }
 }
