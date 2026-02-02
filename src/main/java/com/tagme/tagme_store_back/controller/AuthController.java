@@ -50,9 +50,10 @@ public class AuthController {
 
     @PostMapping("/verify-password")
     public ResponseEntity<Boolean> verifyPassword(@RequestHeader ("Authorization") String token, @RequestBody VerifyPasswordRequest request) {
+        DtoValidator.validate(request);
+
         Long userId = authService.getByToken(token.substring(7)).id();
 
-        System.out.println(request);
         Boolean isCurrent = authService.isCurrentPassword(userId, request.password());
         return new ResponseEntity<>(isCurrent, HttpStatus.OK);
     }

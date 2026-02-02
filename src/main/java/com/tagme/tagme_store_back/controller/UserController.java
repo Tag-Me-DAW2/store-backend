@@ -9,6 +9,7 @@ import com.tagme.tagme_store_back.domain.dto.UserDto;
 import com.tagme.tagme_store_back.domain.exception.BusinessException;
 import com.tagme.tagme_store_back.domain.exception.InvalidCredentialsException;
 import com.tagme.tagme_store_back.domain.model.Page;
+import com.tagme.tagme_store_back.domain.service.AuthService;
 import com.tagme.tagme_store_back.domain.service.UserService;
 import com.tagme.tagme_store_back.domain.validation.DtoValidator;
 import com.tagme.tagme_store_back.web.context.AuthContext;
@@ -25,9 +26,11 @@ import java.util.List;
 @CrossOrigin("*")
 public class UserController {
     private UserService userService;
+    private AuthService authService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AuthService authService) {
         this.userService = userService;
+        this.authService = authService;
     }
 
     @GetMapping
@@ -88,8 +91,10 @@ public class UserController {
 
     @PutMapping("/password/{id}")
     public ResponseEntity<UserResponse> updateUserPassword(@PathVariable Long id, @RequestBody PasswordRequest passwordRequest) throws SQLException, IOException {
-        if (passwordRequest.newPassword() == null || passwordRequest.newPasswordConfirmation() == null) {
-            throw new BusinessException("Old password and new password must be provided");
+        DtoValidator.validate(passwordRequest);
+
+        if (authService.isCurrentPassword(id, passwordRequest.currentPassword()) == false) {
+            throw new InvalidCredentialsException("Current password is incorrect");
         }
 
         if (!passwordRequest.newPassword().equals(passwordRequest.newPasswordConfirmation())) {
