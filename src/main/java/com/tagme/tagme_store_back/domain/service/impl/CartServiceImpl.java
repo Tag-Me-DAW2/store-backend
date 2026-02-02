@@ -11,8 +11,8 @@ import com.tagme.tagme_store_back.domain.repository.OrderRepository;
 import com.tagme.tagme_store_back.domain.service.CartService;
 import com.tagme.tagme_store_back.domain.service.UserService;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class CartServiceImpl implements CartService {
     private final OrderRepository orderRepository;
@@ -40,7 +40,7 @@ public class CartServiceImpl implements CartService {
                 null,
                 UserMapper.fromUserDtoToUser(user),
                 OrderStatus.PENDING,
-                null,
+                new ArrayList<>(),
                 LocalDateTime.now()
         );
 

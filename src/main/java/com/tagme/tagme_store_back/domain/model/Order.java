@@ -23,6 +23,9 @@ public class Order {
     }
 
     private BigDecimal calculateTotalPrice() {
+        if (orderItems == null || orderItems.isEmpty()) {
+            return BigDecimal.ZERO;
+        }
         return orderItems.stream()
                 .map(OrderItem::getTotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);

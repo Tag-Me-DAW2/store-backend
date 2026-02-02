@@ -3,26 +3,32 @@ package com.tagme.tagme_store_back.spring;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tagme.tagme_store_back.domain.repository.AuthRepository;
 import com.tagme.tagme_store_back.domain.repository.CategoryRepository;
+import com.tagme.tagme_store_back.domain.repository.OrderRepository;
 import com.tagme.tagme_store_back.domain.repository.ProductRepository;
 import com.tagme.tagme_store_back.domain.repository.UserRepository;
 import com.tagme.tagme_store_back.domain.service.AuthService;
+import com.tagme.tagme_store_back.domain.service.CartService;
 import com.tagme.tagme_store_back.domain.service.CategoryService;
 import com.tagme.tagme_store_back.domain.service.ProductService;
 import com.tagme.tagme_store_back.domain.service.UserService;
 import com.tagme.tagme_store_back.domain.service.impl.AuthServiceImpl;
+import com.tagme.tagme_store_back.domain.service.impl.CartServiceImpl;
 import com.tagme.tagme_store_back.domain.service.impl.CategoryServiceImpl;
 import com.tagme.tagme_store_back.domain.service.impl.ProductServiceImpl;
 import com.tagme.tagme_store_back.domain.service.impl.UserServiceImpl;
 import com.tagme.tagme_store_back.persistence.dao.jpa.AuthJpaDao;
 import com.tagme.tagme_store_back.persistence.dao.jpa.CategoryJpaDao;
+import com.tagme.tagme_store_back.persistence.dao.jpa.OrderJpaDao;
 import com.tagme.tagme_store_back.persistence.dao.jpa.ProductJpaDao;
 import com.tagme.tagme_store_back.persistence.dao.jpa.UserJpaDao;
 import com.tagme.tagme_store_back.persistence.dao.jpa.impl.AuthJpaDaoImpl;
 import com.tagme.tagme_store_back.persistence.dao.jpa.impl.CategoryJpaDaoImpl;
+import com.tagme.tagme_store_back.persistence.dao.jpa.impl.OrderJpaDaoImpl;
 import com.tagme.tagme_store_back.persistence.dao.jpa.impl.ProductJpaDaoImpl;
 import com.tagme.tagme_store_back.persistence.dao.jpa.impl.UserJpaDaoImpl;
 import com.tagme.tagme_store_back.persistence.repository.AuthRepositoryImpl;
 import com.tagme.tagme_store_back.persistence.repository.CategoryRepositoryImpl;
+import com.tagme.tagme_store_back.persistence.repository.OrderRepositoryImpl;
 import com.tagme.tagme_store_back.persistence.repository.ProductRepositoryImpl;
 import com.tagme.tagme_store_back.persistence.repository.UserRepositoryImpl;
 import jakarta.servlet.MultipartConfigElement;
@@ -96,6 +102,21 @@ public class SpringConfig {
     @Bean
     public ProductService productService(ProductRepository productRepository, CategoryRepository categoryRepository) {
         return new ProductServiceImpl(productRepository, categoryRepository);
+    }
+
+    @Bean
+    public OrderJpaDao orderJpaDao() {
+        return new OrderJpaDaoImpl();
+    }
+
+    @Bean
+    public OrderRepository orderRepository(OrderJpaDao orderJpaDao) {
+        return new OrderRepositoryImpl(orderJpaDao);
+    }
+
+    @Bean
+    public CartService cartService(OrderRepository orderRepository, UserService userService) {
+        return new CartServiceImpl(orderRepository, userService);
     }
 
     @Bean

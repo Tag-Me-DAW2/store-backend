@@ -4,6 +4,8 @@ import com.tagme.tagme_store_back.domain.dto.OrderDto;
 import com.tagme.tagme_store_back.domain.model.OrderStatus;
 import com.tagme.tagme_store_back.domain.repository.OrderRepository;
 import com.tagme.tagme_store_back.persistence.dao.jpa.OrderJpaDao;
+import com.tagme.tagme_store_back.persistence.dao.jpa.entity.OrderJpaEntity;
+import com.tagme.tagme_store_back.persistence.mapper.OrderMapper;
 
 import java.util.Optional;
 
@@ -16,26 +18,28 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public OrderDto save(OrderDto orderDto) {
+        OrderJpaEntity entity = OrderMapper.toJpaEntity(orderDto);
 
-
-//        if (orderDto.id() != null) {
-//            return orderJpaDao.update(orderDto);
-//        }
-        return orderDto;
+        if (orderDto.id() == null) {
+            return OrderMapper.fromJpaEntity(orderJpaDao.insert(entity));
+        } else {
+            return OrderMapper.fromJpaEntity(orderJpaDao.update(entity));
+        }
     }
 
     @Override
     public void delete(Long orderId) {
-
+        orderJpaDao.deleteById(orderId);
     }
 
     @Override
     public Optional<OrderStatus> getStatus(Long orderId) {
-        return Optional.empty();
+        return orderJpaDao.getOrderStatus(orderId);
     }
 
     @Override
     public Optional<OrderDto> getActiveOrder(Long userId) {
-        return Optional.empty();
+        return orderJpaDao.findActiveOrderByUserId(userId)
+                .map(OrderMapper::fromJpaEntity);
     }
 }
