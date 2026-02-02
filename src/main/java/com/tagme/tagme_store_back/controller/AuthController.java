@@ -3,10 +3,12 @@ package com.tagme.tagme_store_back.controller;
 import com.tagme.tagme_store_back.controller.mapper.LoginMapper;
 import com.tagme.tagme_store_back.controller.mapper.UserMapper;
 import com.tagme.tagme_store_back.controller.webModel.request.LoginRequest;
+import com.tagme.tagme_store_back.controller.webModel.request.VerifyPasswordRequest;
 import com.tagme.tagme_store_back.controller.webModel.response.UserResponse;
 import com.tagme.tagme_store_back.domain.dto.LoginDto;
 import com.tagme.tagme_store_back.domain.service.AuthService;
 import com.tagme.tagme_store_back.domain.validation.DtoValidator;
+import com.tagme.tagme_store_back.web.context.AuthContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,5 +46,14 @@ public class AuthController {
     public ResponseEntity<UserResponse> getUserByToken(@RequestHeader("Authorization") String token) throws IOException {
         UserResponse userResponse = UserMapper.fromUserDtoToUserResponse(authService.getByToken(token.substring(7)));
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
+    }
+
+    @PostMapping("/verify-password")
+    public ResponseEntity<Boolean> verifyPassword(@RequestHeader ("Authorization") String token, @RequestBody VerifyPasswordRequest request) {
+        Long userId = authService.getByToken(token.substring(7)).id();
+
+        System.out.println(request);
+        Boolean isCurrent = authService.isCurrentPassword(userId, request.password());
+        return new ResponseEntity<>(isCurrent, HttpStatus.OK);
     }
 }

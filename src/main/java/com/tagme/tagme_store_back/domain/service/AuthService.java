@@ -8,4 +8,5 @@ public interface AuthService {
     String login(LoginDto loginDto);
     void logout(String token);
     UserDto getByToken(String token);
+    Boolean isCurrentPassword(Long userId, String currentPassword);
 }
