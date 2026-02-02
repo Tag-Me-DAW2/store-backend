@@ -1,22 +1,17 @@
 package com.tagme.tagme_store_back.controller;
 
 import com.tagme.tagme_store_back.controller.mapper.ProductMapper;
-import com.tagme.tagme_store_back.controller.webModel.request.ProductInsertRequest;
-import com.tagme.tagme_store_back.controller.webModel.request.ProductUpdateRequest;
 import com.tagme.tagme_store_back.controller.webModel.response.ProductDetailResponse;
 import com.tagme.tagme_store_back.controller.webModel.response.ProductSummaryResponse;
 import com.tagme.tagme_store_back.domain.dto.ProductDto;
-import com.tagme.tagme_store_back.domain.exception.BusinessException;
 import com.tagme.tagme_store_back.domain.model.Page;
 import com.tagme.tagme_store_back.domain.model.ProductSort;
 import com.tagme.tagme_store_back.domain.service.ProductService;
-import com.tagme.tagme_store_back.domain.validation.DtoValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 @RestController

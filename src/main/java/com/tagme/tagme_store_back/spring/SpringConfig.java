@@ -1,6 +1,5 @@
 package com.tagme.tagme_store_back.spring;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tagme.tagme_store_back.domain.repository.AuthRepository;
 import com.tagme.tagme_store_back.domain.repository.CategoryRepository;
 import com.tagme.tagme_store_back.domain.repository.OrderRepository;
@@ -119,10 +118,6 @@ public class SpringConfig {
         return new CartServiceImpl(orderRepository, userService, productService);
     }
 
-    @Bean
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper();
-    }
 
     @Bean
     public MultipartConfigElement multipartConfigElement() {

@@ -1,10 +1,7 @@
 package com.tagme.tagme_store_back.controller.webModel.request;
 
-import java.math.BigDecimal;
-
-public record CartItemRequest(
+public record OrderItemRequest(
         Long productId,
         Long quantity
 ) {
 }
-

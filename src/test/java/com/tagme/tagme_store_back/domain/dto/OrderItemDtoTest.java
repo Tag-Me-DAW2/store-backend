@@ -20,7 +20,17 @@ class OrderItemDtoTest {
     @Test
     void createOrderDto() {
         ProductDto productDto = Instancio.of(ProductDto.class).create();
-        OrderItemDto orderItemDto = new OrderItemDto(1L, productDto, 2L, new BigDecimal(50L), new BigDecimal(10L), new BigDecimal(40L));
+        OrderItemDto orderItemDto = new OrderItemDto(
+                1L, 
+                productDto, 
+                "Test Product",
+                null, // productImage
+                "test.jpg",
+                2L, 
+                new BigDecimal(50L), 
+                new BigDecimal(10L), 
+                new BigDecimal(40L)
+        );
 
         assertDoesNotThrow(() -> DtoValidator.validate(orderItemDto));
     }

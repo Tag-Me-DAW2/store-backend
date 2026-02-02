@@ -15,8 +15,9 @@ import com.tagme.tagme_store_back.domain.repository.OrderRepository;
 import com.tagme.tagme_store_back.domain.service.CartService;
 import com.tagme.tagme_store_back.domain.service.ProductService;
 import com.tagme.tagme_store_back.domain.service.UserService;
-import com.tagme.tagme_store_back.domain.validation.DtoValidator;
+import jakarta.transaction.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -35,19 +36,12 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void clearCart(Long userId) {
-        validateUserId(userId);
-
-        OrderDto orderDto = getActiveCart(userId);
-        orderRepository.delete(orderDto.id());
-        createCart(userId);
-    }
-
-    @Override
+    @Transactional
     public void createCart(Long userId) {
-        validateUserId(userId);
+        if (userId == null || userId <= 0) {
+            throw new ValidationException("User ID must be a positive number");
+        }
 
-        // Verificar si el usuario existe (lanza excepción si no existe)
         UserDto user = userService.getById(userId);
 
         Order newCart = new Order(
@@ -55,19 +49,21 @@ public class CartServiceImpl implements CartService {
                 UserMapper.fromUserDtoToUser(user),
                 OrderStatus.PENDING,
                 new ArrayList<>(),
+                null,
                 LocalDateTime.now()
         );
 
         OrderDto newCartDto = OrderMapper.fromOrderToOrderDto(newCart);
-        DtoValidator.validate(newCartDto);
         orderRepository.save(newCartDto);
     }
 
     @Override
+    @Transactional
     public OrderDto getActiveCart(Long userId) {
-        validateUserId(userId);
+        if (userId == null || userId <= 0) {
+            throw new ValidationException("User ID must be a positive number");
+        }
 
-        // Verificar que el usuario existe
         userService.getById(userId);
 
         return orderRepository.getActiveOrder(userId)
@@ -93,33 +89,67 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    @Transactional
     public void updatePendingCart(OrderDto orderDto) {
-        validateOrderDtoForUpdate(orderDto);
+        if (orderDto == null) {
+            throw new ValidationException("Order cannot be null");
+        }
+        if (orderDto.user() == null || orderDto.user().id() == null || orderDto.user().id() <= 0) {
+            throw new ValidationException("User ID must be a positive number");
+        }
 
         UserDto user = userService.getById(orderDto.user().id());
         OrderDto activeCart = getActiveCart(orderDto.user().id());
 
-        // Verificar que el carrito está en estado PENDING
         if (activeCart.orderStatus() != OrderStatus.PENDING) {
             throw new BusinessException("Cannot update cart. Cart is not in PENDING status");
         }
 
-        // Validar items del carrito
-        validateOrderItems(orderDto.orderItems());
+        if (orderDto.orderItems() != null) {
+            Set<Long> productIds = new HashSet<>();
+            for (OrderItemDto item : orderDto.orderItems()) {
+                if (item.productDto() == null || item.productDto().id() == null || item.productDto().id() <= 0) {
+                    throw new ValidationException("Product ID must be a positive number");
+                }
+                if (item.quantity() == null || item.quantity() < 1) {
+                    throw new ValidationException("Quantity must be at least 1");
+                }
+                if (!productIds.add(item.productDto().id())) {
+                    throw new ValidationException("Duplicate product in cart: " + item.productDto().id());
+                }
+            }
+        }
 
-        // Resolver productos completos por ID
-        List<OrderItemDto> resolvedItems = resolveProductsInItems(orderDto.orderItems());
+        List<OrderItemDto> resolvedItems = new ArrayList<>();
+        if (orderDto.orderItems() != null && !orderDto.orderItems().isEmpty()) {
+            for (OrderItemDto item : orderDto.orderItems()) {
+                ProductDto fullProduct = productService.getById(item.productDto().id());
+                // Para PENDING: los datos del producto se obtienen del Product actual
+                OrderItemDto resolvedItem = new OrderItemDto(
+                        item.id(),
+                        fullProduct,
+                        fullProduct.name(),
+                        fullProduct.image(),
+                        fullProduct.imageName(),
+                        item.quantity(),
+                        fullProduct.basePrice(),
+                        fullProduct.discountPercentage(),
+                        item.total()
+                );
+                resolvedItems.add(resolvedItem);
+            }
+        }
 
-        // Para que pase por la lógica de negocio
         OrderDto orderWithResolvedItems = new OrderDto(
                 orderDto.id(),
                 orderDto.user(),
                 orderDto.orderStatus(),
                 resolvedItems,
                 orderDto.totalPrice(),
+                orderDto.paidDate(),
                 orderDto.createdAt()
         );
-        
+
         Order orderModel = OrderMapper.fromOrderDtoToOrder(orderWithResolvedItems);
         OrderDto orderToUpdate = OrderMapper.fromOrderToOrderDto(orderModel);
 
@@ -129,41 +159,90 @@ public class CartServiceImpl implements CartService {
                 OrderStatus.PENDING,
                 orderToUpdate.orderItems(),
                 orderToUpdate.totalPrice(),
+                null,
                 activeCart.createdAt()
         );
 
-        DtoValidator.validate(updatedCart);
         orderRepository.save(updatedCart);
     }
 
     @Override
+    @Transactional
     public void updateCart(OrderDto orderDto) {
-        validateOrderDtoForUpdate(orderDto);
+        if (orderDto == null) {
+            throw new ValidationException("Order cannot be null");
+        }
+        if (orderDto.user() == null || orderDto.user().id() == null || orderDto.user().id() <= 0) {
+            throw new ValidationException("User ID must be a positive number");
+        }
 
         UserDto user = userService.getById(orderDto.user().id());
         OrderDto activeCart = getActiveCart(orderDto.user().id());
 
-        // Validar transición de estado
-        validateStatusTransition(activeCart.orderStatus(), orderDto.orderStatus());
+        OrderStatus currentStatus = activeCart.orderStatus();
+        OrderStatus newStatus = orderDto.orderStatus();
 
-        // Validar items del carrito
-        validateOrderItems(orderDto.orderItems());
+        if (currentStatus == OrderStatus.PAYED) {
+            throw new BusinessException("Cannot update a cart that is already " + currentStatus);
+        }
 
-        // Resolver productos completos por ID
-        List<OrderItemDto> resolvedItems = resolveProductsInItems(orderDto.orderItems());
+        if (currentStatus == OrderStatus.PENDING && newStatus != OrderStatus.PENDING && newStatus != OrderStatus.PROCESSING) {
+            throw new BusinessException("Invalid status transition from PENDING to " + newStatus);
+        }
 
-        // Para que pase por la lógica de negocio
+        if (currentStatus == OrderStatus.PROCESSING && newStatus != OrderStatus.PROCESSING && newStatus != OrderStatus.PAYED) {
+            throw new BusinessException("Invalid status transition from PROCESSING to " + newStatus);
+        }
+
+        if (orderDto.orderItems() != null) {
+            Set<Long> productIds = new HashSet<>();
+            for (OrderItemDto item : orderDto.orderItems()) {
+                if (item.productDto() == null || item.productDto().id() == null || item.productDto().id() <= 0) {
+                    throw new ValidationException("Product ID must be a positive number");
+                }
+                if (item.quantity() == null || item.quantity() < 1) {
+                    throw new ValidationException("Quantity must be at least 1");
+                }
+                if (!productIds.add(item.productDto().id())) {
+                    throw new ValidationException("Duplicate product in cart: " + item.productDto().id());
+                }
+            }
+        }
+
+        List<OrderItemDto> resolvedItems = new ArrayList<>();
+        if (orderDto.orderItems() != null && !orderDto.orderItems().isEmpty()) {
+            for (OrderItemDto item : orderDto.orderItems()) {
+                ProductDto fullProduct = productService.getById(item.productDto().id());
+                // Los datos del producto se obtienen del Product actual
+                OrderItemDto resolvedItem = new OrderItemDto(
+                        item.id(),
+                        fullProduct,
+                        fullProduct.name(),
+                        fullProduct.image(),
+                        fullProduct.imageName(),
+                        item.quantity(),
+                        fullProduct.basePrice(),
+                        fullProduct.discountPercentage(),
+                        item.total()
+                );
+                resolvedItems.add(resolvedItem);
+            }
+        }
+
         OrderDto orderWithResolvedItems = new OrderDto(
                 orderDto.id(),
                 orderDto.user(),
                 orderDto.orderStatus(),
                 resolvedItems,
                 orderDto.totalPrice(),
+                orderDto.paidDate(),
                 orderDto.createdAt()
         );
-        
+
         Order orderModel = OrderMapper.fromOrderDtoToOrder(orderWithResolvedItems);
         OrderDto orderToUpdate = OrderMapper.fromOrderToOrderDto(orderModel);
+
+        LocalDateTime paidDate = (orderToUpdate.orderStatus() == OrderStatus.PAYED) ? LocalDateTime.now() : null;
 
         OrderDto updatedCart = new OrderDto(
                 activeCart.id(),
@@ -171,99 +250,37 @@ public class CartServiceImpl implements CartService {
                 orderToUpdate.orderStatus(),
                 orderToUpdate.orderItems(),
                 orderToUpdate.totalPrice(),
+                paidDate,
                 activeCart.createdAt()
         );
 
-        DtoValidator.validate(updatedCart);
         orderRepository.save(updatedCart);
     }
 
-    // ==================== Métodos auxiliares ====================
-
-    /**
-     * Resuelve los productos completos a partir de los IDs en los items del carrito.
-     */
-    private List<OrderItemDto> resolveProductsInItems(List<OrderItemDto> items) {
-        if (items == null || items.isEmpty()) {
-            return new ArrayList<>();
-        }
-
-        List<OrderItemDto> resolvedItems = new ArrayList<>();
-        for (OrderItemDto item : items) {
-            ProductDto fullProduct = productService.getById(item.productDto().id());
-            
-            OrderItemDto resolvedItem = new OrderItemDto(
-                    item.id(),
-                    fullProduct,
-                    item.quantity(),
-                    fullProduct.basePrice(),
-                    fullProduct.discountPercentage(),
-                    item.total()
-            );
-            resolvedItems.add(resolvedItem);
-        }
-        return resolvedItems;
-    }
-
-    // ==================== Métodos de validación ====================
-
-    private void validateUserId(Long userId) {
-        if (userId == null) {
-            throw new ValidationException("User ID cannot be null");
-        }
-        if (userId <= 0) {
+    @Override
+    @Transactional
+    public void clearCart(Long userId) {
+        if (userId == null || userId <= 0) {
             throw new ValidationException("User ID must be a positive number");
         }
-    }
 
-    private void validateOrderDtoForUpdate(OrderDto orderDto) {
-        if (orderDto == null) {
-            throw new ValidationException("Order DTO cannot be null");
-        }
-        if (orderDto.user() == null) {
-            throw new ValidationException("User cannot be null in order");
-        }
-        validateUserId(orderDto.user().id());
-    }
+        userService.getById(userId);
+        OrderDto activeCart = getActiveCart(userId);
 
-    private void validateOrderItems(List<OrderItemDto> items) {
-        if (items == null) {
-            return; // Lista vacía es válida (carrito vacío)
+        if (activeCart.orderStatus() != OrderStatus.PENDING) {
+            throw new BusinessException("Cannot clear cart. Cart is not in PENDING status");
         }
 
-        Set<Long> productIds = new HashSet<>();
-        for (OrderItemDto item : items) {
-            if (item.productDto() == null || item.productDto().id() == null) {
-                throw new ValidationException("Product cannot be null in order item");
-            }
+        OrderDto clearedCart = new OrderDto(
+                activeCart.id(),
+                activeCart.user(),
+                OrderStatus.PENDING,
+                new ArrayList<>(),
+                BigDecimal.ZERO,
+                null,
+                activeCart.createdAt()
+        );
 
-            // Verificar productos duplicados
-            if (!productIds.add(item.productDto().id())) {
-                throw new BusinessException("Duplicate product in cart: " + item.productDto().id());
-            }
-
-            if (item.quantity() == null || item.quantity() < 1) {
-                throw new ValidationException("Quantity must be at least 1 for product: " + item.productDto().id());
-            }
-        }
-    }
-
-    private void validateStatusTransition(OrderStatus currentStatus, OrderStatus newStatus) {
-        if (newStatus == null) {
-            throw new ValidationException("New order status cannot be null");
-        }
-
-        // Definir transiciones válidas
-        boolean validTransition = switch (currentStatus) {
-            case PENDING -> newStatus == OrderStatus.PENDING || newStatus == OrderStatus.PROCESSING;
-            case PROCESSING -> newStatus == OrderStatus.PROCESSING || newStatus == OrderStatus.PAYED;
-            case PAYED -> false; // Estado final, no se puede cambiar
-        };
-
-        if (!validTransition) {
-            throw new BusinessException(
-                    String.format("Invalid status transition from %s to %s", currentStatus, newStatus)
-            );
-        }
+        orderRepository.save(clearedCart);
     }
 }

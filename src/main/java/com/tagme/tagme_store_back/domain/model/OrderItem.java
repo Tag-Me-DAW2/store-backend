@@ -7,14 +7,21 @@ import java.util.Objects;
 public class OrderItem {
     private Long id;
     private Product product;
+    private String productName;
+    private byte[] productImage;
+    private String productImageName;
     private Long quantity;
     private BigDecimal basePrice;
     private BigDecimal discountPercentage;
     private BigDecimal total;
 
-    public OrderItem(Long id, Product product, Long quantity, BigDecimal basePrice, BigDecimal discountPercentage) {
+    public OrderItem(Long id, Product product, String productName, byte[] productImage,
+                     String productImageName, Long quantity, BigDecimal basePrice, BigDecimal discountPercentage) {
         this.id = id;
         this.product = product;
+        this.productName = productName;
+        this.productImage = productImage;
+        this.productImageName = productImageName;
         this.quantity = quantity;
         this.basePrice = basePrice;
         this.discountPercentage = discountPercentage;
@@ -50,6 +57,30 @@ public class OrderItem {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public byte[] getProductImage() {
+        return productImage;
+    }
+
+    public void setProductImage(byte[] productImage) {
+        this.productImage = productImage;
+    }
+
+    public String getProductImageName() {
+        return productImageName;
+    }
+
+    public void setProductImageName(String productImageName) {
+        this.productImageName = productImageName;
     }
 
     public Long getQuantity() {

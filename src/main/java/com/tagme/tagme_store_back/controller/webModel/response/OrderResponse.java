@@ -6,13 +6,12 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record CartResponse(
+public record OrderResponse(
         Long id,
         Long userId,
         OrderStatus orderStatus,
-        List<CartItemResponse> orderItems,
+        List<OrderItemResponse> orderItems,
         BigDecimal totalPrice,
-        LocalDateTime createdAt
+        LocalDateTime paidDate
 ) {
 }
-

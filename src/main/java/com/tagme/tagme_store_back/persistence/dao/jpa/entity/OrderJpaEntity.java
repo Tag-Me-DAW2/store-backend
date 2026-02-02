@@ -30,6 +30,9 @@ public class OrderJpaEntity implements Serializable {
     )
     private List<OrderItemJpaEntity> orderItems = new ArrayList<>();
 
+    @Column(name = "paid-date")
+    private LocalDateTime paidDate;
+
     @Column(name = "creation_date", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -83,6 +86,14 @@ public class OrderJpaEntity implements Serializable {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getPaidDate() {
+        return paidDate;
+    }
+
+    public void setPaidDate(LocalDateTime paidDate) {
+        this.paidDate = paidDate;
     }
 
     public void addItem(OrderItemJpaEntity item) {
