@@ -115,8 +115,8 @@ public class SpringConfig {
     }
 
     @Bean
-    public CartService cartService(OrderRepository orderRepository, UserService userService) {
-        return new CartServiceImpl(orderRepository, userService);
+    public CartService cartService(OrderRepository orderRepository, UserService userService, ProductService productService) {
+        return new CartServiceImpl(orderRepository, userService, productService);
     }
 
     @Bean

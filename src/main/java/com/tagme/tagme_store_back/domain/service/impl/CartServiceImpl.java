@@ -2,6 +2,7 @@ package com.tagme.tagme_store_back.domain.service.impl;
 
 import com.tagme.tagme_store_back.domain.dto.OrderDto;
 import com.tagme.tagme_store_back.domain.dto.OrderItemDto;
+import com.tagme.tagme_store_back.domain.dto.ProductDto;
 import com.tagme.tagme_store_back.domain.dto.UserDto;
 import com.tagme.tagme_store_back.domain.exception.BusinessException;
 import com.tagme.tagme_store_back.domain.exception.ResourceNotFoundException;
@@ -12,21 +13,25 @@ import com.tagme.tagme_store_back.domain.model.Order;
 import com.tagme.tagme_store_back.domain.model.OrderStatus;
 import com.tagme.tagme_store_back.domain.repository.OrderRepository;
 import com.tagme.tagme_store_back.domain.service.CartService;
+import com.tagme.tagme_store_back.domain.service.ProductService;
 import com.tagme.tagme_store_back.domain.service.UserService;
 import com.tagme.tagme_store_back.domain.validation.DtoValidator;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class CartServiceImpl implements CartService {
     private final OrderRepository orderRepository;
     private final UserService userService;
+    private final ProductService productService;
 
-    public CartServiceImpl(OrderRepository orderRepository, UserService userService) {
+    public CartServiceImpl(OrderRepository orderRepository, UserService userService, ProductService productService) {
         this.orderRepository = orderRepository;
         this.userService = userService;
+        this.productService = productService;
     }
 
     @Override
@@ -102,8 +107,20 @@ public class CartServiceImpl implements CartService {
         // Validar items del carrito
         validateOrderItems(orderDto.orderItems());
 
+        // Resolver productos completos por ID
+        List<OrderItemDto> resolvedItems = resolveProductsInItems(orderDto.orderItems());
+
         // Para que pase por la lógica de negocio
-        Order orderModel = OrderMapper.fromOrderDtoToOrder(orderDto);
+        OrderDto orderWithResolvedItems = new OrderDto(
+                orderDto.id(),
+                orderDto.user(),
+                orderDto.orderStatus(),
+                resolvedItems,
+                orderDto.totalPrice(),
+                orderDto.createdAt()
+        );
+        
+        Order orderModel = OrderMapper.fromOrderDtoToOrder(orderWithResolvedItems);
         OrderDto orderToUpdate = OrderMapper.fromOrderToOrderDto(orderModel);
 
         OrderDto updatedCart = new OrderDto(
@@ -132,8 +149,20 @@ public class CartServiceImpl implements CartService {
         // Validar items del carrito
         validateOrderItems(orderDto.orderItems());
 
+        // Resolver productos completos por ID
+        List<OrderItemDto> resolvedItems = resolveProductsInItems(orderDto.orderItems());
+
         // Para que pase por la lógica de negocio
-        Order orderModel = OrderMapper.fromOrderDtoToOrder(orderDto);
+        OrderDto orderWithResolvedItems = new OrderDto(
+                orderDto.id(),
+                orderDto.user(),
+                orderDto.orderStatus(),
+                resolvedItems,
+                orderDto.totalPrice(),
+                orderDto.createdAt()
+        );
+        
+        Order orderModel = OrderMapper.fromOrderDtoToOrder(orderWithResolvedItems);
         OrderDto orderToUpdate = OrderMapper.fromOrderToOrderDto(orderModel);
 
         OrderDto updatedCart = new OrderDto(
@@ -147,6 +176,33 @@ public class CartServiceImpl implements CartService {
 
         DtoValidator.validate(updatedCart);
         orderRepository.save(updatedCart);
+    }
+
+    // ==================== Métodos auxiliares ====================
+
+    /**
+     * Resuelve los productos completos a partir de los IDs en los items del carrito.
+     */
+    private List<OrderItemDto> resolveProductsInItems(List<OrderItemDto> items) {
+        if (items == null || items.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<OrderItemDto> resolvedItems = new ArrayList<>();
+        for (OrderItemDto item : items) {
+            ProductDto fullProduct = productService.getById(item.productDto().id());
+            
+            OrderItemDto resolvedItem = new OrderItemDto(
+                    item.id(),
+                    fullProduct,
+                    item.quantity(),
+                    fullProduct.basePrice(),
+                    fullProduct.discountPercentage(),
+                    item.total()
+            );
+            resolvedItems.add(resolvedItem);
+        }
+        return resolvedItems;
     }
 
     // ==================== Métodos de validación ====================
@@ -170,7 +226,7 @@ public class CartServiceImpl implements CartService {
         validateUserId(orderDto.user().id());
     }
 
-    private void validateOrderItems(java.util.List<OrderItemDto> items) {
+    private void validateOrderItems(List<OrderItemDto> items) {
         if (items == null) {
             return; // Lista vacía es válida (carrito vacío)
         }
