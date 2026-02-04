@@ -76,6 +76,6 @@ CREATE TABLE `tb_order_items` (
                                       ON DELETE CASCADE
                                       ON UPDATE CASCADE,
                                   CONSTRAINT `tb_order_items_product_FK` FOREIGN KEY (`product_id`) REFERENCES `tb_products` (`id`)
-                                      ON DELETE RESTRICT
+                                      ON DELETE CASCADE
                                       ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
