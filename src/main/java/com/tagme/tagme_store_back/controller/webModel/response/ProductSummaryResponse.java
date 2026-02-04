@@ -6,6 +6,7 @@ public record ProductSummaryResponse(
         Long id,
         String name,
         BigDecimal discountPercentage,
+        BigDecimal basePrice,
         BigDecimal price,
         String image,
         CategoryResponse category,

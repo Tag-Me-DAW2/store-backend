@@ -54,6 +54,7 @@ public class ProductMapper {
                 productDto.id(),
                 productDto.name(),
                 productDto.discountPercentage(),
+                productDto.basePrice(),
                 productDto.price(),
                 imageBytes != null ? "data:" + mimeType + ";base64,"+Base64.getEncoder().encodeToString(imageBytes) : null,
                 CategoryMapper.fromCategoryDtoToCategoryResponse(productDto.category()),

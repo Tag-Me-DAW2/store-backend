@@ -132,11 +132,39 @@ public class ProductJpaDaoImpl implements ProductJpaDao {
         }
 
         if (minPrice != null) {
-            predicates.add(cb.greaterThanOrEqualTo(p.get("basePrice"), BigDecimal.valueOf(minPrice)));
+            Expression<BigDecimal> basePrice = p.get("basePrice");
+            Expression<BigDecimal> discountPercentage = p.get("discountPercentage");
+
+            Expression<BigDecimal> discountAmount =
+                    cb.quot(
+                            cb.prod(basePrice, discountPercentage),
+                            cb.literal(new BigDecimal("100"))
+                    ).as(BigDecimal.class);
+
+            Expression<BigDecimal> finalPrice =
+                    cb.diff(basePrice, discountAmount);
+
+            predicates.add(
+                    cb.greaterThanOrEqualTo(finalPrice, BigDecimal.valueOf(minPrice))
+            );
         }
 
         if (maxPrice != null) {
-            predicates.add(cb.lessThanOrEqualTo(p.get("basePrice"), BigDecimal.valueOf(maxPrice)));
+            Expression<BigDecimal> basePrice = p.get("basePrice");
+            Expression<BigDecimal> discountPercentage = p.get("discountPercentage");
+
+            Expression<BigDecimal> discountAmount =
+                    cb.quot(
+                            cb.prod(basePrice, discountPercentage),
+                            cb.literal(new BigDecimal("100"))
+                    ).as(BigDecimal.class);
+
+            Expression<BigDecimal> finalPrice =
+                    cb.diff(basePrice, discountAmount);
+
+            predicates.add(
+                    cb.lessThanOrEqualTo(finalPrice, BigDecimal.valueOf(maxPrice))
+            );
         }
 
         if (sort != null) {
