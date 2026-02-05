@@ -3,9 +3,9 @@ package com.tagme.tagme_store_back.domain.mapper;
 
 import com.tagme.tagme_store_back.domain.dto.OrderDto;
 import com.tagme.tagme_store_back.domain.dto.OrderItemDto;
-import com.tagme.tagme_store_back.domain.dto.ProductDto;
 import com.tagme.tagme_store_back.domain.model.Order;
 import com.tagme.tagme_store_back.domain.model.OrderItem;
+import com.tagme.tagme_store_back.domain.model.OrderStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +16,9 @@ public class OrderMapper {
             return null;
         }
 
-        List<OrderItem> productDtos = new ArrayList<>();
+        List<OrderItem> orderItems = new ArrayList<>();
         if (orderDto.orderItems() != null) {
-            productDtos = orderDto.orderItems().stream()
+            orderItems = orderDto.orderItems().stream()
                     .map(OrderItemMapper::fromOrderItemDtoToOrderItem)
                     .toList();
         }
@@ -27,20 +27,27 @@ public class OrderMapper {
                 orderDto.id(),
                 UserMapper.fromUserDtoToUser(orderDto.user()),
                 orderDto.orderStatus(),
-                productDtos,
+                orderItems,
+                orderDto.paidDate(),
                 orderDto.createdAt()
         );
     }
 
+    /**
+     * Mapea Order a OrderDto considerando el estado del pedido:
+     * - PENDING: Los items usan datos actuales del producto
+     * - PAYED/PROCESSING: Los items usan el snapshot guardado
+     */
     public static OrderDto fromOrderToOrderDto(Order order) {
         if (order == null) {
             return null;
         }
 
+        OrderStatus orderStatus = order.getOrderStatus();
         List<OrderItemDto> orderItemDtos = new ArrayList<>();
         if (order.getOrderItems() != null) {
             orderItemDtos = order.getOrderItems().stream()
-                    .map(OrderItemMapper::fromOrderItemToOrderItemDto)
+                    .map(item -> OrderItemMapper.fromOrderItemToOrderItemDto(item, orderStatus))
                     .toList();
         }
 
@@ -50,6 +57,7 @@ public class OrderMapper {
                 order.getOrderStatus(),
                 orderItemDtos,
                 order.getTotalPrice(),
+                order.getPaidDate(),
                 order.getCreatedAt()
         );
     }

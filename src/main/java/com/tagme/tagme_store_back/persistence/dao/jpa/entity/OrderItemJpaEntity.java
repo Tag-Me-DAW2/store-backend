@@ -24,24 +24,40 @@ public class OrderItemJpaEntity implements Serializable {
     @JoinColumn(name = "product_id", nullable = false)
     private ProductJpaEntity product;
 
+    // Campos de snapshot del producto (para historial)
+    @Column(name = "product_name", nullable = false)
+    private String productName;
+
+    @Lob
+    @Column(name = "product_image")
+    private byte[] productImage;
+
+    @Column(name = "product_image_name")
+    private String productImageName;
+
+    @Column(name = "base_price", nullable = false, precision = 19, scale = 2)
+    private BigDecimal basePrice;
+
+    @Column(name = "discountPercentage", nullable = false, precision = 5, scale = 2)
+    private BigDecimal discountPercentage;
+
     @Column(nullable = false)
     private Long quantity;
 
-    private BigDecimal basePrice;
-
-    @Column(name = "discount_percentage", nullable = false, precision = 5, scale = 2)
-    private BigDecimal discountPercentage;
-
-
     public OrderItemJpaEntity() {}
 
-    public OrderItemJpaEntity(Long id, OrderJpaEntity order, ProductJpaEntity product, Long quantity, BigDecimal basePrice, BigDecimal discountPercentage) {
+    public OrderItemJpaEntity(Long id, OrderJpaEntity order, ProductJpaEntity product,
+                              String productName, byte[] productImage, String productImageName,
+                              BigDecimal basePrice, BigDecimal discountPercentage, Long quantity) {
         this.id = id;
         this.order = order;
         this.product = product;
-        this.quantity = quantity;
+        this.productName = productName;
+        this.productImage = productImage;
+        this.productImageName = productImageName;
         this.basePrice = basePrice;
         this.discountPercentage = discountPercentage;
+        this.quantity = quantity;
     }
 
     public Long getId() {
@@ -68,6 +84,30 @@ public class OrderItemJpaEntity implements Serializable {
         this.product = product;
     }
 
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public byte[] getProductImage() {
+        return productImage;
+    }
+
+    public void setProductImage(byte[] productImage) {
+        this.productImage = productImage;
+    }
+
+    public String getProductImageName() {
+        return productImageName;
+    }
+
+    public void setProductImageName(String productImageName) {
+        this.productImageName = productImageName;
+    }
+
     public Long getQuantity() {
         return quantity;
     }
@@ -76,23 +116,14 @@ public class OrderItemJpaEntity implements Serializable {
         this.quantity = quantity;
     }
 
-    @Transient
+    /**
+     * Obtiene el precio base. Si la orden está PENDING, usa el precio actual del producto.
+     * Si la orden ya está procesada, usa el precio guardado (snapshot).
+     */
     public BigDecimal getBasePrice() {
-        if (order.getOrderStatus() == OrderStatus.PENDING) {
+        if (order != null && order.getOrderStatus() == OrderStatus.PENDING && product != null) {
             return product.getBasePrice();
         }
-        return basePrice;
-    }
-
-    @Transient
-    public BigDecimal getDiscountPercentage() {
-        if (order.getOrderStatus() == OrderStatus.PENDING) {
-            return product.getDiscountPercentage();
-        }
-        return discountPercentage;
-    }
-
-    public BigDecimal getPersistedBasePrice() {
         return basePrice;
     }
 
@@ -100,11 +131,40 @@ public class OrderItemJpaEntity implements Serializable {
         this.basePrice = basePrice;
     }
 
-    public BigDecimal getPersistedDiscountPercentage() {
+    /**
+     * Obtiene el porcentaje de descuento. Si la orden está PENDING, usa el descuento actual del producto.
+     * Si la orden ya está procesada, usa el descuento guardado (snapshot).
+     */
+    public BigDecimal getDiscountPercentage() {
+        if (order != null && order.getOrderStatus() == OrderStatus.PENDING && product != null) {
+            return product.getDiscountPercentage();
+        }
         return discountPercentage;
     }
 
     public void setDiscountPercentage(BigDecimal discountPercentage) {
         this.discountPercentage = discountPercentage;
+    }
+
+    // Métodos para obtener los valores persistidos directamente
+    public BigDecimal getPersistedBasePrice() {
+        return basePrice;
+    }
+
+    public BigDecimal getPersistedDiscountPercentage() {
+        return discountPercentage;
+    }
+
+    /**
+     * Copia los datos actuales del producto al snapshot para persistir el historial.
+     */
+    public void snapshotProductData() {
+        if (product != null) {
+            this.productName = product.getName();
+            this.productImage = product.getImage();
+            this.productImageName = product.getImageName();
+            this.basePrice = product.getBasePrice();
+            this.discountPercentage = product.getDiscountPercentage();
+        }
     }
 }

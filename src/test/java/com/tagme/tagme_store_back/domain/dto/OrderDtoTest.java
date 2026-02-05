@@ -23,7 +23,7 @@ class OrderDtoTest {
     void createOrderDto_Success() {
         UserDto user = Instancio.of(UserDto.class).create();
         List<OrderItemDto> orderItems = Instancio.ofList(OrderItemDto.class).size(3).create();
-        OrderDto orderDto = new OrderDto(null, user, OrderStatus.PENDING, orderItems, null, null);
+        OrderDto orderDto = new OrderDto(null, user, OrderStatus.PENDING, orderItems, null, null, null);
 
         assertDoesNotThrow(() -> DtoValidator.validate(orderDto));
     }

@@ -1,14 +1,10 @@
 package com.tagme.tagme_store_back.controller;
 
-import com.github.dockerjava.api.exception.UnauthorizedException;
-import com.tagme.tagme_store_back.controller.mapper.CategoryMapper;
 import com.tagme.tagme_store_back.controller.mapper.UserMapper;
 import com.tagme.tagme_store_back.controller.webModel.request.PasswordRequest;
 import com.tagme.tagme_store_back.controller.webModel.request.UserInsertRequest;
 import com.tagme.tagme_store_back.controller.webModel.request.UserUpdateRequest;
-import com.tagme.tagme_store_back.controller.webModel.response.CategoryResponse;
 import com.tagme.tagme_store_back.controller.webModel.response.UserResponse;
-import com.tagme.tagme_store_back.domain.dto.CategoryDto;
 import com.tagme.tagme_store_back.domain.dto.UserDto;
 import com.tagme.tagme_store_back.domain.exception.BusinessException;
 import com.tagme.tagme_store_back.domain.exception.InvalidCredentialsException;

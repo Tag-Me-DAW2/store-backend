@@ -18,6 +18,7 @@ public record OrderDto(
         List<OrderItemDto>orderItems,
         @Min(value = 0, message = "Total price must be non-negative")
         BigDecimal totalPrice,
+        LocalDateTime paidDate,
         LocalDateTime createdAt
 ) {
 }
