@@ -4,15 +4,9 @@ import com.tagme.tagme_store_back.annotation.DaoTest;
 import com.tagme.tagme_store_back.domain.exception.ResourceNotFoundException;
 import com.tagme.tagme_store_back.persistence.dao.jpa.AuthJpaDao;
 import com.tagme.tagme_store_back.persistence.dao.jpa.entity.UserJpaEntity;
-import com.tagme.tagme_store_back.spring.SpringConfig;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.ContextConfiguration;
 
 import java.util.UUID;
 

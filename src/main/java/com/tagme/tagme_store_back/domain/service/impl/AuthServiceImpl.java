@@ -1,6 +1,5 @@
 package com.tagme.tagme_store_back.domain.service.impl;
 
-import com.tagme.tagme_store_back.controller.webModel.request.LoginRequest;
 import com.tagme.tagme_store_back.domain.dto.LoginDto;
 import com.tagme.tagme_store_back.domain.dto.UserDto;
 import com.tagme.tagme_store_back.domain.exception.InvalidCredentialsException;

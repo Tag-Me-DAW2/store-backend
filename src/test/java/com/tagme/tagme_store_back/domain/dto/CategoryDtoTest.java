@@ -8,9 +8,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import javax.sql.rowset.serial.SerialBlob;
-import java.math.BigDecimal;
-import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.stream.Stream;
 

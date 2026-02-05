@@ -4,7 +4,6 @@ import com.tagme.tagme_store_back.domain.dto.CategoryDto;
 import com.tagme.tagme_store_back.domain.dto.ProductDto;
 import com.tagme.tagme_store_back.domain.exception.ResourceNotFoundException;
 import com.tagme.tagme_store_back.domain.mapper.ProductMapper;
-import com.tagme.tagme_store_back.domain.model.Category;
 import com.tagme.tagme_store_back.domain.model.Page;
 import com.tagme.tagme_store_back.domain.model.Product;
 import com.tagme.tagme_store_back.domain.repository.CategoryRepository;
@@ -19,7 +18,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 

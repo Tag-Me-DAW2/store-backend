@@ -4,7 +4,6 @@ import com.tagme.tagme_store_back.domain.dto.CategoryDto;
 import com.tagme.tagme_store_back.domain.exception.BusinessException;
 import com.tagme.tagme_store_back.domain.exception.ResourceNotFoundException;
 import com.tagme.tagme_store_back.domain.mapper.CategoryMapper;
-import com.tagme.tagme_store_back.domain.model.Category;
 import com.tagme.tagme_store_back.domain.model.Page;
 import com.tagme.tagme_store_back.domain.repository.CategoryRepository;
 import com.tagme.tagme_store_back.domain.service.CategoryService;

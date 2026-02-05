@@ -1,12 +1,10 @@
 package com.tagme.tagme_store_back.persistence.repository;
 
-import com.tagme.tagme_store_back.domain.dto.ProductDto;
 import com.tagme.tagme_store_back.domain.dto.UserDto;
 import com.tagme.tagme_store_back.domain.model.Page;
 import com.tagme.tagme_store_back.domain.repository.UserRepository;
 import com.tagme.tagme_store_back.persistence.dao.jpa.UserJpaDao;
 import com.tagme.tagme_store_back.persistence.dao.jpa.entity.UserJpaEntity;
-import com.tagme.tagme_store_back.persistence.mapper.ProductMapper;
 import com.tagme.tagme_store_back.persistence.mapper.UserMapper;
 
 import java.util.List;

@@ -7,7 +7,6 @@ import com.tagme.tagme_store_back.domain.dto.OrderDto;
 import com.tagme.tagme_store_back.domain.dto.UserDto;
 import com.tagme.tagme_store_back.domain.service.CartService;
 import com.tagme.tagme_store_back.domain.service.UserService;
-import com.tagme.tagme_store_back.domain.validation.DtoValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

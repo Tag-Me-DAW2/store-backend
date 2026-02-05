@@ -6,6 +6,7 @@ import com.tagme.tagme_store_back.domain.dto.OrderItemDto;
 import com.tagme.tagme_store_back.domain.model.Order;
 import com.tagme.tagme_store_back.domain.model.OrderItem;
 import com.tagme.tagme_store_back.domain.model.OrderStatus;
+import com.tagme.tagme_store_back.domain.model.ShippingInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,11 +24,15 @@ public class OrderMapper {
                     .toList();
         }
 
+        ShippingInfo shippingInfo = ShippingInfoMapper.fromShippingInfoDtoToShippingInfo(orderDto.shippingInfo());
+
         return new Order(
                 orderDto.id(),
                 UserMapper.fromUserDtoToUser(orderDto.user()),
                 orderDto.orderStatus(),
                 orderItems,
+                orderDto.shippingCost(),
+                shippingInfo,
                 orderDto.paidDate(),
                 orderDto.createdAt()
         );
@@ -57,6 +62,8 @@ public class OrderMapper {
                 order.getOrderStatus(),
                 orderItemDtos,
                 order.getTotalPrice(),
+                order.getShippingCost(),
+                ShippingInfoMapper.fromShippingInfoToShippingInfoDto(order.getShippingInfo()),
                 order.getPaidDate(),
                 order.getCreatedAt()
         );

@@ -1,9 +1,7 @@
 package com.tagme.tagme_store_back.domain.dto;
 
-import com.tagme.tagme_store_back.domain.model.Category;
 import com.tagme.tagme_store_back.domain.model.ProductMaterial;
 import jakarta.validation.constraints.*;
-import org.aspectj.weaver.ast.Not;
 
 import java.math.BigDecimal;
 import java.sql.Blob;

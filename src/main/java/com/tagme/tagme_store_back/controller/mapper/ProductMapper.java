@@ -2,14 +2,11 @@ package com.tagme.tagme_store_back.controller.mapper;
 
 import com.tagme.tagme_store_back.controller.webModel.request.ProductInsertRequest;
 import com.tagme.tagme_store_back.controller.webModel.request.ProductUpdateRequest;
-import com.tagme.tagme_store_back.controller.webModel.response.CategoryResponse;
 import com.tagme.tagme_store_back.controller.webModel.response.ProductDetailResponse;
 import com.tagme.tagme_store_back.controller.webModel.response.ProductSummaryResponse;
 import com.tagme.tagme_store_back.domain.dto.CategoryDto;
 import com.tagme.tagme_store_back.domain.dto.ProductDto;
-import com.tagme.tagme_store_back.domain.model.Product;
 import com.tagme.tagme_store_back.domain.model.ProductMaterial;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;

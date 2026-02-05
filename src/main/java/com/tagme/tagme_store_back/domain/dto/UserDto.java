@@ -2,7 +2,6 @@ package com.tagme.tagme_store_back.domain.dto;
 
 import com.tagme.tagme_store_back.domain.model.UserRole;
 import com.tagme.tagme_store_back.domain.validation.ValidEmail;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

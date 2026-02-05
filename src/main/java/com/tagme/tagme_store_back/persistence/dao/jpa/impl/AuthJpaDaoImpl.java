@@ -6,7 +6,6 @@ import com.tagme.tagme_store_back.persistence.dao.jpa.entity.SessionJpaEntity;
 import com.tagme.tagme_store_back.persistence.dao.jpa.entity.UserJpaEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
