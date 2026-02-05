@@ -4,7 +4,6 @@ import com.tagme.tagme_store_back.domain.model.OrderStatus;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +16,7 @@ public class OrderJpaEntity implements Serializable {
     private Long id;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "usr_id")
     private UserJpaEntity user;
 
     @Enumerated(EnumType.STRING)
@@ -31,7 +30,10 @@ public class OrderJpaEntity implements Serializable {
     )
     private List<OrderItemJpaEntity> orderItems = new ArrayList<>();
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "paid-date")
+    private LocalDateTime paidDate;
+
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     public OrderJpaEntity() {
@@ -41,7 +43,9 @@ public class OrderJpaEntity implements Serializable {
         this.id = id;
         this.user = user;
         this.orderStatus = orderStatus;
-        addItems(orderItems);
+        if (orderItems != null) {
+            addItems(orderItems);
+        }
     }
 
     public Long getId() {
@@ -82,6 +86,14 @@ public class OrderJpaEntity implements Serializable {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getPaidDate() {
+        return paidDate;
+    }
+
+    public void setPaidDate(LocalDateTime paidDate) {
+        this.paidDate = paidDate;
     }
 
     public void addItem(OrderItemJpaEntity item) {
