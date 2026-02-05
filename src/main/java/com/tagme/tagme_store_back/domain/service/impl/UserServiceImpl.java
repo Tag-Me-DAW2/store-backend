@@ -1,10 +1,8 @@
 package com.tagme.tagme_store_back.domain.service.impl;
 
-import com.tagme.tagme_store_back.domain.dto.ProductDto;
 import com.tagme.tagme_store_back.domain.dto.UserDto;
 import com.tagme.tagme_store_back.domain.exception.BusinessException;
 import com.tagme.tagme_store_back.domain.exception.ResourceNotFoundException;
-import com.tagme.tagme_store_back.domain.mapper.ProductMapper;
 import com.tagme.tagme_store_back.domain.mapper.UserMapper;
 import com.tagme.tagme_store_back.domain.model.Page;
 import com.tagme.tagme_store_back.domain.model.User;

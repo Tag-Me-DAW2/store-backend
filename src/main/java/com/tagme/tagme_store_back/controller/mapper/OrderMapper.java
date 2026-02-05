@@ -42,6 +42,8 @@ public class OrderMapper {
                 orderDto.orderStatus(),
                 itemResponses,
                 orderDto.totalPrice(),
+                orderDto.shippingCost(),
+                ShippingInfoMapper.fromShippingInfoDtoToShippingInfoResponse(orderDto.shippingInfo()),
                 orderDto.paidDate()
         );
     }
@@ -93,6 +95,8 @@ public class OrderMapper {
                 user,
                 OrderStatus.PENDING,
                 orderItems,
+                null,
+                null,
                 null,
                 null,
                 null

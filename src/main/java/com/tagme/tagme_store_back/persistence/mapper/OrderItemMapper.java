@@ -14,43 +14,65 @@ public class OrderItemMapper {
 
     /**
      * Convierte OrderItemDto a entidad JPA.
-     * Siempre guarda el snapshot del producto para preservar datos históricos.
+     * Solo guarda el snapshot del producto cuando el pedido NO está en PENDING.
      */
-    public static OrderItemJpaEntity toJpaEntity(OrderItemDto orderItemDto) {
+    public static OrderItemJpaEntity toJpaEntity(OrderItemDto orderItemDto, OrderStatus orderStatus) {
         if (orderItemDto == null) {
             return null;
         }
 
         ProductJpaEntity productEntity = ProductMapper.fromProductDtoToProductJpaEntity(orderItemDto.productDto());
-        ProductDto productDto = orderItemDto.productDto();
 
-        // Snapshot: usar datos del DTO si están disponibles, sino del producto
-        String snapshotName = orderItemDto.productName() != null ? 
-                orderItemDto.productName() : 
-                (productEntity != null ? productEntity.getName() : null);
-        
-        byte[] snapshotImage = blobToByteArray(orderItemDto.productImage());
-        if (snapshotImage == null && productEntity != null) {
-            snapshotImage = productEntity.getImage();
+        // Solo guardar snapshot si el pedido no está en PENDING
+        if (orderStatus != OrderStatus.PENDING) {
+            // Snapshot: usar datos del DTO si están disponibles, sino del producto
+            String snapshotName = orderItemDto.productName() != null ? 
+                    orderItemDto.productName() : 
+                    (productEntity != null ? productEntity.getName() : null);
+            
+            byte[] snapshotImage = blobToByteArray(orderItemDto.productImage());
+            if (snapshotImage == null && productEntity != null) {
+                snapshotImage = productEntity.getImage();
+            }
+            
+            String snapshotImageName = orderItemDto.productImageName() != null ? 
+                    orderItemDto.productImageName() : 
+                    (productEntity != null ? productEntity.getImageName() : null);
+
+            return new OrderItemJpaEntity(
+                    orderItemDto.id(),
+                    null, // order se setea después
+                    productEntity,
+                    snapshotName,
+                    snapshotImage,
+                    snapshotImageName,
+                    orderItemDto.basePrice() != null ? orderItemDto.basePrice() :
+                            (productEntity != null ? productEntity.getBasePrice() : null),
+                    orderItemDto.discountPercentage() != null ? orderItemDto.discountPercentage() :
+                            (productEntity != null ? productEntity.getDiscountPercentage() : null),
+                    orderItemDto.quantity()
+            );
+        } else {
+            // PENDING: no guardar snapshot, solo la referencia al producto
+            return new OrderItemJpaEntity(
+                    orderItemDto.id(),
+                    null, // order se setea después
+                    productEntity,
+                    null, // productName
+                    null, // productImage
+                    null, // productImageName
+                    null, // basePrice
+                    null, // discountPercentage
+                    orderItemDto.quantity()
+            );
         }
-        
-        String snapshotImageName = orderItemDto.productImageName() != null ? 
-                orderItemDto.productImageName() : 
-                (productEntity != null ? productEntity.getImageName() : null);
+    }
 
-        return new OrderItemJpaEntity(
-                orderItemDto.id(),
-                null, // order se setea después
-                productEntity,
-                snapshotName,
-                snapshotImage,
-                snapshotImageName,
-                orderItemDto.basePrice() != null ? orderItemDto.basePrice() :
-                        (productEntity != null ? productEntity.getBasePrice() : null),
-                orderItemDto.discountPercentage() != null ? orderItemDto.discountPercentage() :
-                        (productEntity != null ? productEntity.getDiscountPercentage() : null),
-                orderItemDto.quantity()
-        );
+    /**
+     * Versión sin estado - asume PENDING (no guarda snapshot)
+     */
+    public static OrderItemJpaEntity toJpaEntity(OrderItemDto orderItemDto) {
+        return toJpaEntity(orderItemDto, OrderStatus.PENDING);
     }
 
     /**

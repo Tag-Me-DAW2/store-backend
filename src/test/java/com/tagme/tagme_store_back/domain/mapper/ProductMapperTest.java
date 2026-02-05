@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import javax.sql.rowset.serial.SerialBlob;
-import java.math.BigDecimal;
 import java.sql.Blob;
 import java.sql.SQLException;
 

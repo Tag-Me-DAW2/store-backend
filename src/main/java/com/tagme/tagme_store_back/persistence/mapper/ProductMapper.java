@@ -1,7 +1,6 @@
 package com.tagme.tagme_store_back.persistence.mapper;
 
 import com.tagme.tagme_store_back.domain.dto.ProductDto;
-import com.tagme.tagme_store_back.domain.model.ProductMaterial;
 import com.tagme.tagme_store_back.persistence.dao.jpa.entity.ProductJpaEntity;
 
 import javax.sql.rowset.serial.SerialBlob;

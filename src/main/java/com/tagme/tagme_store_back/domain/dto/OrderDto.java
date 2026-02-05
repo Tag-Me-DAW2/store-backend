@@ -3,7 +3,6 @@ package com.tagme.tagme_store_back.domain.dto;
 import com.tagme.tagme_store_back.domain.model.OrderStatus;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -18,6 +17,9 @@ public record OrderDto(
         List<OrderItemDto>orderItems,
         @Min(value = 0, message = "Total price must be non-negative")
         BigDecimal totalPrice,
+        @Min(value = 0, message = "Shipping cost must be non-negative")
+        BigDecimal shippingCost,
+        ShippingInfoDto shippingInfo,
         LocalDateTime paidDate,
         LocalDateTime createdAt
 ) {

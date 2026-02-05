@@ -4,6 +4,7 @@ import com.tagme.tagme_store_back.domain.model.OrderStatus;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +24,14 @@ public class OrderJpaEntity implements Serializable {
     @Column(name = "order_status", nullable = false)
     private OrderStatus orderStatus;
 
-    @OneToMany(
-            mappedBy = "order",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItemJpaEntity> orderItems = new ArrayList<>();
+
+    @Column(name = "shipping_cost", nullable = true)
+    private BigDecimal shippingCost;
+
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private ShippingInfoJpaEntity shippingInfo;
 
     @Column(name = "paid-date")
     private LocalDateTime paidDate;
@@ -39,13 +42,15 @@ public class OrderJpaEntity implements Serializable {
     public OrderJpaEntity() {
     }
 
-    public OrderJpaEntity(Long id, UserJpaEntity user, OrderStatus orderStatus, List<OrderItemJpaEntity> orderItems) {
+    public OrderJpaEntity(Long id, UserJpaEntity user, OrderStatus orderStatus, List<OrderItemJpaEntity> orderItems,
+            BigDecimal shippingCost) {
         this.id = id;
         this.user = user;
         this.orderStatus = orderStatus;
         if (orderItems != null) {
             addItems(orderItems);
         }
+        this.shippingCost = shippingCost;
     }
 
     public Long getId() {
@@ -109,6 +114,25 @@ public class OrderJpaEntity implements Serializable {
     public void addItems(List<OrderItemJpaEntity> items) {
         for (OrderItemJpaEntity item : items) {
             addItem(item);
+        }
+    }
+
+    public BigDecimal getShippingCost() {
+        return shippingCost;
+    }
+
+    public void setShippingCost(BigDecimal shippingCost) {
+        this.shippingCost = shippingCost;
+    }
+
+    public ShippingInfoJpaEntity getShippingInfo() {
+        return shippingInfo;
+    }
+
+    public void setShippingInfo(ShippingInfoJpaEntity shippingInfo) {
+        this.shippingInfo = shippingInfo;
+        if (shippingInfo != null) {
+            shippingInfo.setOrder(this);
         }
     }
 

@@ -12,6 +12,8 @@ public record OrderResponse(
         OrderStatus orderStatus,
         List<OrderItemResponse> orderItems,
         BigDecimal totalPrice,
+        BigDecimal shippingCost,
+        ShippingInfoResponse shippingInfo,
         LocalDateTime paidDate
 ) {
 }

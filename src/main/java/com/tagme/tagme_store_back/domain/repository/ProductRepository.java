@@ -2,7 +2,6 @@ package com.tagme.tagme_store_back.domain.repository;
 
 import com.tagme.tagme_store_back.domain.dto.ProductDto;
 import com.tagme.tagme_store_back.domain.model.Page;
-import com.tagme.tagme_store_back.domain.model.Product;
 import com.tagme.tagme_store_back.domain.model.ProductSort;
 
 import java.util.List;

@@ -2,7 +2,6 @@ package com.tagme.tagme_store_back.web.filters;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.annotation.Order;
 
 import java.io.IOException;
@@ -11,7 +10,6 @@ import java.io.IOException;
 public class LoginFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 
         String path = httpServletRequest.getRequestURI();

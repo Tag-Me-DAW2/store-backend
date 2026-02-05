@@ -50,6 +50,8 @@ public class CartServiceImpl implements CartService {
                 OrderStatus.PENDING,
                 new ArrayList<>(),
                 null,
+                null,
+                null,
                 LocalDateTime.now()
         );
 
@@ -146,6 +148,8 @@ public class CartServiceImpl implements CartService {
                 orderDto.orderStatus(),
                 resolvedItems,
                 orderDto.totalPrice(),
+                null,
+                orderDto.shippingInfo(),
                 orderDto.paidDate(),
                 orderDto.createdAt()
         );
@@ -159,6 +163,8 @@ public class CartServiceImpl implements CartService {
                 OrderStatus.PENDING,
                 orderToUpdate.orderItems(),
                 orderToUpdate.totalPrice(),
+                orderToUpdate.shippingCost(),
+                orderDto.shippingInfo(),
                 null,
                 activeCart.createdAt()
         );
@@ -235,6 +241,8 @@ public class CartServiceImpl implements CartService {
                 orderDto.orderStatus(),
                 resolvedItems,
                 orderDto.totalPrice(),
+                null,
+                orderDto.shippingInfo(),
                 orderDto.paidDate(),
                 orderDto.createdAt()
         );
@@ -250,6 +258,8 @@ public class CartServiceImpl implements CartService {
                 orderToUpdate.orderStatus(),
                 orderToUpdate.orderItems(),
                 orderToUpdate.totalPrice(),
+                orderToUpdate.shippingCost(),
+                orderDto.shippingInfo(),
                 paidDate,
                 activeCart.createdAt()
         );
@@ -277,6 +287,8 @@ public class CartServiceImpl implements CartService {
                 OrderStatus.PENDING,
                 new ArrayList<>(),
                 BigDecimal.ZERO,
+                null,
+                null,
                 null,
                 activeCart.createdAt()
         );

@@ -18,7 +18,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -35,7 +34,6 @@ class ProductRepositoryImplTest {
 
     private ProductDto productDto1;
     private ProductDto productDto2;
-    private ProductDto productDto3;
 
 
 
