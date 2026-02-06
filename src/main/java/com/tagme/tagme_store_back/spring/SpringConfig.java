@@ -1,5 +1,7 @@
 package com.tagme.tagme_store_back.spring;
 
+import com.tagme.tagme_store_back.EpsteinFiles.payment.CreditCardPaymentService;
+import com.tagme.tagme_store_back.EpsteinFiles.payment.impl.CreditCardPaymentServiceImpl;
 import com.tagme.tagme_store_back.domain.repository.AuthRepository;
 import com.tagme.tagme_store_back.domain.repository.CategoryRepository;
 import com.tagme.tagme_store_back.domain.repository.OrderRepository;
@@ -114,10 +116,15 @@ public class SpringConfig {
     }
 
     @Bean
-    public CartService cartService(OrderRepository orderRepository, UserService userService, ProductService productService) {
-        return new CartServiceImpl(orderRepository, userService, productService);
+    public CreditCardPaymentService creditCardPayment() {
+        return new CreditCardPaymentServiceImpl();
     }
 
+
+    @Bean
+    public CartService cartService(OrderRepository orderRepository, UserService userService, ProductService productService, CreditCardPaymentService creditCardPaymentService) {
+        return new CartServiceImpl(orderRepository, userService, productService, creditCardPaymentService);
+    }
 
     @Bean
     public MultipartConfigElement multipartConfigElement() {

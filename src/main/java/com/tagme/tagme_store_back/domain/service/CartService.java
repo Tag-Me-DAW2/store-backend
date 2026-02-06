@@ -1,6 +1,7 @@
 package com.tagme.tagme_store_back.domain.service;
 
 import com.tagme.tagme_store_back.domain.dto.OrderDto;
+import com.tagme.tagme_store_back.domain.dto.PayCartDto;
 import com.tagme.tagme_store_back.domain.model.OrderStatus;
 
 public interface CartService {
@@ -10,4 +11,5 @@ public interface CartService {
     OrderStatus getCartStatus(Long userId);
     void updatePendingCart(OrderDto orderDto);
     void updateCart(OrderDto orderDto);
+    void payWithCreditCard(Long userId, PayCartDto payCartDto);
 }

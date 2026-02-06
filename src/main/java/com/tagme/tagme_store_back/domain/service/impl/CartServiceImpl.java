@@ -1,9 +1,8 @@
 package com.tagme.tagme_store_back.domain.service.impl;
 
-import com.tagme.tagme_store_back.domain.dto.OrderDto;
-import com.tagme.tagme_store_back.domain.dto.OrderItemDto;
-import com.tagme.tagme_store_back.domain.dto.ProductDto;
-import com.tagme.tagme_store_back.domain.dto.UserDto;
+import com.tagme.tagme_store_back.EpsteinFiles.payment.CreditCardPaymentService;
+import com.tagme.tagme_store_back.EpsteinFiles.payment.records.CreditCardRequest;
+import com.tagme.tagme_store_back.domain.dto.*;
 import com.tagme.tagme_store_back.domain.exception.BusinessException;
 import com.tagme.tagme_store_back.domain.exception.ResourceNotFoundException;
 import com.tagme.tagme_store_back.domain.exception.ValidationException;
@@ -28,11 +27,13 @@ public class CartServiceImpl implements CartService {
     private final OrderRepository orderRepository;
     private final UserService userService;
     private final ProductService productService;
+    private final CreditCardPaymentService creditCardPaymentService;
 
-    public CartServiceImpl(OrderRepository orderRepository, UserService userService, ProductService productService) {
+    public CartServiceImpl(OrderRepository orderRepository, UserService userService, ProductService productService, CreditCardPaymentService creditCardPaymentService) {
         this.orderRepository = orderRepository;
         this.userService = userService;
         this.productService = productService;
+        this.creditCardPaymentService = creditCardPaymentService;
     }
 
     @Override
@@ -294,5 +295,30 @@ public class CartServiceImpl implements CartService {
         );
 
         orderRepository.save(clearedCart);
+    }
+
+    @Override
+    @Transactional
+    public void payWithCreditCard(Long userId, PayCartDto payCartDto) {
+        if (userId == null) {
+            throw new RuntimeException("User ID cannot be null");
+        }
+
+        if (payCartDto == null) {
+            throw new RuntimeException("Payment information cannot be null");
+        }
+
+        OrderDto activeCart = getActiveCart(userId);
+
+        CreditCardRequest creditCardRequest = new CreditCardRequest(
+                payCartDto.paymentInfo().cardNumber(),
+                payCartDto.paymentInfo().cardHolderName(),
+                payCartDto.paymentInfo().expirationDate(),
+                payCartDto.paymentInfo().cvv()
+        );
+
+        // Realizar el pago.
+        creditCardPaymentService.execute(creditCardRequest, activeCart.totalPrice());
+
     }
 }

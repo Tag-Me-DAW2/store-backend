@@ -61,7 +61,7 @@ public class CartController {
         // Conseguir el usuario para validar que existe
         UserResponse userResponse = AuthContext.getUser();
 
-        System.out.println("User ID from AuthContext: " + userResponse.id() + "Carrito: " +payCartDto.orderInfo().toString());
+        cartService.payWithCreditCard(userResponse.id(), payCartDto);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

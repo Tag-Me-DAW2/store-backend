@@ -80,7 +80,10 @@
             <artifactId>password4j</artifactId>
             <version>${com.password4j.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+        </dependency>
         <!-- Dependencias para pruebas -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
