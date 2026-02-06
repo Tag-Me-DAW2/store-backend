@@ -18,44 +18,44 @@ VALUES
     ('Accessories');
 
 
-INSERT INTO tb_products (name, description, base_price, discount_percentage, image, image_name, category_id)
+INSERT INTO tb_products (name, description, base_price, discount_percentage, image, image_name, category_id, material)
 VALUES
 -- =========================
 -- NFC CARDS (1)
 -- =========================
-('Smart CV Card', 'NFC smart card to instantly share your digital CV', 19.99, 10.00, NULL, NULL, 1),
-('Business Card Pro', 'Professional NFC business card with CV and portfolio', 29.99, 15.00, NULL, NULL, 1),
-('Metal CV Card', 'Premium metal NFC card with personalized digital resume', 49.99, 20.00, NULL, NULL, 1),
-('Wallet CV Card', 'Slim NFC card designed to carry your CV in your wallet', 24.99, 10.00, NULL, NULL, 1),
+('Smart CV Card', 'NFC smart card to instantly share your digital CV', 19.99, 10.00, NULL, NULL, 1, 'PVC'),
+('Business Card Pro', 'Professional NFC business card with CV and portfolio', 29.99, 15.00, NULL, NULL, 1, 'PVC'),
+('Metal CV Card', 'Premium metal NFC card with personalized digital resume', 49.99, 20.00, NULL, NULL, 1, 'STEEL'),
+('Wallet CV Card', 'Slim NFC card designed to carry your CV in your wallet', 24.99, 10.00, NULL, NULL, 1, 'PVC'),
 
 -- =========================
 -- NFC WEARABLES (2)
 -- =========================
-('CV Bracelet', 'Wearable NFC bracelet to share your professional profile', 22.99, 12.00, NULL, NULL, 2),
-('Smart Wristband', 'Smart NFC wristband with instant CV access', 27.99, 15.00, NULL, NULL, 2),
-('CV Keychain', 'Electronic NFC keychain linked to your digital curriculum', 14.99, 8.00, NULL, NULL, 2),
+('CV Bracelet', 'Wearable NFC bracelet to share your professional profile', 22.99, 12.00, NULL, NULL, 2, 'PVC'),
+('Smart Wristband', 'Smart NFC wristband with instant CV access', 27.99, 15.00, NULL, NULL, 2, 'STEEL'),
+('CV Keychain', 'Electronic NFC keychain linked to your digital curriculum', 14.99, 8.00, NULL, NULL, 2, 'WOOD'),
 
 -- =========================
 -- NFC TAGS & STICKERS (3)
 -- =========================
-('CV Sticker', 'Adhesive NFC sticker to share your CV by scanning', 9.99, 5.00, NULL, NULL, 3),
-('Resume Tag', 'Compact NFC tag programmable with your digital resume', 11.99, 7.00, NULL, NULL, 3),
-('Phone CV Tag', 'NFC tag for smartphones with CV redirection', 12.99, 10.00, NULL, NULL, 3),
-('CV Stickers Pack', 'Pack of programmable NFC stickers for digital CVs', 19.99, 12.00, NULL, NULL, 3),
+('CV Sticker', 'Adhesive NFC sticker to share your CV by scanning', 9.99, 5.00, NULL, NULL, 3, 'PVC'),
+('Resume Tag', 'Compact NFC tag programmable with your digital resume', 11.99, 7.00, NULL, NULL, 3, 'PVC'),
+('Phone CV Tag', 'NFC tag for smartphones with CV redirection', 12.99, 10.00, NULL, NULL, 3, 'PVC'),
+('CV Stickers Pack', 'Pack of programmable NFC stickers for digital CVs', 19.99, 12.00, NULL, NULL, 3, 'PVC'),
 
 -- =========================
 -- NFC DESK & OFFICE (4)
 -- =========================
-('Desk CV Stand', 'Desktop NFC stand for scanning your CV in meetings', 29.99, 15.00, NULL, NULL, 4),
-('Office CV Plaque', 'Office plaque with embedded NFC linking to your CV', 39.99, 18.00, NULL, NULL, 4),
-('Interview Card Stand', 'NFC stand designed for interviews and job fairs', 24.99, 10.00, NULL, NULL, 4),
+('Desk CV Stand', 'Desktop NFC stand for scanning your CV in meetings', 29.99, 15.00, NULL, NULL, 4, 'WOOD'),
+('Office CV Plaque', 'Office plaque with embedded NFC linking to your CV', 39.99, 18.00, NULL, NULL, 4, 'GOLDEN'),
+('Interview Card Stand', 'NFC stand designed for interviews and job fairs', 24.99, 10.00, NULL, NULL, 4, 'STEEL'),
 
 -- =========================
 -- NFC ACCESSORIES (5)
 -- =========================
-('Lanyard CV', 'Electronic lanyard with NFC chip for CV sharing', 16.99, 10.00, NULL, NULL, 5),
-('Badge CV Holder', 'Badge holder with integrated NFC CV access', 18.99, 12.00, NULL, NULL, 5),
-('Backpack CV Tag', 'Backpack accessory with NFC linking to your resume', 15.99, 8.00, NULL, NULL, 5);
+('Lanyard CV', 'Electronic lanyard with NFC chip for CV sharing', 16.99, 10.00, NULL, NULL, 5, 'PVC'),
+('Badge CV Holder', 'Badge holder with integrated NFC CV access', 18.99, 12.00, NULL, NULL, 5, 'STEEL'),
+('Backpack CV Tag', 'Backpack accessory with NFC linking to your resume', 15.99, 8.00, NULL, NULL, 5, 'WOOD');
 
 -- ==========================================
 -- SESSIONS (Opcional, normalmente vacío)
