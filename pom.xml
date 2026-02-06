@@ -67,6 +67,11 @@
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>${org.flywaydb.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
             <artifactId>flyway-mysql</artifactId>
             <version>${org.flywaydb.version}</version>
         </dependency>
