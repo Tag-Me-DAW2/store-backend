@@ -11,8 +11,8 @@ public class ShippingInfoMapper {
         return new ShippingInfo(
                 shippingInfoDto.id(),
                 shippingInfoDto.orderId(),
-                shippingInfoDto.name(),
-                shippingInfoDto.surname(),
+                shippingInfoDto.firstName(),
+                shippingInfoDto.lastName(),
                 shippingInfoDto.email(),
                 shippingInfoDto.address(),
                 shippingInfoDto.city(),
@@ -29,8 +29,8 @@ public class ShippingInfoMapper {
         return new ShippingInfoDto(
                 shippingInfo.getId(),
                 shippingInfo.getOrderId(),
-                shippingInfo.getName(),
-                shippingInfo.getSurname(),
+                shippingInfo.getFirstName(),
+                shippingInfo.getLastName(),
                 shippingInfo.getEmail(),
                 shippingInfo.getAddress(),
                 shippingInfo.getCity(),

@@ -64,8 +64,8 @@ CREATE TABLE `tb_orders` (
 CREATE TABLE `tb_shipping_info` (
                                   `id` int(11) NOT NULL AUTO_INCREMENT,
                                   `order_id` int(11) NOT NULL,
-                                  `name` varchar(255) NOT NULL,
-                                  `surname` varchar(255) NOT NULL,
+                                  `first_name` varchar(255) NOT NULL,
+                                  `last_name` varchar(255) NOT NULL,
                                   `email` varchar(255) NOT NULL,
                                   `address` varchar(255) NOT NULL,
                                   `city` varchar(100) NOT NULL,

@@ -11,8 +11,8 @@ public class ShippingInfoMapper {
         }
         return new ShippingInfoResponse(
                 shippingInfoDto.id(),
-                shippingInfoDto.name(),
-                shippingInfoDto.surname(),
+                shippingInfoDto.firstName(),
+                shippingInfoDto.lastName(),
                 shippingInfoDto.email(),
                 shippingInfoDto.address(),
                 shippingInfoDto.city(),
@@ -28,8 +28,8 @@ public class ShippingInfoMapper {
         return new ShippingInfoDto(
                 null,
                 null,
-                request.name(),
-                request.surname(),
+                request.firstName(),
+                request.lastName(),
                 request.email(),
                 request.address(),
                 request.city(),
