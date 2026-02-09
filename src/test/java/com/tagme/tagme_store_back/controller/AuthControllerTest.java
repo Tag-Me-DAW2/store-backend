@@ -84,7 +84,7 @@ class AuthControllerTest {
             UserDto UserDto = Instancio.of(UserDto.class).create();
 
             doNothing().when(authService).logout(anyString());
-            when(authService.getByToken(anyString())).thenReturn(UserDto); // Sin esto el filtro Auth te dice que hasta la próxima
+            when(authService.getByToken(anyString())).thenReturn(UserDto); // Sin esto el filtro AuthRequest te dice que hasta la próxima
 
             mockMvc.perform(post("/auth/logout")
                             .header("Authorization", "Bearer " + token))
