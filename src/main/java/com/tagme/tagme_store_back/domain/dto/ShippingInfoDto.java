@@ -9,9 +9,9 @@ public record ShippingInfoDto(
         Long id,
         Long orderId,
         @NotBlank(message = "Name cannot be empty or null")
-        String name,
-        @NotBlank(message = "Surname cannot be empty or null")
-        String surname,
+        String firstName,
+        @NotBlank(message = "lastName cannot be empty or null")
+        String lastName,
         @ValidEmail
         String email,
         @NotBlank(message = "Address cannot be empty or null")

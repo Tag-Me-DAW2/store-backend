@@ -6,8 +6,8 @@ import java.util.Objects;
 public class ShippingInfo {
     private Long id;
     private Long orderId;
-    private String name;
-    private String surname;
+    private String firstName;
+    private String lastName;
     private String email;
     private String address;
     private String city;
@@ -18,8 +18,8 @@ public class ShippingInfo {
     public ShippingInfo(Long id, Long orderId, String name, String surname, String email, String address, String city, String postalCode, String country, LocalDateTime createdAt) {
         this.id = id;
         this.orderId = orderId;
-        this.name = name;
-        this.surname = surname;
+        this.firstName = name;
+        this.lastName = surname;
         this.email = email;
         this.address = address;
         this.city = city;
@@ -44,20 +44,20 @@ public class ShippingInfo {
         this.orderId = orderId;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getSurname() {
-        return surname;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {
@@ -112,11 +112,11 @@ public class ShippingInfo {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         ShippingInfo that = (ShippingInfo) o;
-        return Objects.equals(id, that.id) && Objects.equals(orderId, that.orderId) && Objects.equals(name, that.name) && Objects.equals(surname, that.surname) && Objects.equals(email, that.email) && Objects.equals(address, that.address) && Objects.equals(city, that.city) && Objects.equals(postalCode, that.postalCode) && Objects.equals(country, that.country) && Objects.equals(createdAt, that.createdAt);
+        return Objects.equals(id, that.id) && Objects.equals(orderId, that.orderId) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(email, that.email) && Objects.equals(address, that.address) && Objects.equals(city, that.city) && Objects.equals(postalCode, that.postalCode) && Objects.equals(country, that.country) && Objects.equals(createdAt, that.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, orderId, name, surname, email, address, city, postalCode, country, createdAt);
+        return Objects.hash(id, orderId, firstName, lastName, email, address, city, postalCode, country, createdAt);
     }
 }

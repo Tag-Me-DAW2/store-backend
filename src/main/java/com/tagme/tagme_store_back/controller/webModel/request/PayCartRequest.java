@@ -1,0 +1,8 @@
+package com.tagme.tagme_store_back.controller.webModel.request;
+
+public record PayCartRequest(
+        OrderInfoRequest orderInfo,
+        CreditCardRequest paymentInfo,
+        ShippingInfoRequest shippingInfo
+) {
+}

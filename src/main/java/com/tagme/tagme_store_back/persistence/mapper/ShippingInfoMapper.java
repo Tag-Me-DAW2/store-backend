@@ -14,8 +14,8 @@ public class ShippingInfoMapper {
         ShippingInfoJpaEntity entity = new ShippingInfoJpaEntity(
                 shippingInfoDto.id(),
                 order,
-                shippingInfoDto.name(),
-                shippingInfoDto.surname(),
+                shippingInfoDto.firstName(),
+                shippingInfoDto.lastName(),
                 shippingInfoDto.email(),
                 shippingInfoDto.address(),
                 shippingInfoDto.city(),
@@ -33,8 +33,8 @@ public class ShippingInfoMapper {
         return new ShippingInfoDto(
                 shippingInfoJpaEntity.getId(),
                 shippingInfoJpaEntity.getOrder() != null ? shippingInfoJpaEntity.getOrder().getId() : null,
-                shippingInfoJpaEntity.getName(),
-                shippingInfoJpaEntity.getSurname(),
+                shippingInfoJpaEntity.getFirstName(),
+                shippingInfoJpaEntity.getLastName(),
                 shippingInfoJpaEntity.getEmail(),
                 shippingInfoJpaEntity.getAddress(),
                 shippingInfoJpaEntity.getCity(),
