@@ -16,6 +16,8 @@ import java.sql.SQLException;
 import java.util.Base64;
 import java.util.List;
 
+import static com.tagme.tagme_store_back.web.utils.MimeUtil.getMimeType;
+
 public class OrderMapper {
 
     public static OrderResponse fromOrderDtoToOrderResponse(OrderDto orderDto) throws IOException {
@@ -57,7 +59,7 @@ public class OrderMapper {
                 orderItemDto.id(),
                 ProductMapper.fromProductDtoToProductSummaryResponse(orderItemDto.productDto()),
                 orderItemDto.productName(),
-                blobToBase64(orderItemDto.productImage()),
+                blobToBase64WithMime(orderItemDto.productImage(), orderItemDto.productImageName()),
                 orderItemDto.productImageName(),
                 orderItemDto.quantity(),
                 orderItemDto.basePrice(),
@@ -66,13 +68,14 @@ public class OrderMapper {
         );
     }
 
-    private static String blobToBase64(Blob blob) {
+    private static String blobToBase64WithMime(Blob blob, String imageName) throws IOException {
         if (blob == null) {
             return null;
         }
         try {
             byte[] bytes = blob.getBytes(1, (int) blob.length());
-            return Base64.getEncoder().encodeToString(bytes);
+            String mimeType = getMimeType(imageName);
+            return "data:" + mimeType + ";base64," + Base64.getEncoder().encodeToString(bytes);
         } catch (SQLException e) {
             return null;
         }

@@ -30,6 +30,9 @@ public class OrderJpaEntity implements Serializable {
     @Column(name = "shipping_cost", nullable = true)
     private BigDecimal shippingCost;
 
+    @Column(name = "total_price", nullable = true)
+    private BigDecimal totalPrice;
+
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private ShippingInfoJpaEntity shippingInfo;
 
@@ -123,6 +126,14 @@ public class OrderJpaEntity implements Serializable {
 
     public void setShippingCost(BigDecimal shippingCost) {
         this.shippingCost = shippingCost;
+    }
+
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
     public ShippingInfoJpaEntity getShippingInfo() {
