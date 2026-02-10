@@ -83,7 +83,7 @@ CREATE TABLE `tb_shipping_info` (
 CREATE TABLE `tb_order_items` (
                                   `id` int(11) NOT NULL AUTO_INCREMENT,
                                   `order_id` int(11) NOT NULL,
-                                  `product_id` int(11) NOT NULL,
+                                  `product_id` int(11) NULL,
                                   `product_name` varchar(255) NULL,
                                   `product_image` LONGBLOB DEFAULT NULL,
                                   `product_image_name` varchar(255) DEFAULT NULL,
@@ -97,6 +97,6 @@ CREATE TABLE `tb_order_items` (
                                       ON DELETE CASCADE
                                       ON UPDATE CASCADE,
                                   CONSTRAINT `tb_order_items_product_FK` FOREIGN KEY (`product_id`) REFERENCES `tb_products` (`id`)
-                                      ON DELETE CASCADE
+                                      ON DELETE SET NULL
                                       ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
