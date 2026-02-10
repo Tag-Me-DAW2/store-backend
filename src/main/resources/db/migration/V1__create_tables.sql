@@ -50,6 +50,7 @@ CREATE TABLE `tb_orders` (
                             `id` int(11) NOT NULL AUTO_INCREMENT,
                             `usr_id` int(11) NOT NULL,
                             `order_status` ENUM('PENDING', 'PROCESSING','PAYED') NOT NULL DEFAULT 'PENDING',
+                            `total_price` DECIMAL(19,2) NULL,
                             `shipping_cost` DECIMAL(19,2) NOT NULL,
                             `paid-date` timestamp NULL DEFAULT NULL,
                             `creation_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,

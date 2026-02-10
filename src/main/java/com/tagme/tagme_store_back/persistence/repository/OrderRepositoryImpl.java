@@ -8,6 +8,7 @@ import com.tagme.tagme_store_back.persistence.dao.jpa.OrderJpaDao;
 import com.tagme.tagme_store_back.persistence.dao.jpa.entity.OrderJpaEntity;
 import com.tagme.tagme_store_back.persistence.mapper.OrderMapper;
 
+import java.util.List;
 import java.util.Optional;
 
 public class OrderRepositoryImpl implements OrderRepository {
@@ -47,6 +48,15 @@ public class OrderRepositoryImpl implements OrderRepository {
         validateUserId(userId);
         return orderJpaDao.findActiveOrderByUserId(userId)
                 .map(OrderMapper::fromJpaEntity);
+    }
+
+    @Override
+    public List<OrderDto> getOrdersByUserId(Long userId) {
+        validateUserId(userId);
+        return orderJpaDao.findNonActiveOrdersByUserId(userId)
+                .stream()
+                .map(OrderMapper::fromJpaEntity)
+                .toList();
     }
 
     // ==================== Métodos de validación ====================

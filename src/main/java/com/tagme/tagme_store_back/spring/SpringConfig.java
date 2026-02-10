@@ -10,11 +10,13 @@ import com.tagme.tagme_store_back.domain.repository.UserRepository;
 import com.tagme.tagme_store_back.domain.service.AuthService;
 import com.tagme.tagme_store_back.domain.service.CartService;
 import com.tagme.tagme_store_back.domain.service.CategoryService;
+import com.tagme.tagme_store_back.domain.service.OrderService;
 import com.tagme.tagme_store_back.domain.service.ProductService;
 import com.tagme.tagme_store_back.domain.service.UserService;
 import com.tagme.tagme_store_back.domain.service.impl.AuthServiceImpl;
 import com.tagme.tagme_store_back.domain.service.impl.CartServiceImpl;
 import com.tagme.tagme_store_back.domain.service.impl.CategoryServiceImpl;
+import com.tagme.tagme_store_back.domain.service.impl.OrderServiceImpl;
 import com.tagme.tagme_store_back.domain.service.impl.ProductServiceImpl;
 import com.tagme.tagme_store_back.domain.service.impl.UserServiceImpl;
 import com.tagme.tagme_store_back.persistence.dao.jpa.AuthJpaDao;
@@ -118,6 +120,11 @@ public class SpringConfig {
     @Bean
     public CartService cartService(OrderRepository orderRepository, UserService userService, ProductService productService, CreditCardPaymentService creditCardPaymentService) {
         return new CartServiceImpl(orderRepository, userService, productService, creditCardPaymentService);
+    }
+
+    @Bean
+    public OrderService orderService(OrderRepository orderRepository, UserService userService) {
+        return new OrderServiceImpl(orderRepository, userService);
     }
 
     @Bean

@@ -74,6 +74,7 @@ public class OrderJpaDaoImpl implements OrderJpaDao {
         existing.setUser(orderJpaEntity.getUser());
         existing.setOrderStatus(orderJpaEntity.getOrderStatus());
         existing.setShippingCost(orderJpaEntity.getShippingCost());
+        existing.setTotalPrice(orderJpaEntity.getTotalPrice());
         existing.setPaidDate(orderJpaEntity.getPaidDate());
 
         // Manejar order items - actualizar existentes y agregar nuevos
@@ -215,6 +216,21 @@ public class OrderJpaDaoImpl implements OrderJpaDao {
 
         List<OrderStatus> results = query.getResultList();
         return results.isEmpty() ? Optional.empty() : Optional.of(results.getFirst());
+    }
+
+    @Override
+    public List<OrderJpaEntity> findNonActiveOrdersByUserId(Long userId) {
+        if (userId == null) {
+            throw new IllegalArgumentException("User ID cannot be null");
+        }
+
+        String sql = "SELECT o FROM OrderJpaEntity o WHERE o.user.id = :userId AND o.orderStatus IN (:statuses) ORDER BY o.paidDate DESC";
+        TypedQuery<OrderJpaEntity> query = entityManager
+                .createQuery(sql, OrderJpaEntity.class)
+                .setParameter("userId", userId)
+                .setParameter("statuses", List.of(OrderStatus.PROCESSING, OrderStatus.PAYED));
+
+        return query.getResultList();
     }
 }
 
