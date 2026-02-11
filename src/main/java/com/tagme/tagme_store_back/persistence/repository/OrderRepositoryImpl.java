@@ -3,6 +3,7 @@ package com.tagme.tagme_store_back.persistence.repository;
 import com.tagme.tagme_store_back.domain.dto.OrderDto;
 import com.tagme.tagme_store_back.domain.exception.ValidationException;
 import com.tagme.tagme_store_back.domain.model.OrderStatus;
+import com.tagme.tagme_store_back.domain.model.Page;
 import com.tagme.tagme_store_back.domain.repository.OrderRepository;
 import com.tagme.tagme_store_back.persistence.dao.jpa.OrderJpaDao;
 import com.tagme.tagme_store_back.persistence.dao.jpa.entity.OrderJpaEntity;
@@ -59,35 +60,60 @@ public class OrderRepositoryImpl implements OrderRepository {
                 .toList();
     }
 
+    @Override
+    public Page<OrderDto> getAllOrders(int page, int size, OrderStatus status, Long userId) {
+        List<OrderDto> orders = orderJpaDao.findAllWithFilters(page, size, status, userId)
+                .stream()
+                .map(OrderMapper::fromJpaEntity)
+                .toList();
+        
+        Long totalElements = orderJpaDao.countWithFilters(status, userId);
+        int totalPages = (int) Math.ceil((double) totalElements / size);
+        
+        return new Page<>(orders, page, size, totalElements, totalPages);
+    }
+
+    @Override
+    public Optional<OrderDto> getById(Long orderId) {
+        validateOrderId(orderId);
+        return orderJpaDao.findById(orderId)
+                .map(OrderMapper::fromJpaEntity);
+    }
+
+    @Override
+    public Long countAll() {
+        return orderJpaDao.countWithFilters(null, null);
+    }
+
     // ==================== Métodos de validación ====================
 
     private void validateOrderId(Long orderId) {
         if (orderId == null) {
-            throw new ValidationException("Order ID cannot be null");
+            throw new ValidationException("El ID del pedido no puede ser nulo");
         }
         if (orderId <= 0) {
-            throw new ValidationException("Order ID must be a positive number");
+            throw new ValidationException("El ID del pedido debe ser un número positivo");
         }
     }
 
     private void validateUserId(Long userId) {
         if (userId == null) {
-            throw new ValidationException("User ID cannot be null");
+            throw new ValidationException("El ID de usuario no puede ser nulo");
         }
         if (userId <= 0) {
-            throw new ValidationException("User ID must be a positive number");
+            throw new ValidationException("El ID de usuario debe ser un número positivo");
         }
     }
 
     private void validateOrderDto(OrderDto orderDto) {
         if (orderDto == null) {
-            throw new ValidationException("Order DTO cannot be null");
+            throw new ValidationException("El pedido no puede ser nulo");
         }
         if (orderDto.user() == null) {
-            throw new ValidationException("User cannot be null in order");
+            throw new ValidationException("El usuario no puede ser nulo en el pedido");
         }
         if (orderDto.orderStatus() == null) {
-            throw new ValidationException("Order status cannot be null");
+            throw new ValidationException("El estado del pedido no puede ser nulo");
         }
     }
 }

@@ -3,6 +3,7 @@ package com.tagme.tagme_store_back.EpsteinFiles.http.impl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tagme.tagme_store_back.EpsteinFiles.http.HttpClientService;
+import com.tagme.tagme_store_back.EpsteinFiles.http.exception.ApiNotWorkingException;
 import com.tagme.tagme_store_back.EpsteinFiles.http.response.ApiResponse;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -51,7 +52,7 @@ public class HttpClientServiceImpl implements HttpClientService {
             }
 
         } catch (Exception e) {
-            throw new RuntimeException("HTTP POST error to " + url, e);
+            throw new ApiNotWorkingException(e.getMessage());
         }
     }
 }

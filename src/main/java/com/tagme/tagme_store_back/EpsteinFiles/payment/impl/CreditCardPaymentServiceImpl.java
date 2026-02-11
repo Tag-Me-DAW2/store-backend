@@ -1,6 +1,7 @@
 package com.tagme.tagme_store_back.EpsteinFiles.payment.impl;
 
 import com.tagme.tagme_store_back.EpsteinFiles.http.HttpClientService;
+import com.tagme.tagme_store_back.EpsteinFiles.http.exception.ApiNotWorkingException;
 import com.tagme.tagme_store_back.EpsteinFiles.http.response.ApiResponse;
 import com.tagme.tagme_store_back.EpsteinFiles.payment.CreditCardPaymentService;
 import com.tagme.tagme_store_back.EpsteinFiles.payment.records.*;
@@ -44,6 +45,10 @@ public class CreditCardPaymentServiceImpl implements CreditCardPaymentService {
         );
 
         if (!response.isOk()) {
+            if (response.getStatusCode() >= 500) {
+                throw new ApiNotWorkingException("Bank API is currently unavailable. Please try again later.");
+            }
+
             throw new RuntimeException(
                     response.getBody()
             );

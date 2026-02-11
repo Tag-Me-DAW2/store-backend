@@ -1,5 +1,6 @@
 package com.tagme.tagme_store_back.domain.service.impl;
 
+import com.tagme.tagme_store_back.EpsteinFiles.http.exception.ApiNotWorkingException;
 import com.tagme.tagme_store_back.EpsteinFiles.payment.CreditCardPaymentService;
 import com.tagme.tagme_store_back.EpsteinFiles.payment.records.CreditCardRequest;
 import com.tagme.tagme_store_back.domain.dto.*;
@@ -11,6 +12,7 @@ import com.tagme.tagme_store_back.domain.mapper.UserMapper;
 import com.tagme.tagme_store_back.domain.model.Order;
 import com.tagme.tagme_store_back.domain.model.OrderStatus;
 import com.tagme.tagme_store_back.domain.repository.OrderRepository;
+import com.tagme.tagme_store_back.domain.repository.PaymentInfoRepository;
 import com.tagme.tagme_store_back.domain.service.CartService;
 import com.tagme.tagme_store_back.domain.service.ProductService;
 import com.tagme.tagme_store_back.domain.service.UserService;
@@ -28,12 +30,14 @@ public class CartServiceImpl implements CartService {
     private final UserService userService;
     private final ProductService productService;
     private final CreditCardPaymentService creditCardPaymentService;
+    private final PaymentInfoRepository paymentInfoRepository;
 
-    public CartServiceImpl(OrderRepository orderRepository, UserService userService, ProductService productService, CreditCardPaymentService creditCardPaymentService) {
+    public CartServiceImpl(OrderRepository orderRepository, UserService userService, ProductService productService, CreditCardPaymentService creditCardPaymentService, PaymentInfoRepository paymentInfoRepository) {
         this.orderRepository = orderRepository;
         this.userService = userService;
         this.productService = productService;
         this.creditCardPaymentService = creditCardPaymentService;
+        this.paymentInfoRepository = paymentInfoRepository;
     }
 
     @Override
@@ -331,10 +335,28 @@ public class CartServiceImpl implements CartService {
         );
         orderRepository.save(processingCart);
 
-        // Realizar el pago.
-        creditCardPaymentService.execute(creditCardRequest, activeCart.totalPrice());
+        // Guardar datos de pago para posible reintento
+        PaymentInfoDto paymentInfo = new PaymentInfoDto(
+                null,
+                processingCart.id(),
+                payCartDto.paymentInfo().cardNumber(),
+                payCartDto.paymentInfo().cardHolderName(),
+                payCartDto.paymentInfo().cvv(),
+                payCartDto.paymentInfo().expirationDate()
+        );
+        paymentInfoRepository.save(paymentInfo);
 
-        // Si el pago ha ido bien, actualizar el estado del carrito a PAYED
+        // Realizar el pago.
+        try {
+            creditCardPaymentService.execute(creditCardRequest, activeCart.totalPrice());
+        } catch (Exception e) {
+            if (e instanceof ApiNotWorkingException) {
+                // Mantener en PROCESSING para poder reintentar
+                return;
+            } else throw new RuntimeException(e.getMessage());
+        }
+
+        // Si el pago ha ido bien, actualizar el estado del carrito a PAYED y eliminar datos de pago
         OrderDto paidCart = new OrderDto(
                 processingCart.id(),
                 processingCart.user(),
@@ -347,5 +369,8 @@ public class CartServiceImpl implements CartService {
                 processingCart.createdAt()
         );
         orderRepository.save(paidCart);
+        
+        // Eliminar datos de pago ya que el pago fue exitoso
+        paymentInfoRepository.deleteByOrderId(processingCart.id());
     }
 }

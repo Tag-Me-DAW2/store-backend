@@ -5,6 +5,7 @@ import com.tagme.tagme_store_back.EpsteinFiles.payment.impl.CreditCardPaymentSer
 import com.tagme.tagme_store_back.domain.repository.AuthRepository;
 import com.tagme.tagme_store_back.domain.repository.CategoryRepository;
 import com.tagme.tagme_store_back.domain.repository.OrderRepository;
+import com.tagme.tagme_store_back.domain.repository.PaymentInfoRepository;
 import com.tagme.tagme_store_back.domain.repository.ProductRepository;
 import com.tagme.tagme_store_back.domain.repository.UserRepository;
 import com.tagme.tagme_store_back.domain.service.AuthService;
@@ -22,16 +23,19 @@ import com.tagme.tagme_store_back.domain.service.impl.UserServiceImpl;
 import com.tagme.tagme_store_back.persistence.dao.jpa.AuthJpaDao;
 import com.tagme.tagme_store_back.persistence.dao.jpa.CategoryJpaDao;
 import com.tagme.tagme_store_back.persistence.dao.jpa.OrderJpaDao;
+import com.tagme.tagme_store_back.persistence.dao.jpa.PaymentInfoJpaDao;
 import com.tagme.tagme_store_back.persistence.dao.jpa.ProductJpaDao;
 import com.tagme.tagme_store_back.persistence.dao.jpa.UserJpaDao;
 import com.tagme.tagme_store_back.persistence.dao.jpa.impl.AuthJpaDaoImpl;
 import com.tagme.tagme_store_back.persistence.dao.jpa.impl.CategoryJpaDaoImpl;
 import com.tagme.tagme_store_back.persistence.dao.jpa.impl.OrderJpaDaoImpl;
+import com.tagme.tagme_store_back.persistence.dao.jpa.impl.PaymentInfoJpaDaoImpl;
 import com.tagme.tagme_store_back.persistence.dao.jpa.impl.ProductJpaDaoImpl;
 import com.tagme.tagme_store_back.persistence.dao.jpa.impl.UserJpaDaoImpl;
 import com.tagme.tagme_store_back.persistence.repository.AuthRepositoryImpl;
 import com.tagme.tagme_store_back.persistence.repository.CategoryRepositoryImpl;
 import com.tagme.tagme_store_back.persistence.repository.OrderRepositoryImpl;
+import com.tagme.tagme_store_back.persistence.repository.PaymentInfoRepositoryImpl;
 import com.tagme.tagme_store_back.persistence.repository.ProductRepositoryImpl;
 import com.tagme.tagme_store_back.persistence.repository.UserRepositoryImpl;
 import jakarta.servlet.MultipartConfigElement;
@@ -118,13 +122,23 @@ public class SpringConfig {
     }
 
     @Bean
-    public CartService cartService(OrderRepository orderRepository, UserService userService, ProductService productService, CreditCardPaymentService creditCardPaymentService) {
-        return new CartServiceImpl(orderRepository, userService, productService, creditCardPaymentService);
+    public PaymentInfoJpaDao paymentInfoJpaDao() {
+        return new PaymentInfoJpaDaoImpl();
     }
 
     @Bean
-    public OrderService orderService(OrderRepository orderRepository, UserService userService) {
-        return new OrderServiceImpl(orderRepository, userService);
+    public PaymentInfoRepository paymentInfoRepository(PaymentInfoJpaDao paymentInfoJpaDao, OrderJpaDao orderJpaDao) {
+        return new PaymentInfoRepositoryImpl(paymentInfoJpaDao, orderJpaDao);
+    }
+
+    @Bean
+    public CartService cartService(OrderRepository orderRepository, UserService userService, ProductService productService, CreditCardPaymentService creditCardPaymentService, PaymentInfoRepository paymentInfoRepository) {
+        return new CartServiceImpl(orderRepository, userService, productService, creditCardPaymentService, paymentInfoRepository);
+    }
+
+    @Bean
+    public OrderService orderService(OrderRepository orderRepository, UserService userService, CreditCardPaymentService creditCardPaymentService, PaymentInfoRepository paymentInfoRepository) {
+        return new OrderServiceImpl(orderRepository, userService, creditCardPaymentService, paymentInfoRepository);
     }
 
     @Bean

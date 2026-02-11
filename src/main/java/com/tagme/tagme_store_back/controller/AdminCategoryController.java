@@ -40,7 +40,7 @@ public class AdminCategoryController {
     @PutMapping("/{id}")
     public ResponseEntity<CategoryResponse> updateCategory(@PathVariable Long id, @RequestBody CategoryRequest categoryRequest) {
         if (!id.equals(categoryRequest.id())) {
-            throw new BusinessException("ID in path and request body must match");
+            throw new BusinessException("El ID de la ruta no coincide con el ID del cuerpo de la petición");
         }
         CategoryDto categoryDto = CategoryMapper.fromCategoryRequestToCategoryDto(categoryRequest);
         DtoValidator.validate(categoryDto);
