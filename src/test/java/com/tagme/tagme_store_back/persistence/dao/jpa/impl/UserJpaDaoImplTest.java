@@ -188,4 +188,46 @@ class UserJpaDaoImplTest extends BaseJpaDaoTest<UserJpaDao> {
             assertThrows(RuntimeException.class, () -> dao.deleteById(userId));
         }
     }
+
+    @Nested
+    class UpdatePasswordTests {
+        @DisplayName("Given an existing user, when updatePassword is called, then the password is updated")
+        @Test
+        void updatePasswordExistingUser() {
+            Long userId = 1L;
+            UserJpaEntity user = dao.findById(userId).get();
+            String oldPassword = user.getPassword();
+            
+            UserJpaEntity userToUpdate = new UserJpaEntity();
+            userToUpdate.setId(userId);
+            userToUpdate.setPassword("newSecurePassword123");
+            
+            dao.updatePassword(userToUpdate);
+            
+            UserJpaEntity reloaded = dao.findById(userId).get();
+            assertEquals("newSecurePassword123", reloaded.getPassword());
+            assertNotEquals(oldPassword, reloaded.getPassword());
+        }
+
+        @DisplayName("Given a non-existing user, when updatePassword is called, then throw ResourceNotFoundException")
+        @Test
+        void updatePasswordNonExistingUser() {
+            UserJpaEntity userToUpdate = new UserJpaEntity();
+            userToUpdate.setId(999L);
+            userToUpdate.setPassword("newPassword");
+            
+            assertThrows(ResourceNotFoundException.class, () -> dao.updatePassword(userToUpdate));
+        }
+    }
+
+    @Nested
+    class CountTests {
+        @DisplayName("When count is called, then return total number of users")
+        @Test
+        void countReturnsTotal() {
+            Long count = dao.count();
+            assertNotNull(count);
+            assertTrue(count > 0);
+        }
+    }
 }

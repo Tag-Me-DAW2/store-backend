@@ -1,13 +1,7 @@
 package com.tagme.tagme_store_back.persistence;
 
 import com.tagme.tagme_store_back.persistence.dao.jpa.*;
-import com.tagme.tagme_store_back.persistence.dao.jpa.CategoryJpaDao;
-import com.tagme.tagme_store_back.persistence.dao.jpa.ProductJpaDao;
-import com.tagme.tagme_store_back.persistence.dao.jpa.impl.AuthJpaDaoImpl;
-import com.tagme.tagme_store_back.persistence.dao.jpa.impl.CategoryJpaDaoImpl;
-import com.tagme.tagme_store_back.persistence.dao.jpa.UserJpaDao;
-import com.tagme.tagme_store_back.persistence.dao.jpa.impl.ProductJpaDaoImpl;
-import com.tagme.tagme_store_back.persistence.dao.jpa.impl.UserJpaDaoImpl;
+import com.tagme.tagme_store_back.persistence.dao.jpa.impl.*;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -36,5 +30,15 @@ public class TestConfig {
     @Bean
     public ProductJpaDao productJpaDao() {
         return new ProductJpaDaoImpl();
+    }
+
+    @Bean
+    public OrderJpaDao orderJpaDao() {
+        return new OrderJpaDaoImpl();
+    }
+
+    @Bean
+    public PaymentInfoJpaDao paymentInfoJpaDao() {
+        return new PaymentInfoJpaDaoImpl();
     }
 }
