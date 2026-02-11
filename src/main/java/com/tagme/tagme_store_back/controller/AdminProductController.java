@@ -38,7 +38,7 @@ public class AdminProductController {
     @PutMapping("/{id}")
     public ResponseEntity<ProductDetailResponse> updateProduct(@PathVariable Long id, @RequestBody ProductUpdateRequest productUpdateRequest) throws SQLException, IOException {
         if (!id.equals(productUpdateRequest.id())) {
-            throw new BusinessException("Path variable ID does not match request body ID");
+            throw new BusinessException("El ID de la ruta no coincide con el ID del cuerpo de la petición");
         }
         ProductDto productDto = ProductMapper.fromProductUpdateRequestToProductDto(productUpdateRequest);
         DtoValidator.validate(productDto);
