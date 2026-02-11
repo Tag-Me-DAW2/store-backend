@@ -232,5 +232,67 @@ public class OrderJpaDaoImpl implements OrderJpaDao {
 
         return query.getResultList();
     }
+
+    @Override
+    public List<OrderJpaEntity> findAllWithFilters(int page, int size, OrderStatus status, Long userId) {
+        int pageIndex = Math.max(page - 1, 0);
+        int validSize = Math.max(size, 1);
+
+        StringBuilder sql = new StringBuilder("SELECT o FROM OrderJpaEntity o WHERE o.orderStatus IN (:statuses)");
+        
+        if (status != null) {
+            sql = new StringBuilder("SELECT o FROM OrderJpaEntity o WHERE o.orderStatus = :status");
+        }
+        
+        if (userId != null) {
+            sql.append(" AND o.user.id = :userId");
+        }
+        
+        sql.append(" ORDER BY o.createdAt DESC");
+
+        TypedQuery<OrderJpaEntity> query = entityManager.createQuery(sql.toString(), OrderJpaEntity.class);
+        
+        if (status != null) {
+            query.setParameter("status", status);
+        } else {
+            query.setParameter("statuses", List.of(OrderStatus.PROCESSING, OrderStatus.PAYED, OrderStatus.CANCELLED));
+        }
+        
+        if (userId != null) {
+            query.setParameter("userId", userId);
+        }
+        
+        query.setFirstResult(pageIndex * validSize);
+        query.setMaxResults(validSize);
+
+        return query.getResultList();
+    }
+
+    @Override
+    public Long countWithFilters(OrderStatus status, Long userId) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(o) FROM OrderJpaEntity o WHERE o.orderStatus IN (:statuses)");
+        
+        if (status != null) {
+            sql = new StringBuilder("SELECT COUNT(o) FROM OrderJpaEntity o WHERE o.orderStatus = :status");
+        }
+        
+        if (userId != null) {
+            sql.append(" AND o.user.id = :userId");
+        }
+
+        TypedQuery<Long> query = entityManager.createQuery(sql.toString(), Long.class);
+        
+        if (status != null) {
+            query.setParameter("status", status);
+        } else {
+            query.setParameter("statuses", List.of(OrderStatus.PROCESSING, OrderStatus.PAYED, OrderStatus.CANCELLED));
+        }
+        
+        if (userId != null) {
+            query.setParameter("userId", userId);
+        }
+
+        return query.getSingleResult();
+    }
 }
 

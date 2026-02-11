@@ -11,4 +11,6 @@ public interface OrderJpaDao extends GenericJpaDao<OrderJpaEntity> {
     Optional<OrderJpaEntity> findActiveOrderByUserId(Long userId);
     Optional<OrderStatus> getOrderStatus(Long orderId);
     List<OrderJpaEntity> findNonActiveOrdersByUserId(Long userId);
+    List<OrderJpaEntity> findAllWithFilters(int page, int size, OrderStatus status, Long userId);
+    Long countWithFilters(OrderStatus status, Long userId);
 }
