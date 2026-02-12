@@ -9,9 +9,12 @@ import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.apache.hc.core5.util.Timeout;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -20,9 +23,23 @@ import java.nio.charset.StandardCharsets;
 public class HttpClientServiceImpl implements HttpClientService {
     private final ObjectMapper mapper = new ObjectMapper();
     private final CloseableHttpClient httpClient;
+    private final RequestConfig defaultRequestConfig;
 
-    public HttpClientServiceImpl() {
-        this.httpClient = HttpClients.createDefault();
+    // timeouts en ms (configurables desde application.properties)
+    public HttpClientServiceImpl(
+            @Value("${http.client.connect-timeout-ms:60000}") long connectTimeoutMs,
+            @Value("${http.client.response-timeout-ms:60000}") long responseTimeoutMs,
+            @Value("${http.client.connection-request-timeout-ms:60000}") long connectionRequestTimeoutMs
+    ) {
+        this.defaultRequestConfig = RequestConfig.custom()
+                .setConnectTimeout(Timeout.ofMilliseconds(connectTimeoutMs))
+                .setResponseTimeout(Timeout.ofMilliseconds(responseTimeoutMs))
+                .setConnectionRequestTimeout(Timeout.ofMilliseconds(connectionRequestTimeoutMs))
+                .build();
+
+        this.httpClient = HttpClients.custom()
+                .setDefaultRequestConfig(defaultRequestConfig)
+                .build();
     }
 
     @Override
@@ -34,6 +51,14 @@ public class HttpClientServiceImpl implements HttpClientService {
             httpPost.setEntity(
                     new StringEntity(json, ContentType.APPLICATION_JSON)
             );
+
+            // Si la URL contiene '?longTimeout=true' aplicamos un timeout de respuesta mucho mayor (10 min)
+            if (url != null && url.contains("longTimeout=true")) {
+                RequestConfig longReq = RequestConfig.copy(defaultRequestConfig)
+                        .setResponseTimeout(Timeout.ofMinutes(10))
+                        .build();
+                httpPost.setConfig(longReq);
+            }
 
             try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
 
