@@ -109,24 +109,8 @@ public class OrderServiceImpl implements OrderService {
             paymentInfoRepository.deleteByOrderId(orderId);
             
         } catch (ApiNotWorkingException e) {
-            // Error 500 del banco - marcar como CANCELLED
-            OrderDto cancelledOrder = new OrderDto(
-                    order.id(),
-                    order.user(),
-                    OrderStatus.CANCELLED,
-                    order.orderItems(),
-                    order.totalPrice(),
-                    order.shippingCost(),
-                    order.shippingInfo(),
-                    null,
-                    order.createdAt()
-            );
-            orderRepository.save(cancelledOrder);
-            
-            // Eliminar los datos de pago
-            paymentInfoRepository.deleteByOrderId(orderId);
-            
-            throw new BusinessException("El pago ha fallado. El pedido ha sido cancelado.");
+            // Error 500 del banco - no cambiar el estado del pedido, pero informar al usuario
+            throw new BusinessException("El pago ha fallado. Reintente más tarde. El pedido sigue en estado PROCESANDO.");
         } catch (Exception e) {
             // Otros errores - marcar como CANCELLED
             OrderDto cancelledOrder = new OrderDto(

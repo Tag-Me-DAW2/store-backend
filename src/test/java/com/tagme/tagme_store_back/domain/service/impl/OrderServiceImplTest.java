@@ -232,19 +232,6 @@ class OrderServiceImplTest {
             assertThrows(BusinessException.class, () -> orderService.retryPayment(1L));
         }
 
-        @DisplayName("Given API error, when retryPayment is called, then order is CANCELLED and throw BusinessException")
-        @Test
-        void retryPaymentApiError() {
-            when(orderRepository.getById(1L)).thenReturn(Optional.of(processingOrderDto));
-            when(paymentInfoRepository.findByOrderId(1L)).thenReturn(Optional.of(paymentInfoDto));
-            doThrow(new ApiNotWorkingException("API Error")).when(creditCardPaymentService).execute(any(), any());
-            when(orderRepository.save(any())).thenReturn(processingOrderDto);
-
-            assertThrows(BusinessException.class, () -> orderService.retryPayment(1L));
-            verify(orderRepository).save(argThat(order -> order.orderStatus() == OrderStatus.CANCELLED));
-            verify(paymentInfoRepository).deleteByOrderId(1L);
-        }
-
         @DisplayName("Given other exception, when retryPayment is called, then order is CANCELLED and throw BusinessException")
         @Test
         void retryPaymentOtherException() {
