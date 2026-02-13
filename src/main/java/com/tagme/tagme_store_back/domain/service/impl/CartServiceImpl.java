@@ -348,7 +348,8 @@ public class CartServiceImpl implements CartService {
 
         // Realizar el pago.
         try {
-            creditCardPaymentService.execute(creditCardRequest, activeCart.totalPrice());
+            BigDecimal totalAmount = activeCart.totalPrice().add(payCartDto.orderInfo().shippingCost());
+            creditCardPaymentService.execute(creditCardRequest, totalAmount);
         } catch (Exception e) {
             if (e instanceof ApiNotWorkingException) {
                 // Mantener en PROCESSING para poder reintentar
