@@ -5,16 +5,16 @@ import com.tagme.tagme_store_back.integration.http.exception.ApiNotWorkingExcept
 import com.tagme.tagme_store_back.integration.http.response.ApiResponse;
 import com.tagme.tagme_store_back.integration.payment.CreditCardPaymentService;
 import com.tagme.tagme_store_back.integration.payment.records.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
-@Service
+@Named
 public class CreditCardPaymentServiceImpl implements CreditCardPaymentService {
 
-    @Autowired
+    @Inject
     private HttpClientService httpClient;
 
     @Value("${tagme.bank.api.host}")
